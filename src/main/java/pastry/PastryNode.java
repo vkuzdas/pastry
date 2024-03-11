@@ -95,7 +95,7 @@ public class PastryNode {
             public void run() {
                 int rand = new Random().nextInt(3)-1;
                 if (rand == 1) {
-                    rand = new Random().nextInt(10)+9000;
+                    rand = new Random().nextInt(80)+10000;
                     logger.trace("[{}]  ticking onto {}", self, rand);
                     ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:"+rand).usePlaintext().build();
                     blockingStub = PastryServiceGrpc.newBlockingStub(channel);
@@ -129,8 +129,8 @@ public class PastryNode {
 
     public static void main(String[] args) throws IOException {
         ArrayList<PastryNode> toShutdown = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            PastryNode node = new PastryNode("localhost", 9000 + i);
+        for (int i = 0; i < 80; i++) {
+            PastryNode node = new PastryNode("localhost", 10000 + i);
             node.initPastry();
             toShutdown.add(node);
         }

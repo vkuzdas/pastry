@@ -1,11 +1,37 @@
 package pastry;
 
+import java.io.IOException;
 import java.math.BigInteger;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class Util {
+
+
+    public static long getDistance(String address) {
+        String[] parts = address.split(":");
+        String host = parts[0];
+        int port = Integer.parseInt(parts[2]);
+
+        try {
+            long startTime = System.currentTimeMillis();
+
+            try (Socket socket = new Socket()) {
+                socket.connect(new InetSocketAddress(host, port), 5000); // Timeout set to 5 seconds
+            }
+
+            return System.currentTimeMillis() - startTime;
+
+        } catch (IOException e) {
+            System.out.println("Host " + host + " on port " + port + " is not reachable.");
+            e.printStackTrace();
+        }
+        return Long.MAX_VALUE;
+    }
 
     public static String getId(String input) {
         MessageDigest md = null;
