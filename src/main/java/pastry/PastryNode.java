@@ -97,10 +97,10 @@ public class PastryNode {
                 if (rand == 1) {
                     rand = new Random().nextInt(80)+10000;
                     logger.trace("[{}]  ticking onto {}", self, rand);
-                    ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:"+rand).usePlaintext().build();
-                    blockingStub = PastryServiceGrpc.newBlockingStub(channel);
-                    blockingStub.join(Pastry.JoinRequest.newBuilder().setPort(self.port).build());
-                    channel.shutdown();
+//                    ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:"+rand).usePlaintext().build();
+//                    blockingStub = PastryServiceGrpc.newBlockingStub(channel);
+//                    blockingStub.join(Pastry.JoinRequest.newBuilder().setPort(self.port).build());
+//                    channel.shutdown();
                 }
             }
         };
@@ -115,17 +115,75 @@ public class PastryNode {
         }
     }
 
-    public void joinPastry() {}
+    /**
+     * Newly joined node <b>X</b> will prompt <b>bootstrap</b> to send <i>'join'</i> request around the network <par>
+     * Request is routed to node <b>Z</b> which is closest to <b>X</b> <par>
+     * Nodes in the routing path will send the node state to <b>X</b>
+     * @param bootstrap
+     */
+    public void joinPastry(NodeReference bootstrap) {
+        ManagedChannel channel = ManagedChannelBuilder.forTarget(bootstrap.getAddress()).usePlaintext().build();
+        blockingStub = PastryServiceGrpc.newBlockingStub(channel);
+        Pastry.JoinRequest.Builder request = Pastry.JoinRequest.newBuilder().setIp(self.ip).setPort(self.port);
+        Pastry.JoinResponse resp;
+        try {
+            resp = blockingStub.join(request.build());
+            channel.shutdown();
+        } catch (StatusRuntimeException e) {
+            logger.error("RPC failed: {}, Wrong bootstrap node specified", e.getStatus());
+            return;
+        }
+
+        // TODO: pokud je network prazdnej, bude v resp.NetworkEmpty, nebo tam bude jenom jeden zaznam?
+        updateNodeState(resp);
+
+    }
+
+    private void updateNodeState(Pastry.JoinResponse resp) {
+        lock.lock();
+        try {
+
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public NodeReference route(String id) {
+        // if network is empty, leafset is empty
+
+
+        // TODO: implement pastry routing logic
+        return self;
+    }
+
+    private Pastry.JoinResponse enrichResponse(Pastry.JoinResponse response) {
+        // TODO: enrich response with node state of current node
+        return response;
+    }
 
 
     private class PastryNodeServer extends PastryServiceGrpc.PastryServiceImplBase {
         @Override
-        public void join(Pastry.JoinRequest request, StreamObserver<Pastry.Empty> responseObserver) {
-            logger.trace("[{}]  registered a tick from {}", self, request.getPort());
-            responseObserver.onNext(Pastry.Empty.newBuilder().build());
+        public void join(Pastry.JoinRequest request, StreamObserver<Pastry.JoinResponse> responseObserver) {
+            NodeReference newNode = new NodeReference(request.getIp(), request.getPort());
+
+            // find the closest node to the new node
+            NodeReference closest = route(Util.getId(newNode.getAddress()));
+
+            // reroute newNode's join request to the closest node
+            ManagedChannel channel = ManagedChannelBuilder.forTarget(newNode.getAddress()).usePlaintext().build();
+            blockingStub = PastryServiceGrpc.newBlockingStub(channel);
+            Pastry.JoinResponse response = blockingStub.join(Pastry.JoinRequest.newBuilder().setIp(request.getIp()).setPort(self.port).build());
+            channel.shutdown();
+
+            // enrich the response with the state of the current node
+            response = enrichResponse(response);
+
+            responseObserver.onNext(response);
             responseObserver.onCompleted();
         }
     }
+
 
     public static void main(String[] args) throws IOException {
         ArrayList<PastryNode> toShutdown = new ArrayList<>();

@@ -28,21 +28,21 @@ public final class PastryServiceGrpc {
 
   // Static method descriptors that strictly reflect the proto.
   private static volatile io.grpc.MethodDescriptor<proto.Pastry.JoinRequest,
-      proto.Pastry.Empty> getJoinMethod;
+      proto.Pastry.JoinResponse> getJoinMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "Join",
       requestType = proto.Pastry.JoinRequest.class,
-      responseType = proto.Pastry.Empty.class,
+      responseType = proto.Pastry.JoinResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<proto.Pastry.JoinRequest,
-      proto.Pastry.Empty> getJoinMethod() {
-    io.grpc.MethodDescriptor<proto.Pastry.JoinRequest, proto.Pastry.Empty> getJoinMethod;
+      proto.Pastry.JoinResponse> getJoinMethod() {
+    io.grpc.MethodDescriptor<proto.Pastry.JoinRequest, proto.Pastry.JoinResponse> getJoinMethod;
     if ((getJoinMethod = PastryServiceGrpc.getJoinMethod) == null) {
       synchronized (PastryServiceGrpc.class) {
         if ((getJoinMethod = PastryServiceGrpc.getJoinMethod) == null) {
           PastryServiceGrpc.getJoinMethod = getJoinMethod = 
-              io.grpc.MethodDescriptor.<proto.Pastry.JoinRequest, proto.Pastry.Empty>newBuilder()
+              io.grpc.MethodDescriptor.<proto.Pastry.JoinRequest, proto.Pastry.JoinResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "PastryService", "Join"))
@@ -50,7 +50,7 @@ public final class PastryServiceGrpc {
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   proto.Pastry.JoinRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  proto.Pastry.Empty.getDefaultInstance()))
+                  proto.Pastry.JoinResponse.getDefaultInstance()))
                   .setSchemaDescriptor(new PastryServiceMethodDescriptorSupplier("Join"))
                   .build();
           }
@@ -89,7 +89,7 @@ public final class PastryServiceGrpc {
     /**
      */
     public void join(proto.Pastry.JoinRequest request,
-        io.grpc.stub.StreamObserver<proto.Pastry.Empty> responseObserver) {
+        io.grpc.stub.StreamObserver<proto.Pastry.JoinResponse> responseObserver) {
       asyncUnimplementedUnaryCall(getJoinMethod(), responseObserver);
     }
 
@@ -100,7 +100,7 @@ public final class PastryServiceGrpc {
             asyncUnaryCall(
               new MethodHandlers<
                 proto.Pastry.JoinRequest,
-                proto.Pastry.Empty>(
+                proto.Pastry.JoinResponse>(
                   this, METHODID_JOIN)))
           .build();
     }
@@ -127,7 +127,7 @@ public final class PastryServiceGrpc {
     /**
      */
     public void join(proto.Pastry.JoinRequest request,
-        io.grpc.stub.StreamObserver<proto.Pastry.Empty> responseObserver) {
+        io.grpc.stub.StreamObserver<proto.Pastry.JoinResponse> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getJoinMethod(), getCallOptions()), request, responseObserver);
     }
@@ -153,7 +153,7 @@ public final class PastryServiceGrpc {
 
     /**
      */
-    public proto.Pastry.Empty join(proto.Pastry.JoinRequest request) {
+    public proto.Pastry.JoinResponse join(proto.Pastry.JoinRequest request) {
       return blockingUnaryCall(
           getChannel(), getJoinMethod(), getCallOptions(), request);
     }
@@ -179,7 +179,7 @@ public final class PastryServiceGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<proto.Pastry.Empty> join(
+    public com.google.common.util.concurrent.ListenableFuture<proto.Pastry.JoinResponse> join(
         proto.Pastry.JoinRequest request) {
       return futureUnaryCall(
           getChannel().newCall(getJoinMethod(), getCallOptions()), request);
@@ -207,7 +207,7 @@ public final class PastryServiceGrpc {
       switch (methodId) {
         case METHODID_JOIN:
           serviceImpl.join((proto.Pastry.JoinRequest) request,
-              (io.grpc.stub.StreamObserver<proto.Pastry.Empty>) responseObserver);
+              (io.grpc.stub.StreamObserver<proto.Pastry.JoinResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();

@@ -19,17 +19,17 @@ public final class Pastry {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string address = 2;</code>
+     * <code>string ip = 1;</code>
      */
-    java.lang.String getAddress();
+    java.lang.String getIp();
     /**
-     * <code>string address = 2;</code>
+     * <code>string ip = 1;</code>
      */
     com.google.protobuf.ByteString
-        getAddressBytes();
+        getIpBytes();
 
     /**
-     * <code>int32 port = 3;</code>
+     * <code>int32 port = 2;</code>
      */
     int getPort();
   }
@@ -46,7 +46,7 @@ public final class Pastry {
       super(builder);
     }
     private JoinRequest() {
-      address_ = "";
+      ip_ = "";
       port_ = 0;
     }
 
@@ -74,13 +74,13 @@ public final class Pastry {
             case 0:
               done = true;
               break;
-            case 18: {
+            case 10: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              address_ = s;
+              ip_ = s;
               break;
             }
-            case 24: {
+            case 16: {
 
               port_ = input.readInt32();
               break;
@@ -117,44 +117,44 @@ public final class Pastry {
               proto.Pastry.JoinRequest.class, proto.Pastry.JoinRequest.Builder.class);
     }
 
-    public static final int ADDRESS_FIELD_NUMBER = 2;
-    private volatile java.lang.Object address_;
+    public static final int IP_FIELD_NUMBER = 1;
+    private volatile java.lang.Object ip_;
     /**
-     * <code>string address = 2;</code>
+     * <code>string ip = 1;</code>
      */
-    public java.lang.String getAddress() {
-      java.lang.Object ref = address_;
+    public java.lang.String getIp() {
+      java.lang.Object ref = ip_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        address_ = s;
+        ip_ = s;
         return s;
       }
     }
     /**
-     * <code>string address = 2;</code>
+     * <code>string ip = 1;</code>
      */
     public com.google.protobuf.ByteString
-        getAddressBytes() {
-      java.lang.Object ref = address_;
+        getIpBytes() {
+      java.lang.Object ref = ip_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        address_ = b;
+        ip_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    public static final int PORT_FIELD_NUMBER = 3;
+    public static final int PORT_FIELD_NUMBER = 2;
     private int port_;
     /**
-     * <code>int32 port = 3;</code>
+     * <code>int32 port = 2;</code>
      */
     public int getPort() {
       return port_;
@@ -174,11 +174,11 @@ public final class Pastry {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!getAddressBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, address_);
+      if (!getIpBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, ip_);
       }
       if (port_ != 0) {
-        output.writeInt32(3, port_);
+        output.writeInt32(2, port_);
       }
       unknownFields.writeTo(output);
     }
@@ -189,12 +189,12 @@ public final class Pastry {
       if (size != -1) return size;
 
       size = 0;
-      if (!getAddressBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, address_);
+      if (!getIpBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, ip_);
       }
       if (port_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(3, port_);
+          .computeInt32Size(2, port_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -212,8 +212,8 @@ public final class Pastry {
       proto.Pastry.JoinRequest other = (proto.Pastry.JoinRequest) obj;
 
       boolean result = true;
-      result = result && getAddress()
-          .equals(other.getAddress());
+      result = result && getIp()
+          .equals(other.getIp());
       result = result && (getPort()
           == other.getPort());
       result = result && unknownFields.equals(other.unknownFields);
@@ -227,8 +227,8 @@ public final class Pastry {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + ADDRESS_FIELD_NUMBER;
-      hash = (53 * hash) + getAddress().hashCode();
+      hash = (37 * hash) + IP_FIELD_NUMBER;
+      hash = (53 * hash) + getIp().hashCode();
       hash = (37 * hash) + PORT_FIELD_NUMBER;
       hash = (53 * hash) + getPort();
       hash = (29 * hash) + unknownFields.hashCode();
@@ -364,7 +364,7 @@ public final class Pastry {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        address_ = "";
+        ip_ = "";
 
         port_ = 0;
 
@@ -394,7 +394,7 @@ public final class Pastry {
       @java.lang.Override
       public proto.Pastry.JoinRequest buildPartial() {
         proto.Pastry.JoinRequest result = new proto.Pastry.JoinRequest(this);
-        result.address_ = address_;
+        result.ip_ = ip_;
         result.port_ = port_;
         onBuilt();
         return result;
@@ -444,8 +444,8 @@ public final class Pastry {
 
       public Builder mergeFrom(proto.Pastry.JoinRequest other) {
         if (other == proto.Pastry.JoinRequest.getDefaultInstance()) return this;
-        if (!other.getAddress().isEmpty()) {
-          address_ = other.address_;
+        if (!other.getIp().isEmpty()) {
+          ip_ = other.ip_;
           onChanged();
         }
         if (other.getPort() != 0) {
@@ -480,84 +480,84 @@ public final class Pastry {
         return this;
       }
 
-      private java.lang.Object address_ = "";
+      private java.lang.Object ip_ = "";
       /**
-       * <code>string address = 2;</code>
+       * <code>string ip = 1;</code>
        */
-      public java.lang.String getAddress() {
-        java.lang.Object ref = address_;
+      public java.lang.String getIp() {
+        java.lang.Object ref = ip_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          address_ = s;
+          ip_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>string address = 2;</code>
+       * <code>string ip = 1;</code>
        */
       public com.google.protobuf.ByteString
-          getAddressBytes() {
-        java.lang.Object ref = address_;
+          getIpBytes() {
+        java.lang.Object ref = ip_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          address_ = b;
+          ip_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string address = 2;</code>
+       * <code>string ip = 1;</code>
        */
-      public Builder setAddress(
+      public Builder setIp(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        address_ = value;
+        ip_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string address = 2;</code>
+       * <code>string ip = 1;</code>
        */
-      public Builder clearAddress() {
+      public Builder clearIp() {
         
-        address_ = getDefaultInstance().getAddress();
+        ip_ = getDefaultInstance().getIp();
         onChanged();
         return this;
       }
       /**
-       * <code>string address = 2;</code>
+       * <code>string ip = 1;</code>
        */
-      public Builder setAddressBytes(
+      public Builder setIpBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        address_ = value;
+        ip_ = value;
         onChanged();
         return this;
       }
 
       private int port_ ;
       /**
-       * <code>int32 port = 3;</code>
+       * <code>int32 port = 2;</code>
        */
       public int getPort() {
         return port_;
       }
       /**
-       * <code>int32 port = 3;</code>
+       * <code>int32 port = 2;</code>
        */
       public Builder setPort(int value) {
         
@@ -566,7 +566,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>int32 port = 3;</code>
+       * <code>int32 port = 2;</code>
        */
       public Builder clearPort() {
         
@@ -1039,6 +1039,4133 @@ public final class Pastry {
 
   }
 
+  public interface JoinResponseOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:JoinResponse)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated .NodeState nodeState = 1;</code>
+     */
+    java.util.List<proto.Pastry.NodeState> 
+        getNodeStateList();
+    /**
+     * <code>repeated .NodeState nodeState = 1;</code>
+     */
+    proto.Pastry.NodeState getNodeState(int index);
+    /**
+     * <code>repeated .NodeState nodeState = 1;</code>
+     */
+    int getNodeStateCount();
+    /**
+     * <code>repeated .NodeState nodeState = 1;</code>
+     */
+    java.util.List<? extends proto.Pastry.NodeStateOrBuilder> 
+        getNodeStateOrBuilderList();
+    /**
+     * <code>repeated .NodeState nodeState = 1;</code>
+     */
+    proto.Pastry.NodeStateOrBuilder getNodeStateOrBuilder(
+        int index);
+
+    /**
+     * <code>bool networkIsEmpty = 2;</code>
+     */
+    boolean getNetworkIsEmpty();
+  }
+  /**
+   * Protobuf type {@code JoinResponse}
+   */
+  public  static final class JoinResponse extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:JoinResponse)
+      JoinResponseOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use JoinResponse.newBuilder() to construct.
+    private JoinResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private JoinResponse() {
+      nodeState_ = java.util.Collections.emptyList();
+      networkIsEmpty_ = false;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private JoinResponse(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                nodeState_ = new java.util.ArrayList<proto.Pastry.NodeState>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              nodeState_.add(
+                  input.readMessage(proto.Pastry.NodeState.parser(), extensionRegistry));
+              break;
+            }
+            case 16: {
+
+              networkIsEmpty_ = input.readBool();
+              break;
+            }
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          nodeState_ = java.util.Collections.unmodifiableList(nodeState_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return proto.Pastry.internal_static_JoinResponse_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return proto.Pastry.internal_static_JoinResponse_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              proto.Pastry.JoinResponse.class, proto.Pastry.JoinResponse.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int NODESTATE_FIELD_NUMBER = 1;
+    private java.util.List<proto.Pastry.NodeState> nodeState_;
+    /**
+     * <code>repeated .NodeState nodeState = 1;</code>
+     */
+    public java.util.List<proto.Pastry.NodeState> getNodeStateList() {
+      return nodeState_;
+    }
+    /**
+     * <code>repeated .NodeState nodeState = 1;</code>
+     */
+    public java.util.List<? extends proto.Pastry.NodeStateOrBuilder> 
+        getNodeStateOrBuilderList() {
+      return nodeState_;
+    }
+    /**
+     * <code>repeated .NodeState nodeState = 1;</code>
+     */
+    public int getNodeStateCount() {
+      return nodeState_.size();
+    }
+    /**
+     * <code>repeated .NodeState nodeState = 1;</code>
+     */
+    public proto.Pastry.NodeState getNodeState(int index) {
+      return nodeState_.get(index);
+    }
+    /**
+     * <code>repeated .NodeState nodeState = 1;</code>
+     */
+    public proto.Pastry.NodeStateOrBuilder getNodeStateOrBuilder(
+        int index) {
+      return nodeState_.get(index);
+    }
+
+    public static final int NETWORKISEMPTY_FIELD_NUMBER = 2;
+    private boolean networkIsEmpty_;
+    /**
+     * <code>bool networkIsEmpty = 2;</code>
+     */
+    public boolean getNetworkIsEmpty() {
+      return networkIsEmpty_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (int i = 0; i < nodeState_.size(); i++) {
+        output.writeMessage(1, nodeState_.get(i));
+      }
+      if (networkIsEmpty_ != false) {
+        output.writeBool(2, networkIsEmpty_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < nodeState_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, nodeState_.get(i));
+      }
+      if (networkIsEmpty_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(2, networkIsEmpty_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof proto.Pastry.JoinResponse)) {
+        return super.equals(obj);
+      }
+      proto.Pastry.JoinResponse other = (proto.Pastry.JoinResponse) obj;
+
+      boolean result = true;
+      result = result && getNodeStateList()
+          .equals(other.getNodeStateList());
+      result = result && (getNetworkIsEmpty()
+          == other.getNetworkIsEmpty());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getNodeStateCount() > 0) {
+        hash = (37 * hash) + NODESTATE_FIELD_NUMBER;
+        hash = (53 * hash) + getNodeStateList().hashCode();
+      }
+      hash = (37 * hash) + NETWORKISEMPTY_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getNetworkIsEmpty());
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static proto.Pastry.JoinResponse parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.JoinResponse parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.JoinResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.JoinResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.JoinResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.JoinResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.JoinResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.JoinResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static proto.Pastry.JoinResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.JoinResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static proto.Pastry.JoinResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.JoinResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(proto.Pastry.JoinResponse prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code JoinResponse}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:JoinResponse)
+        proto.Pastry.JoinResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return proto.Pastry.internal_static_JoinResponse_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return proto.Pastry.internal_static_JoinResponse_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                proto.Pastry.JoinResponse.class, proto.Pastry.JoinResponse.Builder.class);
+      }
+
+      // Construct using proto.Pastry.JoinResponse.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getNodeStateFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        if (nodeStateBuilder_ == null) {
+          nodeState_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          nodeStateBuilder_.clear();
+        }
+        networkIsEmpty_ = false;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return proto.Pastry.internal_static_JoinResponse_descriptor;
+      }
+
+      @java.lang.Override
+      public proto.Pastry.JoinResponse getDefaultInstanceForType() {
+        return proto.Pastry.JoinResponse.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public proto.Pastry.JoinResponse build() {
+        proto.Pastry.JoinResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public proto.Pastry.JoinResponse buildPartial() {
+        proto.Pastry.JoinResponse result = new proto.Pastry.JoinResponse(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (nodeStateBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            nodeState_ = java.util.Collections.unmodifiableList(nodeState_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.nodeState_ = nodeState_;
+        } else {
+          result.nodeState_ = nodeStateBuilder_.build();
+        }
+        result.networkIsEmpty_ = networkIsEmpty_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof proto.Pastry.JoinResponse) {
+          return mergeFrom((proto.Pastry.JoinResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(proto.Pastry.JoinResponse other) {
+        if (other == proto.Pastry.JoinResponse.getDefaultInstance()) return this;
+        if (nodeStateBuilder_ == null) {
+          if (!other.nodeState_.isEmpty()) {
+            if (nodeState_.isEmpty()) {
+              nodeState_ = other.nodeState_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureNodeStateIsMutable();
+              nodeState_.addAll(other.nodeState_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.nodeState_.isEmpty()) {
+            if (nodeStateBuilder_.isEmpty()) {
+              nodeStateBuilder_.dispose();
+              nodeStateBuilder_ = null;
+              nodeState_ = other.nodeState_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              nodeStateBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getNodeStateFieldBuilder() : null;
+            } else {
+              nodeStateBuilder_.addAllMessages(other.nodeState_);
+            }
+          }
+        }
+        if (other.getNetworkIsEmpty() != false) {
+          setNetworkIsEmpty(other.getNetworkIsEmpty());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        proto.Pastry.JoinResponse parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (proto.Pastry.JoinResponse) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<proto.Pastry.NodeState> nodeState_ =
+        java.util.Collections.emptyList();
+      private void ensureNodeStateIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          nodeState_ = new java.util.ArrayList<proto.Pastry.NodeState>(nodeState_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          proto.Pastry.NodeState, proto.Pastry.NodeState.Builder, proto.Pastry.NodeStateOrBuilder> nodeStateBuilder_;
+
+      /**
+       * <code>repeated .NodeState nodeState = 1;</code>
+       */
+      public java.util.List<proto.Pastry.NodeState> getNodeStateList() {
+        if (nodeStateBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(nodeState_);
+        } else {
+          return nodeStateBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .NodeState nodeState = 1;</code>
+       */
+      public int getNodeStateCount() {
+        if (nodeStateBuilder_ == null) {
+          return nodeState_.size();
+        } else {
+          return nodeStateBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .NodeState nodeState = 1;</code>
+       */
+      public proto.Pastry.NodeState getNodeState(int index) {
+        if (nodeStateBuilder_ == null) {
+          return nodeState_.get(index);
+        } else {
+          return nodeStateBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .NodeState nodeState = 1;</code>
+       */
+      public Builder setNodeState(
+          int index, proto.Pastry.NodeState value) {
+        if (nodeStateBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureNodeStateIsMutable();
+          nodeState_.set(index, value);
+          onChanged();
+        } else {
+          nodeStateBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeState nodeState = 1;</code>
+       */
+      public Builder setNodeState(
+          int index, proto.Pastry.NodeState.Builder builderForValue) {
+        if (nodeStateBuilder_ == null) {
+          ensureNodeStateIsMutable();
+          nodeState_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          nodeStateBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeState nodeState = 1;</code>
+       */
+      public Builder addNodeState(proto.Pastry.NodeState value) {
+        if (nodeStateBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureNodeStateIsMutable();
+          nodeState_.add(value);
+          onChanged();
+        } else {
+          nodeStateBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeState nodeState = 1;</code>
+       */
+      public Builder addNodeState(
+          int index, proto.Pastry.NodeState value) {
+        if (nodeStateBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureNodeStateIsMutable();
+          nodeState_.add(index, value);
+          onChanged();
+        } else {
+          nodeStateBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeState nodeState = 1;</code>
+       */
+      public Builder addNodeState(
+          proto.Pastry.NodeState.Builder builderForValue) {
+        if (nodeStateBuilder_ == null) {
+          ensureNodeStateIsMutable();
+          nodeState_.add(builderForValue.build());
+          onChanged();
+        } else {
+          nodeStateBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeState nodeState = 1;</code>
+       */
+      public Builder addNodeState(
+          int index, proto.Pastry.NodeState.Builder builderForValue) {
+        if (nodeStateBuilder_ == null) {
+          ensureNodeStateIsMutable();
+          nodeState_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          nodeStateBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeState nodeState = 1;</code>
+       */
+      public Builder addAllNodeState(
+          java.lang.Iterable<? extends proto.Pastry.NodeState> values) {
+        if (nodeStateBuilder_ == null) {
+          ensureNodeStateIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, nodeState_);
+          onChanged();
+        } else {
+          nodeStateBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeState nodeState = 1;</code>
+       */
+      public Builder clearNodeState() {
+        if (nodeStateBuilder_ == null) {
+          nodeState_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          nodeStateBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeState nodeState = 1;</code>
+       */
+      public Builder removeNodeState(int index) {
+        if (nodeStateBuilder_ == null) {
+          ensureNodeStateIsMutable();
+          nodeState_.remove(index);
+          onChanged();
+        } else {
+          nodeStateBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeState nodeState = 1;</code>
+       */
+      public proto.Pastry.NodeState.Builder getNodeStateBuilder(
+          int index) {
+        return getNodeStateFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .NodeState nodeState = 1;</code>
+       */
+      public proto.Pastry.NodeStateOrBuilder getNodeStateOrBuilder(
+          int index) {
+        if (nodeStateBuilder_ == null) {
+          return nodeState_.get(index);  } else {
+          return nodeStateBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .NodeState nodeState = 1;</code>
+       */
+      public java.util.List<? extends proto.Pastry.NodeStateOrBuilder> 
+           getNodeStateOrBuilderList() {
+        if (nodeStateBuilder_ != null) {
+          return nodeStateBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(nodeState_);
+        }
+      }
+      /**
+       * <code>repeated .NodeState nodeState = 1;</code>
+       */
+      public proto.Pastry.NodeState.Builder addNodeStateBuilder() {
+        return getNodeStateFieldBuilder().addBuilder(
+            proto.Pastry.NodeState.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .NodeState nodeState = 1;</code>
+       */
+      public proto.Pastry.NodeState.Builder addNodeStateBuilder(
+          int index) {
+        return getNodeStateFieldBuilder().addBuilder(
+            index, proto.Pastry.NodeState.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .NodeState nodeState = 1;</code>
+       */
+      public java.util.List<proto.Pastry.NodeState.Builder> 
+           getNodeStateBuilderList() {
+        return getNodeStateFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          proto.Pastry.NodeState, proto.Pastry.NodeState.Builder, proto.Pastry.NodeStateOrBuilder> 
+          getNodeStateFieldBuilder() {
+        if (nodeStateBuilder_ == null) {
+          nodeStateBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              proto.Pastry.NodeState, proto.Pastry.NodeState.Builder, proto.Pastry.NodeStateOrBuilder>(
+                  nodeState_,
+                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  getParentForChildren(),
+                  isClean());
+          nodeState_ = null;
+        }
+        return nodeStateBuilder_;
+      }
+
+      private boolean networkIsEmpty_ ;
+      /**
+       * <code>bool networkIsEmpty = 2;</code>
+       */
+      public boolean getNetworkIsEmpty() {
+        return networkIsEmpty_;
+      }
+      /**
+       * <code>bool networkIsEmpty = 2;</code>
+       */
+      public Builder setNetworkIsEmpty(boolean value) {
+        
+        networkIsEmpty_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool networkIsEmpty = 2;</code>
+       */
+      public Builder clearNetworkIsEmpty() {
+        
+        networkIsEmpty_ = false;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:JoinResponse)
+    }
+
+    // @@protoc_insertion_point(class_scope:JoinResponse)
+    private static final proto.Pastry.JoinResponse DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new proto.Pastry.JoinResponse();
+    }
+
+    public static proto.Pastry.JoinResponse getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<JoinResponse>
+        PARSER = new com.google.protobuf.AbstractParser<JoinResponse>() {
+      @java.lang.Override
+      public JoinResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new JoinResponse(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<JoinResponse> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<JoinResponse> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public proto.Pastry.JoinResponse getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface NodeStateOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:NodeState)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated .NodeReference downLeafSet = 1;</code>
+     */
+    java.util.List<proto.Pastry.NodeReference> 
+        getDownLeafSetList();
+    /**
+     * <code>repeated .NodeReference downLeafSet = 1;</code>
+     */
+    proto.Pastry.NodeReference getDownLeafSet(int index);
+    /**
+     * <code>repeated .NodeReference downLeafSet = 1;</code>
+     */
+    int getDownLeafSetCount();
+    /**
+     * <code>repeated .NodeReference downLeafSet = 1;</code>
+     */
+    java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
+        getDownLeafSetOrBuilderList();
+    /**
+     * <code>repeated .NodeReference downLeafSet = 1;</code>
+     */
+    proto.Pastry.NodeReferenceOrBuilder getDownLeafSetOrBuilder(
+        int index);
+
+    /**
+     * <code>repeated .NodeReference upLeafSet = 2;</code>
+     */
+    java.util.List<proto.Pastry.NodeReference> 
+        getUpLeafSetList();
+    /**
+     * <code>repeated .NodeReference upLeafSet = 2;</code>
+     */
+    proto.Pastry.NodeReference getUpLeafSet(int index);
+    /**
+     * <code>repeated .NodeReference upLeafSet = 2;</code>
+     */
+    int getUpLeafSetCount();
+    /**
+     * <code>repeated .NodeReference upLeafSet = 2;</code>
+     */
+    java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
+        getUpLeafSetOrBuilderList();
+    /**
+     * <code>repeated .NodeReference upLeafSet = 2;</code>
+     */
+    proto.Pastry.NodeReferenceOrBuilder getUpLeafSetOrBuilder(
+        int index);
+
+    /**
+     * <code>repeated .RoutingTableRow routingTable = 3;</code>
+     */
+    java.util.List<proto.Pastry.RoutingTableRow> 
+        getRoutingTableList();
+    /**
+     * <code>repeated .RoutingTableRow routingTable = 3;</code>
+     */
+    proto.Pastry.RoutingTableRow getRoutingTable(int index);
+    /**
+     * <code>repeated .RoutingTableRow routingTable = 3;</code>
+     */
+    int getRoutingTableCount();
+    /**
+     * <code>repeated .RoutingTableRow routingTable = 3;</code>
+     */
+    java.util.List<? extends proto.Pastry.RoutingTableRowOrBuilder> 
+        getRoutingTableOrBuilderList();
+    /**
+     * <code>repeated .RoutingTableRow routingTable = 3;</code>
+     */
+    proto.Pastry.RoutingTableRowOrBuilder getRoutingTableOrBuilder(
+        int index);
+
+    /**
+     * <code>repeated .NodeReference neighborSet = 4;</code>
+     */
+    java.util.List<proto.Pastry.NodeReference> 
+        getNeighborSetList();
+    /**
+     * <code>repeated .NodeReference neighborSet = 4;</code>
+     */
+    proto.Pastry.NodeReference getNeighborSet(int index);
+    /**
+     * <code>repeated .NodeReference neighborSet = 4;</code>
+     */
+    int getNeighborSetCount();
+    /**
+     * <code>repeated .NodeReference neighborSet = 4;</code>
+     */
+    java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
+        getNeighborSetOrBuilderList();
+    /**
+     * <code>repeated .NodeReference neighborSet = 4;</code>
+     */
+    proto.Pastry.NodeReferenceOrBuilder getNeighborSetOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code NodeState}
+   */
+  public  static final class NodeState extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:NodeState)
+      NodeStateOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use NodeState.newBuilder() to construct.
+    private NodeState(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private NodeState() {
+      downLeafSet_ = java.util.Collections.emptyList();
+      upLeafSet_ = java.util.Collections.emptyList();
+      routingTable_ = java.util.Collections.emptyList();
+      neighborSet_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private NodeState(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                downLeafSet_ = new java.util.ArrayList<proto.Pastry.NodeReference>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              downLeafSet_.add(
+                  input.readMessage(proto.Pastry.NodeReference.parser(), extensionRegistry));
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                upLeafSet_ = new java.util.ArrayList<proto.Pastry.NodeReference>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              upLeafSet_.add(
+                  input.readMessage(proto.Pastry.NodeReference.parser(), extensionRegistry));
+              break;
+            }
+            case 26: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                routingTable_ = new java.util.ArrayList<proto.Pastry.RoutingTableRow>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              routingTable_.add(
+                  input.readMessage(proto.Pastry.RoutingTableRow.parser(), extensionRegistry));
+              break;
+            }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                neighborSet_ = new java.util.ArrayList<proto.Pastry.NodeReference>();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              neighborSet_.add(
+                  input.readMessage(proto.Pastry.NodeReference.parser(), extensionRegistry));
+              break;
+            }
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          downLeafSet_ = java.util.Collections.unmodifiableList(downLeafSet_);
+        }
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          upLeafSet_ = java.util.Collections.unmodifiableList(upLeafSet_);
+        }
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          routingTable_ = java.util.Collections.unmodifiableList(routingTable_);
+        }
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          neighborSet_ = java.util.Collections.unmodifiableList(neighborSet_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return proto.Pastry.internal_static_NodeState_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return proto.Pastry.internal_static_NodeState_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              proto.Pastry.NodeState.class, proto.Pastry.NodeState.Builder.class);
+    }
+
+    public static final int DOWNLEAFSET_FIELD_NUMBER = 1;
+    private java.util.List<proto.Pastry.NodeReference> downLeafSet_;
+    /**
+     * <code>repeated .NodeReference downLeafSet = 1;</code>
+     */
+    public java.util.List<proto.Pastry.NodeReference> getDownLeafSetList() {
+      return downLeafSet_;
+    }
+    /**
+     * <code>repeated .NodeReference downLeafSet = 1;</code>
+     */
+    public java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
+        getDownLeafSetOrBuilderList() {
+      return downLeafSet_;
+    }
+    /**
+     * <code>repeated .NodeReference downLeafSet = 1;</code>
+     */
+    public int getDownLeafSetCount() {
+      return downLeafSet_.size();
+    }
+    /**
+     * <code>repeated .NodeReference downLeafSet = 1;</code>
+     */
+    public proto.Pastry.NodeReference getDownLeafSet(int index) {
+      return downLeafSet_.get(index);
+    }
+    /**
+     * <code>repeated .NodeReference downLeafSet = 1;</code>
+     */
+    public proto.Pastry.NodeReferenceOrBuilder getDownLeafSetOrBuilder(
+        int index) {
+      return downLeafSet_.get(index);
+    }
+
+    public static final int UPLEAFSET_FIELD_NUMBER = 2;
+    private java.util.List<proto.Pastry.NodeReference> upLeafSet_;
+    /**
+     * <code>repeated .NodeReference upLeafSet = 2;</code>
+     */
+    public java.util.List<proto.Pastry.NodeReference> getUpLeafSetList() {
+      return upLeafSet_;
+    }
+    /**
+     * <code>repeated .NodeReference upLeafSet = 2;</code>
+     */
+    public java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
+        getUpLeafSetOrBuilderList() {
+      return upLeafSet_;
+    }
+    /**
+     * <code>repeated .NodeReference upLeafSet = 2;</code>
+     */
+    public int getUpLeafSetCount() {
+      return upLeafSet_.size();
+    }
+    /**
+     * <code>repeated .NodeReference upLeafSet = 2;</code>
+     */
+    public proto.Pastry.NodeReference getUpLeafSet(int index) {
+      return upLeafSet_.get(index);
+    }
+    /**
+     * <code>repeated .NodeReference upLeafSet = 2;</code>
+     */
+    public proto.Pastry.NodeReferenceOrBuilder getUpLeafSetOrBuilder(
+        int index) {
+      return upLeafSet_.get(index);
+    }
+
+    public static final int ROUTINGTABLE_FIELD_NUMBER = 3;
+    private java.util.List<proto.Pastry.RoutingTableRow> routingTable_;
+    /**
+     * <code>repeated .RoutingTableRow routingTable = 3;</code>
+     */
+    public java.util.List<proto.Pastry.RoutingTableRow> getRoutingTableList() {
+      return routingTable_;
+    }
+    /**
+     * <code>repeated .RoutingTableRow routingTable = 3;</code>
+     */
+    public java.util.List<? extends proto.Pastry.RoutingTableRowOrBuilder> 
+        getRoutingTableOrBuilderList() {
+      return routingTable_;
+    }
+    /**
+     * <code>repeated .RoutingTableRow routingTable = 3;</code>
+     */
+    public int getRoutingTableCount() {
+      return routingTable_.size();
+    }
+    /**
+     * <code>repeated .RoutingTableRow routingTable = 3;</code>
+     */
+    public proto.Pastry.RoutingTableRow getRoutingTable(int index) {
+      return routingTable_.get(index);
+    }
+    /**
+     * <code>repeated .RoutingTableRow routingTable = 3;</code>
+     */
+    public proto.Pastry.RoutingTableRowOrBuilder getRoutingTableOrBuilder(
+        int index) {
+      return routingTable_.get(index);
+    }
+
+    public static final int NEIGHBORSET_FIELD_NUMBER = 4;
+    private java.util.List<proto.Pastry.NodeReference> neighborSet_;
+    /**
+     * <code>repeated .NodeReference neighborSet = 4;</code>
+     */
+    public java.util.List<proto.Pastry.NodeReference> getNeighborSetList() {
+      return neighborSet_;
+    }
+    /**
+     * <code>repeated .NodeReference neighborSet = 4;</code>
+     */
+    public java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
+        getNeighborSetOrBuilderList() {
+      return neighborSet_;
+    }
+    /**
+     * <code>repeated .NodeReference neighborSet = 4;</code>
+     */
+    public int getNeighborSetCount() {
+      return neighborSet_.size();
+    }
+    /**
+     * <code>repeated .NodeReference neighborSet = 4;</code>
+     */
+    public proto.Pastry.NodeReference getNeighborSet(int index) {
+      return neighborSet_.get(index);
+    }
+    /**
+     * <code>repeated .NodeReference neighborSet = 4;</code>
+     */
+    public proto.Pastry.NodeReferenceOrBuilder getNeighborSetOrBuilder(
+        int index) {
+      return neighborSet_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (int i = 0; i < downLeafSet_.size(); i++) {
+        output.writeMessage(1, downLeafSet_.get(i));
+      }
+      for (int i = 0; i < upLeafSet_.size(); i++) {
+        output.writeMessage(2, upLeafSet_.get(i));
+      }
+      for (int i = 0; i < routingTable_.size(); i++) {
+        output.writeMessage(3, routingTable_.get(i));
+      }
+      for (int i = 0; i < neighborSet_.size(); i++) {
+        output.writeMessage(4, neighborSet_.get(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < downLeafSet_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, downLeafSet_.get(i));
+      }
+      for (int i = 0; i < upLeafSet_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, upLeafSet_.get(i));
+      }
+      for (int i = 0; i < routingTable_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, routingTable_.get(i));
+      }
+      for (int i = 0; i < neighborSet_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, neighborSet_.get(i));
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof proto.Pastry.NodeState)) {
+        return super.equals(obj);
+      }
+      proto.Pastry.NodeState other = (proto.Pastry.NodeState) obj;
+
+      boolean result = true;
+      result = result && getDownLeafSetList()
+          .equals(other.getDownLeafSetList());
+      result = result && getUpLeafSetList()
+          .equals(other.getUpLeafSetList());
+      result = result && getRoutingTableList()
+          .equals(other.getRoutingTableList());
+      result = result && getNeighborSetList()
+          .equals(other.getNeighborSetList());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getDownLeafSetCount() > 0) {
+        hash = (37 * hash) + DOWNLEAFSET_FIELD_NUMBER;
+        hash = (53 * hash) + getDownLeafSetList().hashCode();
+      }
+      if (getUpLeafSetCount() > 0) {
+        hash = (37 * hash) + UPLEAFSET_FIELD_NUMBER;
+        hash = (53 * hash) + getUpLeafSetList().hashCode();
+      }
+      if (getRoutingTableCount() > 0) {
+        hash = (37 * hash) + ROUTINGTABLE_FIELD_NUMBER;
+        hash = (53 * hash) + getRoutingTableList().hashCode();
+      }
+      if (getNeighborSetCount() > 0) {
+        hash = (37 * hash) + NEIGHBORSET_FIELD_NUMBER;
+        hash = (53 * hash) + getNeighborSetList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static proto.Pastry.NodeState parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.NodeState parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.NodeState parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.NodeState parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.NodeState parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.NodeState parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.NodeState parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.NodeState parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static proto.Pastry.NodeState parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.NodeState parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static proto.Pastry.NodeState parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.NodeState parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(proto.Pastry.NodeState prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code NodeState}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:NodeState)
+        proto.Pastry.NodeStateOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return proto.Pastry.internal_static_NodeState_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return proto.Pastry.internal_static_NodeState_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                proto.Pastry.NodeState.class, proto.Pastry.NodeState.Builder.class);
+      }
+
+      // Construct using proto.Pastry.NodeState.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getDownLeafSetFieldBuilder();
+          getUpLeafSetFieldBuilder();
+          getRoutingTableFieldBuilder();
+          getNeighborSetFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        if (downLeafSetBuilder_ == null) {
+          downLeafSet_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          downLeafSetBuilder_.clear();
+        }
+        if (upLeafSetBuilder_ == null) {
+          upLeafSet_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+        } else {
+          upLeafSetBuilder_.clear();
+        }
+        if (routingTableBuilder_ == null) {
+          routingTable_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        } else {
+          routingTableBuilder_.clear();
+        }
+        if (neighborSetBuilder_ == null) {
+          neighborSet_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+        } else {
+          neighborSetBuilder_.clear();
+        }
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return proto.Pastry.internal_static_NodeState_descriptor;
+      }
+
+      @java.lang.Override
+      public proto.Pastry.NodeState getDefaultInstanceForType() {
+        return proto.Pastry.NodeState.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public proto.Pastry.NodeState build() {
+        proto.Pastry.NodeState result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public proto.Pastry.NodeState buildPartial() {
+        proto.Pastry.NodeState result = new proto.Pastry.NodeState(this);
+        int from_bitField0_ = bitField0_;
+        if (downLeafSetBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            downLeafSet_ = java.util.Collections.unmodifiableList(downLeafSet_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.downLeafSet_ = downLeafSet_;
+        } else {
+          result.downLeafSet_ = downLeafSetBuilder_.build();
+        }
+        if (upLeafSetBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            upLeafSet_ = java.util.Collections.unmodifiableList(upLeafSet_);
+            bitField0_ = (bitField0_ & ~0x00000002);
+          }
+          result.upLeafSet_ = upLeafSet_;
+        } else {
+          result.upLeafSet_ = upLeafSetBuilder_.build();
+        }
+        if (routingTableBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) == 0x00000004)) {
+            routingTable_ = java.util.Collections.unmodifiableList(routingTable_);
+            bitField0_ = (bitField0_ & ~0x00000004);
+          }
+          result.routingTable_ = routingTable_;
+        } else {
+          result.routingTable_ = routingTableBuilder_.build();
+        }
+        if (neighborSetBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) == 0x00000008)) {
+            neighborSet_ = java.util.Collections.unmodifiableList(neighborSet_);
+            bitField0_ = (bitField0_ & ~0x00000008);
+          }
+          result.neighborSet_ = neighborSet_;
+        } else {
+          result.neighborSet_ = neighborSetBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof proto.Pastry.NodeState) {
+          return mergeFrom((proto.Pastry.NodeState)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(proto.Pastry.NodeState other) {
+        if (other == proto.Pastry.NodeState.getDefaultInstance()) return this;
+        if (downLeafSetBuilder_ == null) {
+          if (!other.downLeafSet_.isEmpty()) {
+            if (downLeafSet_.isEmpty()) {
+              downLeafSet_ = other.downLeafSet_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureDownLeafSetIsMutable();
+              downLeafSet_.addAll(other.downLeafSet_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.downLeafSet_.isEmpty()) {
+            if (downLeafSetBuilder_.isEmpty()) {
+              downLeafSetBuilder_.dispose();
+              downLeafSetBuilder_ = null;
+              downLeafSet_ = other.downLeafSet_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              downLeafSetBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getDownLeafSetFieldBuilder() : null;
+            } else {
+              downLeafSetBuilder_.addAllMessages(other.downLeafSet_);
+            }
+          }
+        }
+        if (upLeafSetBuilder_ == null) {
+          if (!other.upLeafSet_.isEmpty()) {
+            if (upLeafSet_.isEmpty()) {
+              upLeafSet_ = other.upLeafSet_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+            } else {
+              ensureUpLeafSetIsMutable();
+              upLeafSet_.addAll(other.upLeafSet_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.upLeafSet_.isEmpty()) {
+            if (upLeafSetBuilder_.isEmpty()) {
+              upLeafSetBuilder_.dispose();
+              upLeafSetBuilder_ = null;
+              upLeafSet_ = other.upLeafSet_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+              upLeafSetBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getUpLeafSetFieldBuilder() : null;
+            } else {
+              upLeafSetBuilder_.addAllMessages(other.upLeafSet_);
+            }
+          }
+        }
+        if (routingTableBuilder_ == null) {
+          if (!other.routingTable_.isEmpty()) {
+            if (routingTable_.isEmpty()) {
+              routingTable_ = other.routingTable_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+            } else {
+              ensureRoutingTableIsMutable();
+              routingTable_.addAll(other.routingTable_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.routingTable_.isEmpty()) {
+            if (routingTableBuilder_.isEmpty()) {
+              routingTableBuilder_.dispose();
+              routingTableBuilder_ = null;
+              routingTable_ = other.routingTable_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+              routingTableBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getRoutingTableFieldBuilder() : null;
+            } else {
+              routingTableBuilder_.addAllMessages(other.routingTable_);
+            }
+          }
+        }
+        if (neighborSetBuilder_ == null) {
+          if (!other.neighborSet_.isEmpty()) {
+            if (neighborSet_.isEmpty()) {
+              neighborSet_ = other.neighborSet_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+            } else {
+              ensureNeighborSetIsMutable();
+              neighborSet_.addAll(other.neighborSet_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.neighborSet_.isEmpty()) {
+            if (neighborSetBuilder_.isEmpty()) {
+              neighborSetBuilder_.dispose();
+              neighborSetBuilder_ = null;
+              neighborSet_ = other.neighborSet_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+              neighborSetBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getNeighborSetFieldBuilder() : null;
+            } else {
+              neighborSetBuilder_.addAllMessages(other.neighborSet_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        proto.Pastry.NodeState parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (proto.Pastry.NodeState) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<proto.Pastry.NodeReference> downLeafSet_ =
+        java.util.Collections.emptyList();
+      private void ensureDownLeafSetIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          downLeafSet_ = new java.util.ArrayList<proto.Pastry.NodeReference>(downLeafSet_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> downLeafSetBuilder_;
+
+      /**
+       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       */
+      public java.util.List<proto.Pastry.NodeReference> getDownLeafSetList() {
+        if (downLeafSetBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(downLeafSet_);
+        } else {
+          return downLeafSetBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       */
+      public int getDownLeafSetCount() {
+        if (downLeafSetBuilder_ == null) {
+          return downLeafSet_.size();
+        } else {
+          return downLeafSetBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       */
+      public proto.Pastry.NodeReference getDownLeafSet(int index) {
+        if (downLeafSetBuilder_ == null) {
+          return downLeafSet_.get(index);
+        } else {
+          return downLeafSetBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       */
+      public Builder setDownLeafSet(
+          int index, proto.Pastry.NodeReference value) {
+        if (downLeafSetBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDownLeafSetIsMutable();
+          downLeafSet_.set(index, value);
+          onChanged();
+        } else {
+          downLeafSetBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       */
+      public Builder setDownLeafSet(
+          int index, proto.Pastry.NodeReference.Builder builderForValue) {
+        if (downLeafSetBuilder_ == null) {
+          ensureDownLeafSetIsMutable();
+          downLeafSet_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          downLeafSetBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       */
+      public Builder addDownLeafSet(proto.Pastry.NodeReference value) {
+        if (downLeafSetBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDownLeafSetIsMutable();
+          downLeafSet_.add(value);
+          onChanged();
+        } else {
+          downLeafSetBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       */
+      public Builder addDownLeafSet(
+          int index, proto.Pastry.NodeReference value) {
+        if (downLeafSetBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDownLeafSetIsMutable();
+          downLeafSet_.add(index, value);
+          onChanged();
+        } else {
+          downLeafSetBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       */
+      public Builder addDownLeafSet(
+          proto.Pastry.NodeReference.Builder builderForValue) {
+        if (downLeafSetBuilder_ == null) {
+          ensureDownLeafSetIsMutable();
+          downLeafSet_.add(builderForValue.build());
+          onChanged();
+        } else {
+          downLeafSetBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       */
+      public Builder addDownLeafSet(
+          int index, proto.Pastry.NodeReference.Builder builderForValue) {
+        if (downLeafSetBuilder_ == null) {
+          ensureDownLeafSetIsMutable();
+          downLeafSet_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          downLeafSetBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       */
+      public Builder addAllDownLeafSet(
+          java.lang.Iterable<? extends proto.Pastry.NodeReference> values) {
+        if (downLeafSetBuilder_ == null) {
+          ensureDownLeafSetIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, downLeafSet_);
+          onChanged();
+        } else {
+          downLeafSetBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       */
+      public Builder clearDownLeafSet() {
+        if (downLeafSetBuilder_ == null) {
+          downLeafSet_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          downLeafSetBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       */
+      public Builder removeDownLeafSet(int index) {
+        if (downLeafSetBuilder_ == null) {
+          ensureDownLeafSetIsMutable();
+          downLeafSet_.remove(index);
+          onChanged();
+        } else {
+          downLeafSetBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       */
+      public proto.Pastry.NodeReference.Builder getDownLeafSetBuilder(
+          int index) {
+        return getDownLeafSetFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       */
+      public proto.Pastry.NodeReferenceOrBuilder getDownLeafSetOrBuilder(
+          int index) {
+        if (downLeafSetBuilder_ == null) {
+          return downLeafSet_.get(index);  } else {
+          return downLeafSetBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       */
+      public java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
+           getDownLeafSetOrBuilderList() {
+        if (downLeafSetBuilder_ != null) {
+          return downLeafSetBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(downLeafSet_);
+        }
+      }
+      /**
+       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       */
+      public proto.Pastry.NodeReference.Builder addDownLeafSetBuilder() {
+        return getDownLeafSetFieldBuilder().addBuilder(
+            proto.Pastry.NodeReference.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       */
+      public proto.Pastry.NodeReference.Builder addDownLeafSetBuilder(
+          int index) {
+        return getDownLeafSetFieldBuilder().addBuilder(
+            index, proto.Pastry.NodeReference.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       */
+      public java.util.List<proto.Pastry.NodeReference.Builder> 
+           getDownLeafSetBuilderList() {
+        return getDownLeafSetFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> 
+          getDownLeafSetFieldBuilder() {
+        if (downLeafSetBuilder_ == null) {
+          downLeafSetBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder>(
+                  downLeafSet_,
+                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  getParentForChildren(),
+                  isClean());
+          downLeafSet_ = null;
+        }
+        return downLeafSetBuilder_;
+      }
+
+      private java.util.List<proto.Pastry.NodeReference> upLeafSet_ =
+        java.util.Collections.emptyList();
+      private void ensureUpLeafSetIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          upLeafSet_ = new java.util.ArrayList<proto.Pastry.NodeReference>(upLeafSet_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> upLeafSetBuilder_;
+
+      /**
+       * <code>repeated .NodeReference upLeafSet = 2;</code>
+       */
+      public java.util.List<proto.Pastry.NodeReference> getUpLeafSetList() {
+        if (upLeafSetBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(upLeafSet_);
+        } else {
+          return upLeafSetBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .NodeReference upLeafSet = 2;</code>
+       */
+      public int getUpLeafSetCount() {
+        if (upLeafSetBuilder_ == null) {
+          return upLeafSet_.size();
+        } else {
+          return upLeafSetBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .NodeReference upLeafSet = 2;</code>
+       */
+      public proto.Pastry.NodeReference getUpLeafSet(int index) {
+        if (upLeafSetBuilder_ == null) {
+          return upLeafSet_.get(index);
+        } else {
+          return upLeafSetBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .NodeReference upLeafSet = 2;</code>
+       */
+      public Builder setUpLeafSet(
+          int index, proto.Pastry.NodeReference value) {
+        if (upLeafSetBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureUpLeafSetIsMutable();
+          upLeafSet_.set(index, value);
+          onChanged();
+        } else {
+          upLeafSetBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference upLeafSet = 2;</code>
+       */
+      public Builder setUpLeafSet(
+          int index, proto.Pastry.NodeReference.Builder builderForValue) {
+        if (upLeafSetBuilder_ == null) {
+          ensureUpLeafSetIsMutable();
+          upLeafSet_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          upLeafSetBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference upLeafSet = 2;</code>
+       */
+      public Builder addUpLeafSet(proto.Pastry.NodeReference value) {
+        if (upLeafSetBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureUpLeafSetIsMutable();
+          upLeafSet_.add(value);
+          onChanged();
+        } else {
+          upLeafSetBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference upLeafSet = 2;</code>
+       */
+      public Builder addUpLeafSet(
+          int index, proto.Pastry.NodeReference value) {
+        if (upLeafSetBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureUpLeafSetIsMutable();
+          upLeafSet_.add(index, value);
+          onChanged();
+        } else {
+          upLeafSetBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference upLeafSet = 2;</code>
+       */
+      public Builder addUpLeafSet(
+          proto.Pastry.NodeReference.Builder builderForValue) {
+        if (upLeafSetBuilder_ == null) {
+          ensureUpLeafSetIsMutable();
+          upLeafSet_.add(builderForValue.build());
+          onChanged();
+        } else {
+          upLeafSetBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference upLeafSet = 2;</code>
+       */
+      public Builder addUpLeafSet(
+          int index, proto.Pastry.NodeReference.Builder builderForValue) {
+        if (upLeafSetBuilder_ == null) {
+          ensureUpLeafSetIsMutable();
+          upLeafSet_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          upLeafSetBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference upLeafSet = 2;</code>
+       */
+      public Builder addAllUpLeafSet(
+          java.lang.Iterable<? extends proto.Pastry.NodeReference> values) {
+        if (upLeafSetBuilder_ == null) {
+          ensureUpLeafSetIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, upLeafSet_);
+          onChanged();
+        } else {
+          upLeafSetBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference upLeafSet = 2;</code>
+       */
+      public Builder clearUpLeafSet() {
+        if (upLeafSetBuilder_ == null) {
+          upLeafSet_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          onChanged();
+        } else {
+          upLeafSetBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference upLeafSet = 2;</code>
+       */
+      public Builder removeUpLeafSet(int index) {
+        if (upLeafSetBuilder_ == null) {
+          ensureUpLeafSetIsMutable();
+          upLeafSet_.remove(index);
+          onChanged();
+        } else {
+          upLeafSetBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference upLeafSet = 2;</code>
+       */
+      public proto.Pastry.NodeReference.Builder getUpLeafSetBuilder(
+          int index) {
+        return getUpLeafSetFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .NodeReference upLeafSet = 2;</code>
+       */
+      public proto.Pastry.NodeReferenceOrBuilder getUpLeafSetOrBuilder(
+          int index) {
+        if (upLeafSetBuilder_ == null) {
+          return upLeafSet_.get(index);  } else {
+          return upLeafSetBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .NodeReference upLeafSet = 2;</code>
+       */
+      public java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
+           getUpLeafSetOrBuilderList() {
+        if (upLeafSetBuilder_ != null) {
+          return upLeafSetBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(upLeafSet_);
+        }
+      }
+      /**
+       * <code>repeated .NodeReference upLeafSet = 2;</code>
+       */
+      public proto.Pastry.NodeReference.Builder addUpLeafSetBuilder() {
+        return getUpLeafSetFieldBuilder().addBuilder(
+            proto.Pastry.NodeReference.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .NodeReference upLeafSet = 2;</code>
+       */
+      public proto.Pastry.NodeReference.Builder addUpLeafSetBuilder(
+          int index) {
+        return getUpLeafSetFieldBuilder().addBuilder(
+            index, proto.Pastry.NodeReference.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .NodeReference upLeafSet = 2;</code>
+       */
+      public java.util.List<proto.Pastry.NodeReference.Builder> 
+           getUpLeafSetBuilderList() {
+        return getUpLeafSetFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> 
+          getUpLeafSetFieldBuilder() {
+        if (upLeafSetBuilder_ == null) {
+          upLeafSetBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder>(
+                  upLeafSet_,
+                  ((bitField0_ & 0x00000002) == 0x00000002),
+                  getParentForChildren(),
+                  isClean());
+          upLeafSet_ = null;
+        }
+        return upLeafSetBuilder_;
+      }
+
+      private java.util.List<proto.Pastry.RoutingTableRow> routingTable_ =
+        java.util.Collections.emptyList();
+      private void ensureRoutingTableIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          routingTable_ = new java.util.ArrayList<proto.Pastry.RoutingTableRow>(routingTable_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          proto.Pastry.RoutingTableRow, proto.Pastry.RoutingTableRow.Builder, proto.Pastry.RoutingTableRowOrBuilder> routingTableBuilder_;
+
+      /**
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       */
+      public java.util.List<proto.Pastry.RoutingTableRow> getRoutingTableList() {
+        if (routingTableBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(routingTable_);
+        } else {
+          return routingTableBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       */
+      public int getRoutingTableCount() {
+        if (routingTableBuilder_ == null) {
+          return routingTable_.size();
+        } else {
+          return routingTableBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       */
+      public proto.Pastry.RoutingTableRow getRoutingTable(int index) {
+        if (routingTableBuilder_ == null) {
+          return routingTable_.get(index);
+        } else {
+          return routingTableBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       */
+      public Builder setRoutingTable(
+          int index, proto.Pastry.RoutingTableRow value) {
+        if (routingTableBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureRoutingTableIsMutable();
+          routingTable_.set(index, value);
+          onChanged();
+        } else {
+          routingTableBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       */
+      public Builder setRoutingTable(
+          int index, proto.Pastry.RoutingTableRow.Builder builderForValue) {
+        if (routingTableBuilder_ == null) {
+          ensureRoutingTableIsMutable();
+          routingTable_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          routingTableBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       */
+      public Builder addRoutingTable(proto.Pastry.RoutingTableRow value) {
+        if (routingTableBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureRoutingTableIsMutable();
+          routingTable_.add(value);
+          onChanged();
+        } else {
+          routingTableBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       */
+      public Builder addRoutingTable(
+          int index, proto.Pastry.RoutingTableRow value) {
+        if (routingTableBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureRoutingTableIsMutable();
+          routingTable_.add(index, value);
+          onChanged();
+        } else {
+          routingTableBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       */
+      public Builder addRoutingTable(
+          proto.Pastry.RoutingTableRow.Builder builderForValue) {
+        if (routingTableBuilder_ == null) {
+          ensureRoutingTableIsMutable();
+          routingTable_.add(builderForValue.build());
+          onChanged();
+        } else {
+          routingTableBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       */
+      public Builder addRoutingTable(
+          int index, proto.Pastry.RoutingTableRow.Builder builderForValue) {
+        if (routingTableBuilder_ == null) {
+          ensureRoutingTableIsMutable();
+          routingTable_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          routingTableBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       */
+      public Builder addAllRoutingTable(
+          java.lang.Iterable<? extends proto.Pastry.RoutingTableRow> values) {
+        if (routingTableBuilder_ == null) {
+          ensureRoutingTableIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, routingTable_);
+          onChanged();
+        } else {
+          routingTableBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       */
+      public Builder clearRoutingTable() {
+        if (routingTableBuilder_ == null) {
+          routingTable_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+          onChanged();
+        } else {
+          routingTableBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       */
+      public Builder removeRoutingTable(int index) {
+        if (routingTableBuilder_ == null) {
+          ensureRoutingTableIsMutable();
+          routingTable_.remove(index);
+          onChanged();
+        } else {
+          routingTableBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       */
+      public proto.Pastry.RoutingTableRow.Builder getRoutingTableBuilder(
+          int index) {
+        return getRoutingTableFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       */
+      public proto.Pastry.RoutingTableRowOrBuilder getRoutingTableOrBuilder(
+          int index) {
+        if (routingTableBuilder_ == null) {
+          return routingTable_.get(index);  } else {
+          return routingTableBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       */
+      public java.util.List<? extends proto.Pastry.RoutingTableRowOrBuilder> 
+           getRoutingTableOrBuilderList() {
+        if (routingTableBuilder_ != null) {
+          return routingTableBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(routingTable_);
+        }
+      }
+      /**
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       */
+      public proto.Pastry.RoutingTableRow.Builder addRoutingTableBuilder() {
+        return getRoutingTableFieldBuilder().addBuilder(
+            proto.Pastry.RoutingTableRow.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       */
+      public proto.Pastry.RoutingTableRow.Builder addRoutingTableBuilder(
+          int index) {
+        return getRoutingTableFieldBuilder().addBuilder(
+            index, proto.Pastry.RoutingTableRow.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       */
+      public java.util.List<proto.Pastry.RoutingTableRow.Builder> 
+           getRoutingTableBuilderList() {
+        return getRoutingTableFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          proto.Pastry.RoutingTableRow, proto.Pastry.RoutingTableRow.Builder, proto.Pastry.RoutingTableRowOrBuilder> 
+          getRoutingTableFieldBuilder() {
+        if (routingTableBuilder_ == null) {
+          routingTableBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              proto.Pastry.RoutingTableRow, proto.Pastry.RoutingTableRow.Builder, proto.Pastry.RoutingTableRowOrBuilder>(
+                  routingTable_,
+                  ((bitField0_ & 0x00000004) == 0x00000004),
+                  getParentForChildren(),
+                  isClean());
+          routingTable_ = null;
+        }
+        return routingTableBuilder_;
+      }
+
+      private java.util.List<proto.Pastry.NodeReference> neighborSet_ =
+        java.util.Collections.emptyList();
+      private void ensureNeighborSetIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          neighborSet_ = new java.util.ArrayList<proto.Pastry.NodeReference>(neighborSet_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> neighborSetBuilder_;
+
+      /**
+       * <code>repeated .NodeReference neighborSet = 4;</code>
+       */
+      public java.util.List<proto.Pastry.NodeReference> getNeighborSetList() {
+        if (neighborSetBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(neighborSet_);
+        } else {
+          return neighborSetBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 4;</code>
+       */
+      public int getNeighborSetCount() {
+        if (neighborSetBuilder_ == null) {
+          return neighborSet_.size();
+        } else {
+          return neighborSetBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 4;</code>
+       */
+      public proto.Pastry.NodeReference getNeighborSet(int index) {
+        if (neighborSetBuilder_ == null) {
+          return neighborSet_.get(index);
+        } else {
+          return neighborSetBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 4;</code>
+       */
+      public Builder setNeighborSet(
+          int index, proto.Pastry.NodeReference value) {
+        if (neighborSetBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureNeighborSetIsMutable();
+          neighborSet_.set(index, value);
+          onChanged();
+        } else {
+          neighborSetBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 4;</code>
+       */
+      public Builder setNeighborSet(
+          int index, proto.Pastry.NodeReference.Builder builderForValue) {
+        if (neighborSetBuilder_ == null) {
+          ensureNeighborSetIsMutable();
+          neighborSet_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          neighborSetBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 4;</code>
+       */
+      public Builder addNeighborSet(proto.Pastry.NodeReference value) {
+        if (neighborSetBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureNeighborSetIsMutable();
+          neighborSet_.add(value);
+          onChanged();
+        } else {
+          neighborSetBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 4;</code>
+       */
+      public Builder addNeighborSet(
+          int index, proto.Pastry.NodeReference value) {
+        if (neighborSetBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureNeighborSetIsMutable();
+          neighborSet_.add(index, value);
+          onChanged();
+        } else {
+          neighborSetBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 4;</code>
+       */
+      public Builder addNeighborSet(
+          proto.Pastry.NodeReference.Builder builderForValue) {
+        if (neighborSetBuilder_ == null) {
+          ensureNeighborSetIsMutable();
+          neighborSet_.add(builderForValue.build());
+          onChanged();
+        } else {
+          neighborSetBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 4;</code>
+       */
+      public Builder addNeighborSet(
+          int index, proto.Pastry.NodeReference.Builder builderForValue) {
+        if (neighborSetBuilder_ == null) {
+          ensureNeighborSetIsMutable();
+          neighborSet_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          neighborSetBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 4;</code>
+       */
+      public Builder addAllNeighborSet(
+          java.lang.Iterable<? extends proto.Pastry.NodeReference> values) {
+        if (neighborSetBuilder_ == null) {
+          ensureNeighborSetIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, neighborSet_);
+          onChanged();
+        } else {
+          neighborSetBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 4;</code>
+       */
+      public Builder clearNeighborSet() {
+        if (neighborSetBuilder_ == null) {
+          neighborSet_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+          onChanged();
+        } else {
+          neighborSetBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 4;</code>
+       */
+      public Builder removeNeighborSet(int index) {
+        if (neighborSetBuilder_ == null) {
+          ensureNeighborSetIsMutable();
+          neighborSet_.remove(index);
+          onChanged();
+        } else {
+          neighborSetBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 4;</code>
+       */
+      public proto.Pastry.NodeReference.Builder getNeighborSetBuilder(
+          int index) {
+        return getNeighborSetFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 4;</code>
+       */
+      public proto.Pastry.NodeReferenceOrBuilder getNeighborSetOrBuilder(
+          int index) {
+        if (neighborSetBuilder_ == null) {
+          return neighborSet_.get(index);  } else {
+          return neighborSetBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 4;</code>
+       */
+      public java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
+           getNeighborSetOrBuilderList() {
+        if (neighborSetBuilder_ != null) {
+          return neighborSetBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(neighborSet_);
+        }
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 4;</code>
+       */
+      public proto.Pastry.NodeReference.Builder addNeighborSetBuilder() {
+        return getNeighborSetFieldBuilder().addBuilder(
+            proto.Pastry.NodeReference.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 4;</code>
+       */
+      public proto.Pastry.NodeReference.Builder addNeighborSetBuilder(
+          int index) {
+        return getNeighborSetFieldBuilder().addBuilder(
+            index, proto.Pastry.NodeReference.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 4;</code>
+       */
+      public java.util.List<proto.Pastry.NodeReference.Builder> 
+           getNeighborSetBuilderList() {
+        return getNeighborSetFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> 
+          getNeighborSetFieldBuilder() {
+        if (neighborSetBuilder_ == null) {
+          neighborSetBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder>(
+                  neighborSet_,
+                  ((bitField0_ & 0x00000008) == 0x00000008),
+                  getParentForChildren(),
+                  isClean());
+          neighborSet_ = null;
+        }
+        return neighborSetBuilder_;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:NodeState)
+    }
+
+    // @@protoc_insertion_point(class_scope:NodeState)
+    private static final proto.Pastry.NodeState DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new proto.Pastry.NodeState();
+    }
+
+    public static proto.Pastry.NodeState getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<NodeState>
+        PARSER = new com.google.protobuf.AbstractParser<NodeState>() {
+      @java.lang.Override
+      public NodeState parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new NodeState(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<NodeState> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<NodeState> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public proto.Pastry.NodeState getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface RoutingTableRowOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:RoutingTableRow)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated .NodeReference routingTableEntry = 1;</code>
+     */
+    java.util.List<proto.Pastry.NodeReference> 
+        getRoutingTableEntryList();
+    /**
+     * <code>repeated .NodeReference routingTableEntry = 1;</code>
+     */
+    proto.Pastry.NodeReference getRoutingTableEntry(int index);
+    /**
+     * <code>repeated .NodeReference routingTableEntry = 1;</code>
+     */
+    int getRoutingTableEntryCount();
+    /**
+     * <code>repeated .NodeReference routingTableEntry = 1;</code>
+     */
+    java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
+        getRoutingTableEntryOrBuilderList();
+    /**
+     * <code>repeated .NodeReference routingTableEntry = 1;</code>
+     */
+    proto.Pastry.NodeReferenceOrBuilder getRoutingTableEntryOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code RoutingTableRow}
+   */
+  public  static final class RoutingTableRow extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:RoutingTableRow)
+      RoutingTableRowOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use RoutingTableRow.newBuilder() to construct.
+    private RoutingTableRow(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private RoutingTableRow() {
+      routingTableEntry_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private RoutingTableRow(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                routingTableEntry_ = new java.util.ArrayList<proto.Pastry.NodeReference>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              routingTableEntry_.add(
+                  input.readMessage(proto.Pastry.NodeReference.parser(), extensionRegistry));
+              break;
+            }
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          routingTableEntry_ = java.util.Collections.unmodifiableList(routingTableEntry_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return proto.Pastry.internal_static_RoutingTableRow_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return proto.Pastry.internal_static_RoutingTableRow_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              proto.Pastry.RoutingTableRow.class, proto.Pastry.RoutingTableRow.Builder.class);
+    }
+
+    public static final int ROUTINGTABLEENTRY_FIELD_NUMBER = 1;
+    private java.util.List<proto.Pastry.NodeReference> routingTableEntry_;
+    /**
+     * <code>repeated .NodeReference routingTableEntry = 1;</code>
+     */
+    public java.util.List<proto.Pastry.NodeReference> getRoutingTableEntryList() {
+      return routingTableEntry_;
+    }
+    /**
+     * <code>repeated .NodeReference routingTableEntry = 1;</code>
+     */
+    public java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
+        getRoutingTableEntryOrBuilderList() {
+      return routingTableEntry_;
+    }
+    /**
+     * <code>repeated .NodeReference routingTableEntry = 1;</code>
+     */
+    public int getRoutingTableEntryCount() {
+      return routingTableEntry_.size();
+    }
+    /**
+     * <code>repeated .NodeReference routingTableEntry = 1;</code>
+     */
+    public proto.Pastry.NodeReference getRoutingTableEntry(int index) {
+      return routingTableEntry_.get(index);
+    }
+    /**
+     * <code>repeated .NodeReference routingTableEntry = 1;</code>
+     */
+    public proto.Pastry.NodeReferenceOrBuilder getRoutingTableEntryOrBuilder(
+        int index) {
+      return routingTableEntry_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (int i = 0; i < routingTableEntry_.size(); i++) {
+        output.writeMessage(1, routingTableEntry_.get(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < routingTableEntry_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, routingTableEntry_.get(i));
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof proto.Pastry.RoutingTableRow)) {
+        return super.equals(obj);
+      }
+      proto.Pastry.RoutingTableRow other = (proto.Pastry.RoutingTableRow) obj;
+
+      boolean result = true;
+      result = result && getRoutingTableEntryList()
+          .equals(other.getRoutingTableEntryList());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getRoutingTableEntryCount() > 0) {
+        hash = (37 * hash) + ROUTINGTABLEENTRY_FIELD_NUMBER;
+        hash = (53 * hash) + getRoutingTableEntryList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static proto.Pastry.RoutingTableRow parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.RoutingTableRow parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.RoutingTableRow parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.RoutingTableRow parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.RoutingTableRow parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.RoutingTableRow parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.RoutingTableRow parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.RoutingTableRow parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static proto.Pastry.RoutingTableRow parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.RoutingTableRow parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static proto.Pastry.RoutingTableRow parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.RoutingTableRow parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(proto.Pastry.RoutingTableRow prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code RoutingTableRow}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:RoutingTableRow)
+        proto.Pastry.RoutingTableRowOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return proto.Pastry.internal_static_RoutingTableRow_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return proto.Pastry.internal_static_RoutingTableRow_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                proto.Pastry.RoutingTableRow.class, proto.Pastry.RoutingTableRow.Builder.class);
+      }
+
+      // Construct using proto.Pastry.RoutingTableRow.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getRoutingTableEntryFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        if (routingTableEntryBuilder_ == null) {
+          routingTableEntry_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          routingTableEntryBuilder_.clear();
+        }
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return proto.Pastry.internal_static_RoutingTableRow_descriptor;
+      }
+
+      @java.lang.Override
+      public proto.Pastry.RoutingTableRow getDefaultInstanceForType() {
+        return proto.Pastry.RoutingTableRow.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public proto.Pastry.RoutingTableRow build() {
+        proto.Pastry.RoutingTableRow result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public proto.Pastry.RoutingTableRow buildPartial() {
+        proto.Pastry.RoutingTableRow result = new proto.Pastry.RoutingTableRow(this);
+        int from_bitField0_ = bitField0_;
+        if (routingTableEntryBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            routingTableEntry_ = java.util.Collections.unmodifiableList(routingTableEntry_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.routingTableEntry_ = routingTableEntry_;
+        } else {
+          result.routingTableEntry_ = routingTableEntryBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof proto.Pastry.RoutingTableRow) {
+          return mergeFrom((proto.Pastry.RoutingTableRow)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(proto.Pastry.RoutingTableRow other) {
+        if (other == proto.Pastry.RoutingTableRow.getDefaultInstance()) return this;
+        if (routingTableEntryBuilder_ == null) {
+          if (!other.routingTableEntry_.isEmpty()) {
+            if (routingTableEntry_.isEmpty()) {
+              routingTableEntry_ = other.routingTableEntry_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureRoutingTableEntryIsMutable();
+              routingTableEntry_.addAll(other.routingTableEntry_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.routingTableEntry_.isEmpty()) {
+            if (routingTableEntryBuilder_.isEmpty()) {
+              routingTableEntryBuilder_.dispose();
+              routingTableEntryBuilder_ = null;
+              routingTableEntry_ = other.routingTableEntry_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              routingTableEntryBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getRoutingTableEntryFieldBuilder() : null;
+            } else {
+              routingTableEntryBuilder_.addAllMessages(other.routingTableEntry_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        proto.Pastry.RoutingTableRow parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (proto.Pastry.RoutingTableRow) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<proto.Pastry.NodeReference> routingTableEntry_ =
+        java.util.Collections.emptyList();
+      private void ensureRoutingTableEntryIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          routingTableEntry_ = new java.util.ArrayList<proto.Pastry.NodeReference>(routingTableEntry_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> routingTableEntryBuilder_;
+
+      /**
+       * <code>repeated .NodeReference routingTableEntry = 1;</code>
+       */
+      public java.util.List<proto.Pastry.NodeReference> getRoutingTableEntryList() {
+        if (routingTableEntryBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(routingTableEntry_);
+        } else {
+          return routingTableEntryBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .NodeReference routingTableEntry = 1;</code>
+       */
+      public int getRoutingTableEntryCount() {
+        if (routingTableEntryBuilder_ == null) {
+          return routingTableEntry_.size();
+        } else {
+          return routingTableEntryBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .NodeReference routingTableEntry = 1;</code>
+       */
+      public proto.Pastry.NodeReference getRoutingTableEntry(int index) {
+        if (routingTableEntryBuilder_ == null) {
+          return routingTableEntry_.get(index);
+        } else {
+          return routingTableEntryBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .NodeReference routingTableEntry = 1;</code>
+       */
+      public Builder setRoutingTableEntry(
+          int index, proto.Pastry.NodeReference value) {
+        if (routingTableEntryBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureRoutingTableEntryIsMutable();
+          routingTableEntry_.set(index, value);
+          onChanged();
+        } else {
+          routingTableEntryBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference routingTableEntry = 1;</code>
+       */
+      public Builder setRoutingTableEntry(
+          int index, proto.Pastry.NodeReference.Builder builderForValue) {
+        if (routingTableEntryBuilder_ == null) {
+          ensureRoutingTableEntryIsMutable();
+          routingTableEntry_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          routingTableEntryBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference routingTableEntry = 1;</code>
+       */
+      public Builder addRoutingTableEntry(proto.Pastry.NodeReference value) {
+        if (routingTableEntryBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureRoutingTableEntryIsMutable();
+          routingTableEntry_.add(value);
+          onChanged();
+        } else {
+          routingTableEntryBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference routingTableEntry = 1;</code>
+       */
+      public Builder addRoutingTableEntry(
+          int index, proto.Pastry.NodeReference value) {
+        if (routingTableEntryBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureRoutingTableEntryIsMutable();
+          routingTableEntry_.add(index, value);
+          onChanged();
+        } else {
+          routingTableEntryBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference routingTableEntry = 1;</code>
+       */
+      public Builder addRoutingTableEntry(
+          proto.Pastry.NodeReference.Builder builderForValue) {
+        if (routingTableEntryBuilder_ == null) {
+          ensureRoutingTableEntryIsMutable();
+          routingTableEntry_.add(builderForValue.build());
+          onChanged();
+        } else {
+          routingTableEntryBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference routingTableEntry = 1;</code>
+       */
+      public Builder addRoutingTableEntry(
+          int index, proto.Pastry.NodeReference.Builder builderForValue) {
+        if (routingTableEntryBuilder_ == null) {
+          ensureRoutingTableEntryIsMutable();
+          routingTableEntry_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          routingTableEntryBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference routingTableEntry = 1;</code>
+       */
+      public Builder addAllRoutingTableEntry(
+          java.lang.Iterable<? extends proto.Pastry.NodeReference> values) {
+        if (routingTableEntryBuilder_ == null) {
+          ensureRoutingTableEntryIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, routingTableEntry_);
+          onChanged();
+        } else {
+          routingTableEntryBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference routingTableEntry = 1;</code>
+       */
+      public Builder clearRoutingTableEntry() {
+        if (routingTableEntryBuilder_ == null) {
+          routingTableEntry_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          routingTableEntryBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference routingTableEntry = 1;</code>
+       */
+      public Builder removeRoutingTableEntry(int index) {
+        if (routingTableEntryBuilder_ == null) {
+          ensureRoutingTableEntryIsMutable();
+          routingTableEntry_.remove(index);
+          onChanged();
+        } else {
+          routingTableEntryBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference routingTableEntry = 1;</code>
+       */
+      public proto.Pastry.NodeReference.Builder getRoutingTableEntryBuilder(
+          int index) {
+        return getRoutingTableEntryFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .NodeReference routingTableEntry = 1;</code>
+       */
+      public proto.Pastry.NodeReferenceOrBuilder getRoutingTableEntryOrBuilder(
+          int index) {
+        if (routingTableEntryBuilder_ == null) {
+          return routingTableEntry_.get(index);  } else {
+          return routingTableEntryBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .NodeReference routingTableEntry = 1;</code>
+       */
+      public java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
+           getRoutingTableEntryOrBuilderList() {
+        if (routingTableEntryBuilder_ != null) {
+          return routingTableEntryBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(routingTableEntry_);
+        }
+      }
+      /**
+       * <code>repeated .NodeReference routingTableEntry = 1;</code>
+       */
+      public proto.Pastry.NodeReference.Builder addRoutingTableEntryBuilder() {
+        return getRoutingTableEntryFieldBuilder().addBuilder(
+            proto.Pastry.NodeReference.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .NodeReference routingTableEntry = 1;</code>
+       */
+      public proto.Pastry.NodeReference.Builder addRoutingTableEntryBuilder(
+          int index) {
+        return getRoutingTableEntryFieldBuilder().addBuilder(
+            index, proto.Pastry.NodeReference.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .NodeReference routingTableEntry = 1;</code>
+       */
+      public java.util.List<proto.Pastry.NodeReference.Builder> 
+           getRoutingTableEntryBuilderList() {
+        return getRoutingTableEntryFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> 
+          getRoutingTableEntryFieldBuilder() {
+        if (routingTableEntryBuilder_ == null) {
+          routingTableEntryBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder>(
+                  routingTableEntry_,
+                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  getParentForChildren(),
+                  isClean());
+          routingTableEntry_ = null;
+        }
+        return routingTableEntryBuilder_;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:RoutingTableRow)
+    }
+
+    // @@protoc_insertion_point(class_scope:RoutingTableRow)
+    private static final proto.Pastry.RoutingTableRow DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new proto.Pastry.RoutingTableRow();
+    }
+
+    public static proto.Pastry.RoutingTableRow getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<RoutingTableRow>
+        PARSER = new com.google.protobuf.AbstractParser<RoutingTableRow>() {
+      @java.lang.Override
+      public RoutingTableRow parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new RoutingTableRow(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<RoutingTableRow> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<RoutingTableRow> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public proto.Pastry.RoutingTableRow getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface NodeReferenceOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:NodeReference)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string address = 1;</code>
+     */
+    java.lang.String getAddress();
+    /**
+     * <code>string address = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getAddressBytes();
+
+    /**
+     * <code>int32 port = 2;</code>
+     */
+    int getPort();
+  }
+  /**
+   * Protobuf type {@code NodeReference}
+   */
+  public  static final class NodeReference extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:NodeReference)
+      NodeReferenceOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use NodeReference.newBuilder() to construct.
+    private NodeReference(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private NodeReference() {
+      address_ = "";
+      port_ = 0;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private NodeReference(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              address_ = s;
+              break;
+            }
+            case 16: {
+
+              port_ = input.readInt32();
+              break;
+            }
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return proto.Pastry.internal_static_NodeReference_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return proto.Pastry.internal_static_NodeReference_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              proto.Pastry.NodeReference.class, proto.Pastry.NodeReference.Builder.class);
+    }
+
+    public static final int ADDRESS_FIELD_NUMBER = 1;
+    private volatile java.lang.Object address_;
+    /**
+     * <code>string address = 1;</code>
+     */
+    public java.lang.String getAddress() {
+      java.lang.Object ref = address_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        address_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string address = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAddressBytes() {
+      java.lang.Object ref = address_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        address_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PORT_FIELD_NUMBER = 2;
+    private int port_;
+    /**
+     * <code>int32 port = 2;</code>
+     */
+    public int getPort() {
+      return port_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getAddressBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, address_);
+      }
+      if (port_ != 0) {
+        output.writeInt32(2, port_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getAddressBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, address_);
+      }
+      if (port_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, port_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof proto.Pastry.NodeReference)) {
+        return super.equals(obj);
+      }
+      proto.Pastry.NodeReference other = (proto.Pastry.NodeReference) obj;
+
+      boolean result = true;
+      result = result && getAddress()
+          .equals(other.getAddress());
+      result = result && (getPort()
+          == other.getPort());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + ADDRESS_FIELD_NUMBER;
+      hash = (53 * hash) + getAddress().hashCode();
+      hash = (37 * hash) + PORT_FIELD_NUMBER;
+      hash = (53 * hash) + getPort();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static proto.Pastry.NodeReference parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.NodeReference parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.NodeReference parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.NodeReference parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.NodeReference parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.NodeReference parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.NodeReference parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.NodeReference parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static proto.Pastry.NodeReference parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.NodeReference parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static proto.Pastry.NodeReference parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.NodeReference parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(proto.Pastry.NodeReference prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code NodeReference}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:NodeReference)
+        proto.Pastry.NodeReferenceOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return proto.Pastry.internal_static_NodeReference_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return proto.Pastry.internal_static_NodeReference_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                proto.Pastry.NodeReference.class, proto.Pastry.NodeReference.Builder.class);
+      }
+
+      // Construct using proto.Pastry.NodeReference.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        address_ = "";
+
+        port_ = 0;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return proto.Pastry.internal_static_NodeReference_descriptor;
+      }
+
+      @java.lang.Override
+      public proto.Pastry.NodeReference getDefaultInstanceForType() {
+        return proto.Pastry.NodeReference.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public proto.Pastry.NodeReference build() {
+        proto.Pastry.NodeReference result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public proto.Pastry.NodeReference buildPartial() {
+        proto.Pastry.NodeReference result = new proto.Pastry.NodeReference(this);
+        result.address_ = address_;
+        result.port_ = port_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof proto.Pastry.NodeReference) {
+          return mergeFrom((proto.Pastry.NodeReference)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(proto.Pastry.NodeReference other) {
+        if (other == proto.Pastry.NodeReference.getDefaultInstance()) return this;
+        if (!other.getAddress().isEmpty()) {
+          address_ = other.address_;
+          onChanged();
+        }
+        if (other.getPort() != 0) {
+          setPort(other.getPort());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        proto.Pastry.NodeReference parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (proto.Pastry.NodeReference) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object address_ = "";
+      /**
+       * <code>string address = 1;</code>
+       */
+      public java.lang.String getAddress() {
+        java.lang.Object ref = address_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          address_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string address = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getAddressBytes() {
+        java.lang.Object ref = address_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          address_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string address = 1;</code>
+       */
+      public Builder setAddress(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        address_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string address = 1;</code>
+       */
+      public Builder clearAddress() {
+        
+        address_ = getDefaultInstance().getAddress();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string address = 1;</code>
+       */
+      public Builder setAddressBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        address_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int port_ ;
+      /**
+       * <code>int32 port = 2;</code>
+       */
+      public int getPort() {
+        return port_;
+      }
+      /**
+       * <code>int32 port = 2;</code>
+       */
+      public Builder setPort(int value) {
+        
+        port_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 port = 2;</code>
+       */
+      public Builder clearPort() {
+        
+        port_ = 0;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:NodeReference)
+    }
+
+    // @@protoc_insertion_point(class_scope:NodeReference)
+    private static final proto.Pastry.NodeReference DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new proto.Pastry.NodeReference();
+    }
+
+    public static proto.Pastry.NodeReference getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<NodeReference>
+        PARSER = new com.google.protobuf.AbstractParser<NodeReference>() {
+      @java.lang.Override
+      public NodeReference parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new NodeReference(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<NodeReference> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<NodeReference> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public proto.Pastry.NodeReference getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_JoinRequest_descriptor;
   private static final 
@@ -1049,6 +5176,26 @@ public final class Pastry {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_Empty_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_JoinResponse_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_JoinResponse_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_NodeState_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_NodeState_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_RoutingTableRow_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_RoutingTableRow_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_NodeReference_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_NodeReference_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1058,10 +5205,19 @@ public final class Pastry {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\014pastry.proto\",\n\013JoinRequest\022\017\n\007address" +
-      "\030\002 \001(\t\022\014\n\004port\030\003 \001(\005\"\007\n\005Empty2/\n\rPastryS" +
-      "ervice\022\036\n\004Join\022\014.JoinRequest\032\006.Empty\"\000B\007" +
-      "\n\005protob\006proto3"
+      "\n\014pastry.proto\"\'\n\013JoinRequest\022\n\n\002ip\030\001 \001(" +
+      "\t\022\014\n\004port\030\002 \001(\005\"\007\n\005Empty\"E\n\014JoinResponse" +
+      "\022\035\n\tnodeState\030\001 \003(\0132\n.NodeState\022\026\n\016netwo" +
+      "rkIsEmpty\030\002 \001(\010\"\240\001\n\tNodeState\022#\n\013downLea" +
+      "fSet\030\001 \003(\0132\016.NodeReference\022!\n\tupLeafSet\030" +
+      "\002 \003(\0132\016.NodeReference\022&\n\014routingTable\030\003 " +
+      "\003(\0132\020.RoutingTableRow\022#\n\013neighborSet\030\004 \003" +
+      "(\0132\016.NodeReference\"<\n\017RoutingTableRow\022)\n" +
+      "\021routingTableEntry\030\001 \003(\0132\016.NodeReference" +
+      "\".\n\rNodeReference\022\017\n\007address\030\001 \001(\t\022\014\n\004po" +
+      "rt\030\002 \001(\00526\n\rPastryService\022%\n\004Join\022\014.Join" +
+      "Request\032\r.JoinResponse\"\000B\007\n\005protob\006proto" +
+      "3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1080,13 +5236,37 @@ public final class Pastry {
     internal_static_JoinRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_JoinRequest_descriptor,
-        new java.lang.String[] { "Address", "Port", });
+        new java.lang.String[] { "Ip", "Port", });
     internal_static_Empty_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_Empty_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Empty_descriptor,
         new java.lang.String[] { });
+    internal_static_JoinResponse_descriptor =
+      getDescriptor().getMessageTypes().get(2);
+    internal_static_JoinResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_JoinResponse_descriptor,
+        new java.lang.String[] { "NodeState", "NetworkIsEmpty", });
+    internal_static_NodeState_descriptor =
+      getDescriptor().getMessageTypes().get(3);
+    internal_static_NodeState_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_NodeState_descriptor,
+        new java.lang.String[] { "DownLeafSet", "UpLeafSet", "RoutingTable", "NeighborSet", });
+    internal_static_RoutingTableRow_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_RoutingTableRow_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_RoutingTableRow_descriptor,
+        new java.lang.String[] { "RoutingTableEntry", });
+    internal_static_NodeReference_descriptor =
+      getDescriptor().getMessageTypes().get(5);
+    internal_static_NodeReference_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_NodeReference_descriptor,
+        new java.lang.String[] { "Address", "Port", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

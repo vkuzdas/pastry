@@ -1,5 +1,8 @@
 package pastry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.InetAddress;
@@ -11,26 +14,25 @@ import java.security.NoSuchAlgorithmException;
 
 public class Util {
 
+    private static final Logger logger = LoggerFactory.getLogger(Util.class);
 
     public static long getDistance(String address) {
         String[] parts = address.split(":");
         String host = parts[0];
-        int port = Integer.parseInt(parts[2]);
+        int port = Integer.parseInt(parts[1]);
 
         try {
             long startTime = System.currentTimeMillis();
-
             try (Socket socket = new Socket()) {
-                socket.connect(new InetSocketAddress(host, port), 5000); // Timeout set to 5 seconds
+                socket.connect(new InetSocketAddress(host, port), 2000);
             }
 
             return System.currentTimeMillis() - startTime;
 
         } catch (IOException e) {
-            System.out.println("Host " + host + " on port " + port + " is not reachable.");
-            e.printStackTrace();
+            logger.warn("Host " + host + " on port " + port + " is not reachable: " + e.getMessage());
+            return Long.MAX_VALUE;
         }
-        return Long.MAX_VALUE;
     }
 
     public static String getId(String input) {

@@ -4,12 +4,35 @@ syntax = "proto3";
 option java_package = "proto";
 
 message JoinRequest {
-  string address = 2;
-  int32 port = 3;
+  string ip = 1;
+  int32 port = 2;
 }
 
 message Empty {}
 
+message JoinResponse {
+  repeated NodeState nodeState = 1;
+  bool networkIsEmpty = 2;
+}
+
+message NodeState {
+  repeated NodeReference downLeafSet = 1;
+  repeated NodeReference upLeafSet = 2;
+
+  repeated RoutingTableRow routingTable = 3;
+
+  repeated NodeReference neighborSet = 4;
+}
+
+message RoutingTableRow {
+  repeated NodeReference routingTableEntry = 1;
+}
+
+message NodeReference {
+  string address = 1;
+  int32 port = 2;
+}
+
 service PastryService {
-  rpc Join(JoinRequest) returns (Empty) {}
+  rpc Join(JoinRequest) returns (JoinResponse) {}
 }
