@@ -15,14 +15,13 @@ public class UtilTest {
 
     @BeforeEach
     void printTestNameToConsole(TestInfo testInfo) {
-        System.out.println(System.lineSeparator() + System.lineSeparator()
+        logger.warn(System.lineSeparator() + System.lineSeparator()
                 + "============== " + testInfo.getTestMethod().map(Method::getName).orElse(null)
                 + "() =============" + System.lineSeparator());
     }
 
     @Test
     public void testGetId() {
-        logger.warn("logger in CI test");
         String seznam = "77.75.77.222:80";
         long id = Util.getDistance(seznam);
         assertNotEquals(Long.MAX_VALUE, id);
