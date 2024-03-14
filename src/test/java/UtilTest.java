@@ -13,4 +13,11 @@ public class UtilTest {
         assertNotEquals(Long.MAX_VALUE, id);
     }
 
+    @Test
+    public void testGetId_google() {
+        String google = "142.251.36.110:80";
+        long id = Util.getDistance(google);
+        assertNotEquals(Long.MAX_VALUE, id);
+    }
+
 }
