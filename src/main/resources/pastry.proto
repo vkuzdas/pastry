@@ -12,16 +12,14 @@ message Empty {}
 
 message JoinResponse {
   repeated NodeState nodeState = 1;
-  bool networkIsEmpty = 2;
 }
 
 message NodeState {
-  repeated NodeReference downLeafSet = 1;
-  repeated NodeReference upLeafSet = 2;
+  repeated NodeReference leafSet = 1;
 
-  repeated RoutingTableRow routingTable = 3;
+  repeated RoutingTableRow routingTable = 2;
 
-  repeated NodeReference neighborSet = 4;
+  repeated NodeReference neighborSet = 3;
 }
 
 message RoutingTableRow {
@@ -29,7 +27,7 @@ message RoutingTableRow {
 }
 
 message NodeReference {
-  string address = 1;
+  string ip = 1;
   int32 port = 2;
 }
 

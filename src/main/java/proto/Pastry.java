@@ -1066,11 +1066,6 @@ public final class Pastry {
      */
     proto.Pastry.NodeStateOrBuilder getNodeStateOrBuilder(
         int index);
-
-    /**
-     * <code>bool networkIsEmpty = 2;</code>
-     */
-    boolean getNetworkIsEmpty();
   }
   /**
    * Protobuf type {@code JoinResponse}
@@ -1086,7 +1081,6 @@ public final class Pastry {
     }
     private JoinResponse() {
       nodeState_ = java.util.Collections.emptyList();
-      networkIsEmpty_ = false;
     }
 
     @java.lang.Override
@@ -1120,11 +1114,6 @@ public final class Pastry {
               }
               nodeState_.add(
                   input.readMessage(proto.Pastry.NodeState.parser(), extensionRegistry));
-              break;
-            }
-            case 16: {
-
-              networkIsEmpty_ = input.readBool();
               break;
             }
             default: {
@@ -1162,7 +1151,6 @@ public final class Pastry {
               proto.Pastry.JoinResponse.class, proto.Pastry.JoinResponse.Builder.class);
     }
 
-    private int bitField0_;
     public static final int NODESTATE_FIELD_NUMBER = 1;
     private java.util.List<proto.Pastry.NodeState> nodeState_;
     /**
@@ -1198,15 +1186,6 @@ public final class Pastry {
       return nodeState_.get(index);
     }
 
-    public static final int NETWORKISEMPTY_FIELD_NUMBER = 2;
-    private boolean networkIsEmpty_;
-    /**
-     * <code>bool networkIsEmpty = 2;</code>
-     */
-    public boolean getNetworkIsEmpty() {
-      return networkIsEmpty_;
-    }
-
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -1224,9 +1203,6 @@ public final class Pastry {
       for (int i = 0; i < nodeState_.size(); i++) {
         output.writeMessage(1, nodeState_.get(i));
       }
-      if (networkIsEmpty_ != false) {
-        output.writeBool(2, networkIsEmpty_);
-      }
       unknownFields.writeTo(output);
     }
 
@@ -1239,10 +1215,6 @@ public final class Pastry {
       for (int i = 0; i < nodeState_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, nodeState_.get(i));
-      }
-      if (networkIsEmpty_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(2, networkIsEmpty_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1262,8 +1234,6 @@ public final class Pastry {
       boolean result = true;
       result = result && getNodeStateList()
           .equals(other.getNodeStateList());
-      result = result && (getNetworkIsEmpty()
-          == other.getNetworkIsEmpty());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -1279,9 +1249,6 @@ public final class Pastry {
         hash = (37 * hash) + NODESTATE_FIELD_NUMBER;
         hash = (53 * hash) + getNodeStateList().hashCode();
       }
-      hash = (37 * hash) + NETWORKISEMPTY_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-          getNetworkIsEmpty());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1422,8 +1389,6 @@ public final class Pastry {
         } else {
           nodeStateBuilder_.clear();
         }
-        networkIsEmpty_ = false;
-
         return this;
       }
 
@@ -1451,7 +1416,6 @@ public final class Pastry {
       public proto.Pastry.JoinResponse buildPartial() {
         proto.Pastry.JoinResponse result = new proto.Pastry.JoinResponse(this);
         int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
         if (nodeStateBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
             nodeState_ = java.util.Collections.unmodifiableList(nodeState_);
@@ -1461,8 +1425,6 @@ public final class Pastry {
         } else {
           result.nodeState_ = nodeStateBuilder_.build();
         }
-        result.networkIsEmpty_ = networkIsEmpty_;
-        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -1536,9 +1498,6 @@ public final class Pastry {
               nodeStateBuilder_.addAllMessages(other.nodeState_);
             }
           }
-        }
-        if (other.getNetworkIsEmpty() != false) {
-          setNetworkIsEmpty(other.getNetworkIsEmpty());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1809,32 +1768,6 @@ public final class Pastry {
         }
         return nodeStateBuilder_;
       }
-
-      private boolean networkIsEmpty_ ;
-      /**
-       * <code>bool networkIsEmpty = 2;</code>
-       */
-      public boolean getNetworkIsEmpty() {
-        return networkIsEmpty_;
-      }
-      /**
-       * <code>bool networkIsEmpty = 2;</code>
-       */
-      public Builder setNetworkIsEmpty(boolean value) {
-        
-        networkIsEmpty_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bool networkIsEmpty = 2;</code>
-       */
-      public Builder clearNetworkIsEmpty() {
-        
-        networkIsEmpty_ = false;
-        onChanged();
-        return this;
-      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1893,97 +1826,73 @@ public final class Pastry {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>repeated .NodeReference downLeafSet = 1;</code>
+     * <code>repeated .NodeReference leafSet = 1;</code>
      */
     java.util.List<proto.Pastry.NodeReference> 
-        getDownLeafSetList();
+        getLeafSetList();
     /**
-     * <code>repeated .NodeReference downLeafSet = 1;</code>
+     * <code>repeated .NodeReference leafSet = 1;</code>
      */
-    proto.Pastry.NodeReference getDownLeafSet(int index);
+    proto.Pastry.NodeReference getLeafSet(int index);
     /**
-     * <code>repeated .NodeReference downLeafSet = 1;</code>
+     * <code>repeated .NodeReference leafSet = 1;</code>
      */
-    int getDownLeafSetCount();
+    int getLeafSetCount();
     /**
-     * <code>repeated .NodeReference downLeafSet = 1;</code>
+     * <code>repeated .NodeReference leafSet = 1;</code>
      */
     java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
-        getDownLeafSetOrBuilderList();
+        getLeafSetOrBuilderList();
     /**
-     * <code>repeated .NodeReference downLeafSet = 1;</code>
+     * <code>repeated .NodeReference leafSet = 1;</code>
      */
-    proto.Pastry.NodeReferenceOrBuilder getDownLeafSetOrBuilder(
+    proto.Pastry.NodeReferenceOrBuilder getLeafSetOrBuilder(
         int index);
 
     /**
-     * <code>repeated .NodeReference upLeafSet = 2;</code>
-     */
-    java.util.List<proto.Pastry.NodeReference> 
-        getUpLeafSetList();
-    /**
-     * <code>repeated .NodeReference upLeafSet = 2;</code>
-     */
-    proto.Pastry.NodeReference getUpLeafSet(int index);
-    /**
-     * <code>repeated .NodeReference upLeafSet = 2;</code>
-     */
-    int getUpLeafSetCount();
-    /**
-     * <code>repeated .NodeReference upLeafSet = 2;</code>
-     */
-    java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
-        getUpLeafSetOrBuilderList();
-    /**
-     * <code>repeated .NodeReference upLeafSet = 2;</code>
-     */
-    proto.Pastry.NodeReferenceOrBuilder getUpLeafSetOrBuilder(
-        int index);
-
-    /**
-     * <code>repeated .RoutingTableRow routingTable = 3;</code>
+     * <code>repeated .RoutingTableRow routingTable = 2;</code>
      */
     java.util.List<proto.Pastry.RoutingTableRow> 
         getRoutingTableList();
     /**
-     * <code>repeated .RoutingTableRow routingTable = 3;</code>
+     * <code>repeated .RoutingTableRow routingTable = 2;</code>
      */
     proto.Pastry.RoutingTableRow getRoutingTable(int index);
     /**
-     * <code>repeated .RoutingTableRow routingTable = 3;</code>
+     * <code>repeated .RoutingTableRow routingTable = 2;</code>
      */
     int getRoutingTableCount();
     /**
-     * <code>repeated .RoutingTableRow routingTable = 3;</code>
+     * <code>repeated .RoutingTableRow routingTable = 2;</code>
      */
     java.util.List<? extends proto.Pastry.RoutingTableRowOrBuilder> 
         getRoutingTableOrBuilderList();
     /**
-     * <code>repeated .RoutingTableRow routingTable = 3;</code>
+     * <code>repeated .RoutingTableRow routingTable = 2;</code>
      */
     proto.Pastry.RoutingTableRowOrBuilder getRoutingTableOrBuilder(
         int index);
 
     /**
-     * <code>repeated .NodeReference neighborSet = 4;</code>
+     * <code>repeated .NodeReference neighborSet = 3;</code>
      */
     java.util.List<proto.Pastry.NodeReference> 
         getNeighborSetList();
     /**
-     * <code>repeated .NodeReference neighborSet = 4;</code>
+     * <code>repeated .NodeReference neighborSet = 3;</code>
      */
     proto.Pastry.NodeReference getNeighborSet(int index);
     /**
-     * <code>repeated .NodeReference neighborSet = 4;</code>
+     * <code>repeated .NodeReference neighborSet = 3;</code>
      */
     int getNeighborSetCount();
     /**
-     * <code>repeated .NodeReference neighborSet = 4;</code>
+     * <code>repeated .NodeReference neighborSet = 3;</code>
      */
     java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
         getNeighborSetOrBuilderList();
     /**
-     * <code>repeated .NodeReference neighborSet = 4;</code>
+     * <code>repeated .NodeReference neighborSet = 3;</code>
      */
     proto.Pastry.NodeReferenceOrBuilder getNeighborSetOrBuilder(
         int index);
@@ -2001,8 +1910,7 @@ public final class Pastry {
       super(builder);
     }
     private NodeState() {
-      downLeafSet_ = java.util.Collections.emptyList();
-      upLeafSet_ = java.util.Collections.emptyList();
+      leafSet_ = java.util.Collections.emptyList();
       routingTable_ = java.util.Collections.emptyList();
       neighborSet_ = java.util.Collections.emptyList();
     }
@@ -2033,35 +1941,26 @@ public final class Pastry {
               break;
             case 10: {
               if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                downLeafSet_ = new java.util.ArrayList<proto.Pastry.NodeReference>();
+                leafSet_ = new java.util.ArrayList<proto.Pastry.NodeReference>();
                 mutable_bitField0_ |= 0x00000001;
               }
-              downLeafSet_.add(
+              leafSet_.add(
                   input.readMessage(proto.Pastry.NodeReference.parser(), extensionRegistry));
               break;
             }
             case 18: {
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                upLeafSet_ = new java.util.ArrayList<proto.Pastry.NodeReference>();
-                mutable_bitField0_ |= 0x00000002;
-              }
-              upLeafSet_.add(
-                  input.readMessage(proto.Pastry.NodeReference.parser(), extensionRegistry));
-              break;
-            }
-            case 26: {
-              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
                 routingTable_ = new java.util.ArrayList<proto.Pastry.RoutingTableRow>();
-                mutable_bitField0_ |= 0x00000004;
+                mutable_bitField0_ |= 0x00000002;
               }
               routingTable_.add(
                   input.readMessage(proto.Pastry.RoutingTableRow.parser(), extensionRegistry));
               break;
             }
-            case 34: {
-              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+            case 26: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
                 neighborSet_ = new java.util.ArrayList<proto.Pastry.NodeReference>();
-                mutable_bitField0_ |= 0x00000008;
+                mutable_bitField0_ |= 0x00000004;
               }
               neighborSet_.add(
                   input.readMessage(proto.Pastry.NodeReference.parser(), extensionRegistry));
@@ -2083,15 +1982,12 @@ public final class Pastry {
             e).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-          downLeafSet_ = java.util.Collections.unmodifiableList(downLeafSet_);
+          leafSet_ = java.util.Collections.unmodifiableList(leafSet_);
         }
         if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-          upLeafSet_ = java.util.Collections.unmodifiableList(upLeafSet_);
-        }
-        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
           routingTable_ = java.util.Collections.unmodifiableList(routingTable_);
         }
-        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
           neighborSet_ = java.util.Collections.unmodifiableList(neighborSet_);
         }
         this.unknownFields = unknownFields.build();
@@ -2111,140 +2007,105 @@ public final class Pastry {
               proto.Pastry.NodeState.class, proto.Pastry.NodeState.Builder.class);
     }
 
-    public static final int DOWNLEAFSET_FIELD_NUMBER = 1;
-    private java.util.List<proto.Pastry.NodeReference> downLeafSet_;
+    public static final int LEAFSET_FIELD_NUMBER = 1;
+    private java.util.List<proto.Pastry.NodeReference> leafSet_;
     /**
-     * <code>repeated .NodeReference downLeafSet = 1;</code>
+     * <code>repeated .NodeReference leafSet = 1;</code>
      */
-    public java.util.List<proto.Pastry.NodeReference> getDownLeafSetList() {
-      return downLeafSet_;
+    public java.util.List<proto.Pastry.NodeReference> getLeafSetList() {
+      return leafSet_;
     }
     /**
-     * <code>repeated .NodeReference downLeafSet = 1;</code>
-     */
-    public java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
-        getDownLeafSetOrBuilderList() {
-      return downLeafSet_;
-    }
-    /**
-     * <code>repeated .NodeReference downLeafSet = 1;</code>
-     */
-    public int getDownLeafSetCount() {
-      return downLeafSet_.size();
-    }
-    /**
-     * <code>repeated .NodeReference downLeafSet = 1;</code>
-     */
-    public proto.Pastry.NodeReference getDownLeafSet(int index) {
-      return downLeafSet_.get(index);
-    }
-    /**
-     * <code>repeated .NodeReference downLeafSet = 1;</code>
-     */
-    public proto.Pastry.NodeReferenceOrBuilder getDownLeafSetOrBuilder(
-        int index) {
-      return downLeafSet_.get(index);
-    }
-
-    public static final int UPLEAFSET_FIELD_NUMBER = 2;
-    private java.util.List<proto.Pastry.NodeReference> upLeafSet_;
-    /**
-     * <code>repeated .NodeReference upLeafSet = 2;</code>
-     */
-    public java.util.List<proto.Pastry.NodeReference> getUpLeafSetList() {
-      return upLeafSet_;
-    }
-    /**
-     * <code>repeated .NodeReference upLeafSet = 2;</code>
+     * <code>repeated .NodeReference leafSet = 1;</code>
      */
     public java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
-        getUpLeafSetOrBuilderList() {
-      return upLeafSet_;
+        getLeafSetOrBuilderList() {
+      return leafSet_;
     }
     /**
-     * <code>repeated .NodeReference upLeafSet = 2;</code>
+     * <code>repeated .NodeReference leafSet = 1;</code>
      */
-    public int getUpLeafSetCount() {
-      return upLeafSet_.size();
+    public int getLeafSetCount() {
+      return leafSet_.size();
     }
     /**
-     * <code>repeated .NodeReference upLeafSet = 2;</code>
+     * <code>repeated .NodeReference leafSet = 1;</code>
      */
-    public proto.Pastry.NodeReference getUpLeafSet(int index) {
-      return upLeafSet_.get(index);
+    public proto.Pastry.NodeReference getLeafSet(int index) {
+      return leafSet_.get(index);
     }
     /**
-     * <code>repeated .NodeReference upLeafSet = 2;</code>
+     * <code>repeated .NodeReference leafSet = 1;</code>
      */
-    public proto.Pastry.NodeReferenceOrBuilder getUpLeafSetOrBuilder(
+    public proto.Pastry.NodeReferenceOrBuilder getLeafSetOrBuilder(
         int index) {
-      return upLeafSet_.get(index);
+      return leafSet_.get(index);
     }
 
-    public static final int ROUTINGTABLE_FIELD_NUMBER = 3;
+    public static final int ROUTINGTABLE_FIELD_NUMBER = 2;
     private java.util.List<proto.Pastry.RoutingTableRow> routingTable_;
     /**
-     * <code>repeated .RoutingTableRow routingTable = 3;</code>
+     * <code>repeated .RoutingTableRow routingTable = 2;</code>
      */
     public java.util.List<proto.Pastry.RoutingTableRow> getRoutingTableList() {
       return routingTable_;
     }
     /**
-     * <code>repeated .RoutingTableRow routingTable = 3;</code>
+     * <code>repeated .RoutingTableRow routingTable = 2;</code>
      */
     public java.util.List<? extends proto.Pastry.RoutingTableRowOrBuilder> 
         getRoutingTableOrBuilderList() {
       return routingTable_;
     }
     /**
-     * <code>repeated .RoutingTableRow routingTable = 3;</code>
+     * <code>repeated .RoutingTableRow routingTable = 2;</code>
      */
     public int getRoutingTableCount() {
       return routingTable_.size();
     }
     /**
-     * <code>repeated .RoutingTableRow routingTable = 3;</code>
+     * <code>repeated .RoutingTableRow routingTable = 2;</code>
      */
     public proto.Pastry.RoutingTableRow getRoutingTable(int index) {
       return routingTable_.get(index);
     }
     /**
-     * <code>repeated .RoutingTableRow routingTable = 3;</code>
+     * <code>repeated .RoutingTableRow routingTable = 2;</code>
      */
     public proto.Pastry.RoutingTableRowOrBuilder getRoutingTableOrBuilder(
         int index) {
       return routingTable_.get(index);
     }
 
-    public static final int NEIGHBORSET_FIELD_NUMBER = 4;
+    public static final int NEIGHBORSET_FIELD_NUMBER = 3;
     private java.util.List<proto.Pastry.NodeReference> neighborSet_;
     /**
-     * <code>repeated .NodeReference neighborSet = 4;</code>
+     * <code>repeated .NodeReference neighborSet = 3;</code>
      */
     public java.util.List<proto.Pastry.NodeReference> getNeighborSetList() {
       return neighborSet_;
     }
     /**
-     * <code>repeated .NodeReference neighborSet = 4;</code>
+     * <code>repeated .NodeReference neighborSet = 3;</code>
      */
     public java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
         getNeighborSetOrBuilderList() {
       return neighborSet_;
     }
     /**
-     * <code>repeated .NodeReference neighborSet = 4;</code>
+     * <code>repeated .NodeReference neighborSet = 3;</code>
      */
     public int getNeighborSetCount() {
       return neighborSet_.size();
     }
     /**
-     * <code>repeated .NodeReference neighborSet = 4;</code>
+     * <code>repeated .NodeReference neighborSet = 3;</code>
      */
     public proto.Pastry.NodeReference getNeighborSet(int index) {
       return neighborSet_.get(index);
     }
     /**
-     * <code>repeated .NodeReference neighborSet = 4;</code>
+     * <code>repeated .NodeReference neighborSet = 3;</code>
      */
     public proto.Pastry.NodeReferenceOrBuilder getNeighborSetOrBuilder(
         int index) {
@@ -2265,17 +2126,14 @@ public final class Pastry {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      for (int i = 0; i < downLeafSet_.size(); i++) {
-        output.writeMessage(1, downLeafSet_.get(i));
-      }
-      for (int i = 0; i < upLeafSet_.size(); i++) {
-        output.writeMessage(2, upLeafSet_.get(i));
+      for (int i = 0; i < leafSet_.size(); i++) {
+        output.writeMessage(1, leafSet_.get(i));
       }
       for (int i = 0; i < routingTable_.size(); i++) {
-        output.writeMessage(3, routingTable_.get(i));
+        output.writeMessage(2, routingTable_.get(i));
       }
       for (int i = 0; i < neighborSet_.size(); i++) {
-        output.writeMessage(4, neighborSet_.get(i));
+        output.writeMessage(3, neighborSet_.get(i));
       }
       unknownFields.writeTo(output);
     }
@@ -2286,21 +2144,17 @@ public final class Pastry {
       if (size != -1) return size;
 
       size = 0;
-      for (int i = 0; i < downLeafSet_.size(); i++) {
+      for (int i = 0; i < leafSet_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, downLeafSet_.get(i));
-      }
-      for (int i = 0; i < upLeafSet_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, upLeafSet_.get(i));
+          .computeMessageSize(1, leafSet_.get(i));
       }
       for (int i = 0; i < routingTable_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, routingTable_.get(i));
+          .computeMessageSize(2, routingTable_.get(i));
       }
       for (int i = 0; i < neighborSet_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, neighborSet_.get(i));
+          .computeMessageSize(3, neighborSet_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -2318,10 +2172,8 @@ public final class Pastry {
       proto.Pastry.NodeState other = (proto.Pastry.NodeState) obj;
 
       boolean result = true;
-      result = result && getDownLeafSetList()
-          .equals(other.getDownLeafSetList());
-      result = result && getUpLeafSetList()
-          .equals(other.getUpLeafSetList());
+      result = result && getLeafSetList()
+          .equals(other.getLeafSetList());
       result = result && getRoutingTableList()
           .equals(other.getRoutingTableList());
       result = result && getNeighborSetList()
@@ -2337,13 +2189,9 @@ public final class Pastry {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      if (getDownLeafSetCount() > 0) {
-        hash = (37 * hash) + DOWNLEAFSET_FIELD_NUMBER;
-        hash = (53 * hash) + getDownLeafSetList().hashCode();
-      }
-      if (getUpLeafSetCount() > 0) {
-        hash = (37 * hash) + UPLEAFSET_FIELD_NUMBER;
-        hash = (53 * hash) + getUpLeafSetList().hashCode();
+      if (getLeafSetCount() > 0) {
+        hash = (37 * hash) + LEAFSET_FIELD_NUMBER;
+        hash = (53 * hash) + getLeafSetList().hashCode();
       }
       if (getRoutingTableCount() > 0) {
         hash = (37 * hash) + ROUTINGTABLE_FIELD_NUMBER;
@@ -2481,8 +2329,7 @@ public final class Pastry {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
-          getDownLeafSetFieldBuilder();
-          getUpLeafSetFieldBuilder();
+          getLeafSetFieldBuilder();
           getRoutingTableFieldBuilder();
           getNeighborSetFieldBuilder();
         }
@@ -2490,27 +2337,21 @@ public final class Pastry {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        if (downLeafSetBuilder_ == null) {
-          downLeafSet_ = java.util.Collections.emptyList();
+        if (leafSetBuilder_ == null) {
+          leafSet_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000001);
         } else {
-          downLeafSetBuilder_.clear();
-        }
-        if (upLeafSetBuilder_ == null) {
-          upLeafSet_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
-        } else {
-          upLeafSetBuilder_.clear();
+          leafSetBuilder_.clear();
         }
         if (routingTableBuilder_ == null) {
           routingTable_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000002);
         } else {
           routingTableBuilder_.clear();
         }
         if (neighborSetBuilder_ == null) {
           neighborSet_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000008);
+          bitField0_ = (bitField0_ & ~0x00000004);
         } else {
           neighborSetBuilder_.clear();
         }
@@ -2541,37 +2382,28 @@ public final class Pastry {
       public proto.Pastry.NodeState buildPartial() {
         proto.Pastry.NodeState result = new proto.Pastry.NodeState(this);
         int from_bitField0_ = bitField0_;
-        if (downLeafSetBuilder_ == null) {
+        if (leafSetBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
-            downLeafSet_ = java.util.Collections.unmodifiableList(downLeafSet_);
+            leafSet_ = java.util.Collections.unmodifiableList(leafSet_);
             bitField0_ = (bitField0_ & ~0x00000001);
           }
-          result.downLeafSet_ = downLeafSet_;
+          result.leafSet_ = leafSet_;
         } else {
-          result.downLeafSet_ = downLeafSetBuilder_.build();
-        }
-        if (upLeafSetBuilder_ == null) {
-          if (((bitField0_ & 0x00000002) == 0x00000002)) {
-            upLeafSet_ = java.util.Collections.unmodifiableList(upLeafSet_);
-            bitField0_ = (bitField0_ & ~0x00000002);
-          }
-          result.upLeafSet_ = upLeafSet_;
-        } else {
-          result.upLeafSet_ = upLeafSetBuilder_.build();
+          result.leafSet_ = leafSetBuilder_.build();
         }
         if (routingTableBuilder_ == null) {
-          if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
             routingTable_ = java.util.Collections.unmodifiableList(routingTable_);
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ = (bitField0_ & ~0x00000002);
           }
           result.routingTable_ = routingTable_;
         } else {
           result.routingTable_ = routingTableBuilder_.build();
         }
         if (neighborSetBuilder_ == null) {
-          if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          if (((bitField0_ & 0x00000004) == 0x00000004)) {
             neighborSet_ = java.util.Collections.unmodifiableList(neighborSet_);
-            bitField0_ = (bitField0_ & ~0x00000008);
+            bitField0_ = (bitField0_ & ~0x00000004);
           }
           result.neighborSet_ = neighborSet_;
         } else {
@@ -2625,55 +2457,29 @@ public final class Pastry {
 
       public Builder mergeFrom(proto.Pastry.NodeState other) {
         if (other == proto.Pastry.NodeState.getDefaultInstance()) return this;
-        if (downLeafSetBuilder_ == null) {
-          if (!other.downLeafSet_.isEmpty()) {
-            if (downLeafSet_.isEmpty()) {
-              downLeafSet_ = other.downLeafSet_;
+        if (leafSetBuilder_ == null) {
+          if (!other.leafSet_.isEmpty()) {
+            if (leafSet_.isEmpty()) {
+              leafSet_ = other.leafSet_;
               bitField0_ = (bitField0_ & ~0x00000001);
             } else {
-              ensureDownLeafSetIsMutable();
-              downLeafSet_.addAll(other.downLeafSet_);
+              ensureLeafSetIsMutable();
+              leafSet_.addAll(other.leafSet_);
             }
             onChanged();
           }
         } else {
-          if (!other.downLeafSet_.isEmpty()) {
-            if (downLeafSetBuilder_.isEmpty()) {
-              downLeafSetBuilder_.dispose();
-              downLeafSetBuilder_ = null;
-              downLeafSet_ = other.downLeafSet_;
+          if (!other.leafSet_.isEmpty()) {
+            if (leafSetBuilder_.isEmpty()) {
+              leafSetBuilder_.dispose();
+              leafSetBuilder_ = null;
+              leafSet_ = other.leafSet_;
               bitField0_ = (bitField0_ & ~0x00000001);
-              downLeafSetBuilder_ = 
+              leafSetBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getDownLeafSetFieldBuilder() : null;
+                   getLeafSetFieldBuilder() : null;
             } else {
-              downLeafSetBuilder_.addAllMessages(other.downLeafSet_);
-            }
-          }
-        }
-        if (upLeafSetBuilder_ == null) {
-          if (!other.upLeafSet_.isEmpty()) {
-            if (upLeafSet_.isEmpty()) {
-              upLeafSet_ = other.upLeafSet_;
-              bitField0_ = (bitField0_ & ~0x00000002);
-            } else {
-              ensureUpLeafSetIsMutable();
-              upLeafSet_.addAll(other.upLeafSet_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.upLeafSet_.isEmpty()) {
-            if (upLeafSetBuilder_.isEmpty()) {
-              upLeafSetBuilder_.dispose();
-              upLeafSetBuilder_ = null;
-              upLeafSet_ = other.upLeafSet_;
-              bitField0_ = (bitField0_ & ~0x00000002);
-              upLeafSetBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getUpLeafSetFieldBuilder() : null;
-            } else {
-              upLeafSetBuilder_.addAllMessages(other.upLeafSet_);
+              leafSetBuilder_.addAllMessages(other.leafSet_);
             }
           }
         }
@@ -2681,7 +2487,7 @@ public final class Pastry {
           if (!other.routingTable_.isEmpty()) {
             if (routingTable_.isEmpty()) {
               routingTable_ = other.routingTable_;
-              bitField0_ = (bitField0_ & ~0x00000004);
+              bitField0_ = (bitField0_ & ~0x00000002);
             } else {
               ensureRoutingTableIsMutable();
               routingTable_.addAll(other.routingTable_);
@@ -2694,7 +2500,7 @@ public final class Pastry {
               routingTableBuilder_.dispose();
               routingTableBuilder_ = null;
               routingTable_ = other.routingTable_;
-              bitField0_ = (bitField0_ & ~0x00000004);
+              bitField0_ = (bitField0_ & ~0x00000002);
               routingTableBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getRoutingTableFieldBuilder() : null;
@@ -2707,7 +2513,7 @@ public final class Pastry {
           if (!other.neighborSet_.isEmpty()) {
             if (neighborSet_.isEmpty()) {
               neighborSet_ = other.neighborSet_;
-              bitField0_ = (bitField0_ & ~0x00000008);
+              bitField0_ = (bitField0_ & ~0x00000004);
             } else {
               ensureNeighborSetIsMutable();
               neighborSet_.addAll(other.neighborSet_);
@@ -2720,7 +2526,7 @@ public final class Pastry {
               neighborSetBuilder_.dispose();
               neighborSetBuilder_ = null;
               neighborSet_ = other.neighborSet_;
-              bitField0_ = (bitField0_ & ~0x00000008);
+              bitField0_ = (bitField0_ & ~0x00000004);
               neighborSetBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getNeighborSetFieldBuilder() : null;
@@ -2759,492 +2565,252 @@ public final class Pastry {
       }
       private int bitField0_;
 
-      private java.util.List<proto.Pastry.NodeReference> downLeafSet_ =
+      private java.util.List<proto.Pastry.NodeReference> leafSet_ =
         java.util.Collections.emptyList();
-      private void ensureDownLeafSetIsMutable() {
+      private void ensureLeafSetIsMutable() {
         if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          downLeafSet_ = new java.util.ArrayList<proto.Pastry.NodeReference>(downLeafSet_);
+          leafSet_ = new java.util.ArrayList<proto.Pastry.NodeReference>(leafSet_);
           bitField0_ |= 0x00000001;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> downLeafSetBuilder_;
+          proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> leafSetBuilder_;
 
       /**
-       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 1;</code>
        */
-      public java.util.List<proto.Pastry.NodeReference> getDownLeafSetList() {
-        if (downLeafSetBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(downLeafSet_);
+      public java.util.List<proto.Pastry.NodeReference> getLeafSetList() {
+        if (leafSetBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(leafSet_);
         } else {
-          return downLeafSetBuilder_.getMessageList();
+          return leafSetBuilder_.getMessageList();
         }
       }
       /**
-       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 1;</code>
        */
-      public int getDownLeafSetCount() {
-        if (downLeafSetBuilder_ == null) {
-          return downLeafSet_.size();
+      public int getLeafSetCount() {
+        if (leafSetBuilder_ == null) {
+          return leafSet_.size();
         } else {
-          return downLeafSetBuilder_.getCount();
+          return leafSetBuilder_.getCount();
         }
       }
       /**
-       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 1;</code>
        */
-      public proto.Pastry.NodeReference getDownLeafSet(int index) {
-        if (downLeafSetBuilder_ == null) {
-          return downLeafSet_.get(index);
+      public proto.Pastry.NodeReference getLeafSet(int index) {
+        if (leafSetBuilder_ == null) {
+          return leafSet_.get(index);
         } else {
-          return downLeafSetBuilder_.getMessage(index);
+          return leafSetBuilder_.getMessage(index);
         }
       }
       /**
-       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 1;</code>
        */
-      public Builder setDownLeafSet(
+      public Builder setLeafSet(
           int index, proto.Pastry.NodeReference value) {
-        if (downLeafSetBuilder_ == null) {
+        if (leafSetBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureDownLeafSetIsMutable();
-          downLeafSet_.set(index, value);
+          ensureLeafSetIsMutable();
+          leafSet_.set(index, value);
           onChanged();
         } else {
-          downLeafSetBuilder_.setMessage(index, value);
+          leafSetBuilder_.setMessage(index, value);
         }
         return this;
       }
       /**
-       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 1;</code>
        */
-      public Builder setDownLeafSet(
+      public Builder setLeafSet(
           int index, proto.Pastry.NodeReference.Builder builderForValue) {
-        if (downLeafSetBuilder_ == null) {
-          ensureDownLeafSetIsMutable();
-          downLeafSet_.set(index, builderForValue.build());
+        if (leafSetBuilder_ == null) {
+          ensureLeafSetIsMutable();
+          leafSet_.set(index, builderForValue.build());
           onChanged();
         } else {
-          downLeafSetBuilder_.setMessage(index, builderForValue.build());
+          leafSetBuilder_.setMessage(index, builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 1;</code>
        */
-      public Builder addDownLeafSet(proto.Pastry.NodeReference value) {
-        if (downLeafSetBuilder_ == null) {
+      public Builder addLeafSet(proto.Pastry.NodeReference value) {
+        if (leafSetBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureDownLeafSetIsMutable();
-          downLeafSet_.add(value);
+          ensureLeafSetIsMutable();
+          leafSet_.add(value);
           onChanged();
         } else {
-          downLeafSetBuilder_.addMessage(value);
+          leafSetBuilder_.addMessage(value);
         }
         return this;
       }
       /**
-       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 1;</code>
        */
-      public Builder addDownLeafSet(
+      public Builder addLeafSet(
           int index, proto.Pastry.NodeReference value) {
-        if (downLeafSetBuilder_ == null) {
+        if (leafSetBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureDownLeafSetIsMutable();
-          downLeafSet_.add(index, value);
+          ensureLeafSetIsMutable();
+          leafSet_.add(index, value);
           onChanged();
         } else {
-          downLeafSetBuilder_.addMessage(index, value);
+          leafSetBuilder_.addMessage(index, value);
         }
         return this;
       }
       /**
-       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 1;</code>
        */
-      public Builder addDownLeafSet(
+      public Builder addLeafSet(
           proto.Pastry.NodeReference.Builder builderForValue) {
-        if (downLeafSetBuilder_ == null) {
-          ensureDownLeafSetIsMutable();
-          downLeafSet_.add(builderForValue.build());
+        if (leafSetBuilder_ == null) {
+          ensureLeafSetIsMutable();
+          leafSet_.add(builderForValue.build());
           onChanged();
         } else {
-          downLeafSetBuilder_.addMessage(builderForValue.build());
+          leafSetBuilder_.addMessage(builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 1;</code>
        */
-      public Builder addDownLeafSet(
+      public Builder addLeafSet(
           int index, proto.Pastry.NodeReference.Builder builderForValue) {
-        if (downLeafSetBuilder_ == null) {
-          ensureDownLeafSetIsMutable();
-          downLeafSet_.add(index, builderForValue.build());
+        if (leafSetBuilder_ == null) {
+          ensureLeafSetIsMutable();
+          leafSet_.add(index, builderForValue.build());
           onChanged();
         } else {
-          downLeafSetBuilder_.addMessage(index, builderForValue.build());
+          leafSetBuilder_.addMessage(index, builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 1;</code>
        */
-      public Builder addAllDownLeafSet(
+      public Builder addAllLeafSet(
           java.lang.Iterable<? extends proto.Pastry.NodeReference> values) {
-        if (downLeafSetBuilder_ == null) {
-          ensureDownLeafSetIsMutable();
+        if (leafSetBuilder_ == null) {
+          ensureLeafSetIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, downLeafSet_);
+              values, leafSet_);
           onChanged();
         } else {
-          downLeafSetBuilder_.addAllMessages(values);
+          leafSetBuilder_.addAllMessages(values);
         }
         return this;
       }
       /**
-       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 1;</code>
        */
-      public Builder clearDownLeafSet() {
-        if (downLeafSetBuilder_ == null) {
-          downLeafSet_ = java.util.Collections.emptyList();
+      public Builder clearLeafSet() {
+        if (leafSetBuilder_ == null) {
+          leafSet_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000001);
           onChanged();
         } else {
-          downLeafSetBuilder_.clear();
+          leafSetBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 1;</code>
        */
-      public Builder removeDownLeafSet(int index) {
-        if (downLeafSetBuilder_ == null) {
-          ensureDownLeafSetIsMutable();
-          downLeafSet_.remove(index);
+      public Builder removeLeafSet(int index) {
+        if (leafSetBuilder_ == null) {
+          ensureLeafSetIsMutable();
+          leafSet_.remove(index);
           onChanged();
         } else {
-          downLeafSetBuilder_.remove(index);
+          leafSetBuilder_.remove(index);
         }
         return this;
       }
       /**
-       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 1;</code>
        */
-      public proto.Pastry.NodeReference.Builder getDownLeafSetBuilder(
+      public proto.Pastry.NodeReference.Builder getLeafSetBuilder(
           int index) {
-        return getDownLeafSetFieldBuilder().getBuilder(index);
+        return getLeafSetFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 1;</code>
        */
-      public proto.Pastry.NodeReferenceOrBuilder getDownLeafSetOrBuilder(
+      public proto.Pastry.NodeReferenceOrBuilder getLeafSetOrBuilder(
           int index) {
-        if (downLeafSetBuilder_ == null) {
-          return downLeafSet_.get(index);  } else {
-          return downLeafSetBuilder_.getMessageOrBuilder(index);
+        if (leafSetBuilder_ == null) {
+          return leafSet_.get(index);  } else {
+          return leafSetBuilder_.getMessageOrBuilder(index);
         }
       }
       /**
-       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 1;</code>
        */
       public java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
-           getDownLeafSetOrBuilderList() {
-        if (downLeafSetBuilder_ != null) {
-          return downLeafSetBuilder_.getMessageOrBuilderList();
+           getLeafSetOrBuilderList() {
+        if (leafSetBuilder_ != null) {
+          return leafSetBuilder_.getMessageOrBuilderList();
         } else {
-          return java.util.Collections.unmodifiableList(downLeafSet_);
+          return java.util.Collections.unmodifiableList(leafSet_);
         }
       }
       /**
-       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 1;</code>
        */
-      public proto.Pastry.NodeReference.Builder addDownLeafSetBuilder() {
-        return getDownLeafSetFieldBuilder().addBuilder(
+      public proto.Pastry.NodeReference.Builder addLeafSetBuilder() {
+        return getLeafSetFieldBuilder().addBuilder(
             proto.Pastry.NodeReference.getDefaultInstance());
       }
       /**
-       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 1;</code>
        */
-      public proto.Pastry.NodeReference.Builder addDownLeafSetBuilder(
+      public proto.Pastry.NodeReference.Builder addLeafSetBuilder(
           int index) {
-        return getDownLeafSetFieldBuilder().addBuilder(
+        return getLeafSetFieldBuilder().addBuilder(
             index, proto.Pastry.NodeReference.getDefaultInstance());
       }
       /**
-       * <code>repeated .NodeReference downLeafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 1;</code>
        */
       public java.util.List<proto.Pastry.NodeReference.Builder> 
-           getDownLeafSetBuilderList() {
-        return getDownLeafSetFieldBuilder().getBuilderList();
+           getLeafSetBuilderList() {
+        return getLeafSetFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
           proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> 
-          getDownLeafSetFieldBuilder() {
-        if (downLeafSetBuilder_ == null) {
-          downLeafSetBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+          getLeafSetFieldBuilder() {
+        if (leafSetBuilder_ == null) {
+          leafSetBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder>(
-                  downLeafSet_,
+                  leafSet_,
                   ((bitField0_ & 0x00000001) == 0x00000001),
                   getParentForChildren(),
                   isClean());
-          downLeafSet_ = null;
+          leafSet_ = null;
         }
-        return downLeafSetBuilder_;
-      }
-
-      private java.util.List<proto.Pastry.NodeReference> upLeafSet_ =
-        java.util.Collections.emptyList();
-      private void ensureUpLeafSetIsMutable() {
-        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          upLeafSet_ = new java.util.ArrayList<proto.Pastry.NodeReference>(upLeafSet_);
-          bitField0_ |= 0x00000002;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> upLeafSetBuilder_;
-
-      /**
-       * <code>repeated .NodeReference upLeafSet = 2;</code>
-       */
-      public java.util.List<proto.Pastry.NodeReference> getUpLeafSetList() {
-        if (upLeafSetBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(upLeafSet_);
-        } else {
-          return upLeafSetBuilder_.getMessageList();
-        }
-      }
-      /**
-       * <code>repeated .NodeReference upLeafSet = 2;</code>
-       */
-      public int getUpLeafSetCount() {
-        if (upLeafSetBuilder_ == null) {
-          return upLeafSet_.size();
-        } else {
-          return upLeafSetBuilder_.getCount();
-        }
-      }
-      /**
-       * <code>repeated .NodeReference upLeafSet = 2;</code>
-       */
-      public proto.Pastry.NodeReference getUpLeafSet(int index) {
-        if (upLeafSetBuilder_ == null) {
-          return upLeafSet_.get(index);
-        } else {
-          return upLeafSetBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <code>repeated .NodeReference upLeafSet = 2;</code>
-       */
-      public Builder setUpLeafSet(
-          int index, proto.Pastry.NodeReference value) {
-        if (upLeafSetBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureUpLeafSetIsMutable();
-          upLeafSet_.set(index, value);
-          onChanged();
-        } else {
-          upLeafSetBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .NodeReference upLeafSet = 2;</code>
-       */
-      public Builder setUpLeafSet(
-          int index, proto.Pastry.NodeReference.Builder builderForValue) {
-        if (upLeafSetBuilder_ == null) {
-          ensureUpLeafSetIsMutable();
-          upLeafSet_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          upLeafSetBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .NodeReference upLeafSet = 2;</code>
-       */
-      public Builder addUpLeafSet(proto.Pastry.NodeReference value) {
-        if (upLeafSetBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureUpLeafSetIsMutable();
-          upLeafSet_.add(value);
-          onChanged();
-        } else {
-          upLeafSetBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .NodeReference upLeafSet = 2;</code>
-       */
-      public Builder addUpLeafSet(
-          int index, proto.Pastry.NodeReference value) {
-        if (upLeafSetBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureUpLeafSetIsMutable();
-          upLeafSet_.add(index, value);
-          onChanged();
-        } else {
-          upLeafSetBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .NodeReference upLeafSet = 2;</code>
-       */
-      public Builder addUpLeafSet(
-          proto.Pastry.NodeReference.Builder builderForValue) {
-        if (upLeafSetBuilder_ == null) {
-          ensureUpLeafSetIsMutable();
-          upLeafSet_.add(builderForValue.build());
-          onChanged();
-        } else {
-          upLeafSetBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .NodeReference upLeafSet = 2;</code>
-       */
-      public Builder addUpLeafSet(
-          int index, proto.Pastry.NodeReference.Builder builderForValue) {
-        if (upLeafSetBuilder_ == null) {
-          ensureUpLeafSetIsMutable();
-          upLeafSet_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          upLeafSetBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .NodeReference upLeafSet = 2;</code>
-       */
-      public Builder addAllUpLeafSet(
-          java.lang.Iterable<? extends proto.Pastry.NodeReference> values) {
-        if (upLeafSetBuilder_ == null) {
-          ensureUpLeafSetIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, upLeafSet_);
-          onChanged();
-        } else {
-          upLeafSetBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .NodeReference upLeafSet = 2;</code>
-       */
-      public Builder clearUpLeafSet() {
-        if (upLeafSetBuilder_ == null) {
-          upLeafSet_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
-          onChanged();
-        } else {
-          upLeafSetBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .NodeReference upLeafSet = 2;</code>
-       */
-      public Builder removeUpLeafSet(int index) {
-        if (upLeafSetBuilder_ == null) {
-          ensureUpLeafSetIsMutable();
-          upLeafSet_.remove(index);
-          onChanged();
-        } else {
-          upLeafSetBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .NodeReference upLeafSet = 2;</code>
-       */
-      public proto.Pastry.NodeReference.Builder getUpLeafSetBuilder(
-          int index) {
-        return getUpLeafSetFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .NodeReference upLeafSet = 2;</code>
-       */
-      public proto.Pastry.NodeReferenceOrBuilder getUpLeafSetOrBuilder(
-          int index) {
-        if (upLeafSetBuilder_ == null) {
-          return upLeafSet_.get(index);  } else {
-          return upLeafSetBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <code>repeated .NodeReference upLeafSet = 2;</code>
-       */
-      public java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
-           getUpLeafSetOrBuilderList() {
-        if (upLeafSetBuilder_ != null) {
-          return upLeafSetBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(upLeafSet_);
-        }
-      }
-      /**
-       * <code>repeated .NodeReference upLeafSet = 2;</code>
-       */
-      public proto.Pastry.NodeReference.Builder addUpLeafSetBuilder() {
-        return getUpLeafSetFieldBuilder().addBuilder(
-            proto.Pastry.NodeReference.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .NodeReference upLeafSet = 2;</code>
-       */
-      public proto.Pastry.NodeReference.Builder addUpLeafSetBuilder(
-          int index) {
-        return getUpLeafSetFieldBuilder().addBuilder(
-            index, proto.Pastry.NodeReference.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .NodeReference upLeafSet = 2;</code>
-       */
-      public java.util.List<proto.Pastry.NodeReference.Builder> 
-           getUpLeafSetBuilderList() {
-        return getUpLeafSetFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> 
-          getUpLeafSetFieldBuilder() {
-        if (upLeafSetBuilder_ == null) {
-          upLeafSetBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder>(
-                  upLeafSet_,
-                  ((bitField0_ & 0x00000002) == 0x00000002),
-                  getParentForChildren(),
-                  isClean());
-          upLeafSet_ = null;
-        }
-        return upLeafSetBuilder_;
+        return leafSetBuilder_;
       }
 
       private java.util.List<proto.Pastry.RoutingTableRow> routingTable_ =
         java.util.Collections.emptyList();
       private void ensureRoutingTableIsMutable() {
-        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
           routingTable_ = new java.util.ArrayList<proto.Pastry.RoutingTableRow>(routingTable_);
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000002;
          }
       }
 
@@ -3252,7 +2818,7 @@ public final class Pastry {
           proto.Pastry.RoutingTableRow, proto.Pastry.RoutingTableRow.Builder, proto.Pastry.RoutingTableRowOrBuilder> routingTableBuilder_;
 
       /**
-       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       * <code>repeated .RoutingTableRow routingTable = 2;</code>
        */
       public java.util.List<proto.Pastry.RoutingTableRow> getRoutingTableList() {
         if (routingTableBuilder_ == null) {
@@ -3262,7 +2828,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       * <code>repeated .RoutingTableRow routingTable = 2;</code>
        */
       public int getRoutingTableCount() {
         if (routingTableBuilder_ == null) {
@@ -3272,7 +2838,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       * <code>repeated .RoutingTableRow routingTable = 2;</code>
        */
       public proto.Pastry.RoutingTableRow getRoutingTable(int index) {
         if (routingTableBuilder_ == null) {
@@ -3282,7 +2848,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       * <code>repeated .RoutingTableRow routingTable = 2;</code>
        */
       public Builder setRoutingTable(
           int index, proto.Pastry.RoutingTableRow value) {
@@ -3299,7 +2865,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       * <code>repeated .RoutingTableRow routingTable = 2;</code>
        */
       public Builder setRoutingTable(
           int index, proto.Pastry.RoutingTableRow.Builder builderForValue) {
@@ -3313,7 +2879,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       * <code>repeated .RoutingTableRow routingTable = 2;</code>
        */
       public Builder addRoutingTable(proto.Pastry.RoutingTableRow value) {
         if (routingTableBuilder_ == null) {
@@ -3329,7 +2895,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       * <code>repeated .RoutingTableRow routingTable = 2;</code>
        */
       public Builder addRoutingTable(
           int index, proto.Pastry.RoutingTableRow value) {
@@ -3346,7 +2912,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       * <code>repeated .RoutingTableRow routingTable = 2;</code>
        */
       public Builder addRoutingTable(
           proto.Pastry.RoutingTableRow.Builder builderForValue) {
@@ -3360,7 +2926,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       * <code>repeated .RoutingTableRow routingTable = 2;</code>
        */
       public Builder addRoutingTable(
           int index, proto.Pastry.RoutingTableRow.Builder builderForValue) {
@@ -3374,7 +2940,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       * <code>repeated .RoutingTableRow routingTable = 2;</code>
        */
       public Builder addAllRoutingTable(
           java.lang.Iterable<? extends proto.Pastry.RoutingTableRow> values) {
@@ -3389,12 +2955,12 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       * <code>repeated .RoutingTableRow routingTable = 2;</code>
        */
       public Builder clearRoutingTable() {
         if (routingTableBuilder_ == null) {
           routingTable_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000002);
           onChanged();
         } else {
           routingTableBuilder_.clear();
@@ -3402,7 +2968,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       * <code>repeated .RoutingTableRow routingTable = 2;</code>
        */
       public Builder removeRoutingTable(int index) {
         if (routingTableBuilder_ == null) {
@@ -3415,14 +2981,14 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       * <code>repeated .RoutingTableRow routingTable = 2;</code>
        */
       public proto.Pastry.RoutingTableRow.Builder getRoutingTableBuilder(
           int index) {
         return getRoutingTableFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       * <code>repeated .RoutingTableRow routingTable = 2;</code>
        */
       public proto.Pastry.RoutingTableRowOrBuilder getRoutingTableOrBuilder(
           int index) {
@@ -3432,7 +2998,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       * <code>repeated .RoutingTableRow routingTable = 2;</code>
        */
       public java.util.List<? extends proto.Pastry.RoutingTableRowOrBuilder> 
            getRoutingTableOrBuilderList() {
@@ -3443,14 +3009,14 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       * <code>repeated .RoutingTableRow routingTable = 2;</code>
        */
       public proto.Pastry.RoutingTableRow.Builder addRoutingTableBuilder() {
         return getRoutingTableFieldBuilder().addBuilder(
             proto.Pastry.RoutingTableRow.getDefaultInstance());
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       * <code>repeated .RoutingTableRow routingTable = 2;</code>
        */
       public proto.Pastry.RoutingTableRow.Builder addRoutingTableBuilder(
           int index) {
@@ -3458,7 +3024,7 @@ public final class Pastry {
             index, proto.Pastry.RoutingTableRow.getDefaultInstance());
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 3;</code>
+       * <code>repeated .RoutingTableRow routingTable = 2;</code>
        */
       public java.util.List<proto.Pastry.RoutingTableRow.Builder> 
            getRoutingTableBuilderList() {
@@ -3471,7 +3037,7 @@ public final class Pastry {
           routingTableBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               proto.Pastry.RoutingTableRow, proto.Pastry.RoutingTableRow.Builder, proto.Pastry.RoutingTableRowOrBuilder>(
                   routingTable_,
-                  ((bitField0_ & 0x00000004) == 0x00000004),
+                  ((bitField0_ & 0x00000002) == 0x00000002),
                   getParentForChildren(),
                   isClean());
           routingTable_ = null;
@@ -3482,9 +3048,9 @@ public final class Pastry {
       private java.util.List<proto.Pastry.NodeReference> neighborSet_ =
         java.util.Collections.emptyList();
       private void ensureNeighborSetIsMutable() {
-        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
           neighborSet_ = new java.util.ArrayList<proto.Pastry.NodeReference>(neighborSet_);
-          bitField0_ |= 0x00000008;
+          bitField0_ |= 0x00000004;
          }
       }
 
@@ -3492,7 +3058,7 @@ public final class Pastry {
           proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> neighborSetBuilder_;
 
       /**
-       * <code>repeated .NodeReference neighborSet = 4;</code>
+       * <code>repeated .NodeReference neighborSet = 3;</code>
        */
       public java.util.List<proto.Pastry.NodeReference> getNeighborSetList() {
         if (neighborSetBuilder_ == null) {
@@ -3502,7 +3068,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 4;</code>
+       * <code>repeated .NodeReference neighborSet = 3;</code>
        */
       public int getNeighborSetCount() {
         if (neighborSetBuilder_ == null) {
@@ -3512,7 +3078,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 4;</code>
+       * <code>repeated .NodeReference neighborSet = 3;</code>
        */
       public proto.Pastry.NodeReference getNeighborSet(int index) {
         if (neighborSetBuilder_ == null) {
@@ -3522,7 +3088,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 4;</code>
+       * <code>repeated .NodeReference neighborSet = 3;</code>
        */
       public Builder setNeighborSet(
           int index, proto.Pastry.NodeReference value) {
@@ -3539,7 +3105,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 4;</code>
+       * <code>repeated .NodeReference neighborSet = 3;</code>
        */
       public Builder setNeighborSet(
           int index, proto.Pastry.NodeReference.Builder builderForValue) {
@@ -3553,7 +3119,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 4;</code>
+       * <code>repeated .NodeReference neighborSet = 3;</code>
        */
       public Builder addNeighborSet(proto.Pastry.NodeReference value) {
         if (neighborSetBuilder_ == null) {
@@ -3569,7 +3135,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 4;</code>
+       * <code>repeated .NodeReference neighborSet = 3;</code>
        */
       public Builder addNeighborSet(
           int index, proto.Pastry.NodeReference value) {
@@ -3586,7 +3152,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 4;</code>
+       * <code>repeated .NodeReference neighborSet = 3;</code>
        */
       public Builder addNeighborSet(
           proto.Pastry.NodeReference.Builder builderForValue) {
@@ -3600,7 +3166,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 4;</code>
+       * <code>repeated .NodeReference neighborSet = 3;</code>
        */
       public Builder addNeighborSet(
           int index, proto.Pastry.NodeReference.Builder builderForValue) {
@@ -3614,7 +3180,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 4;</code>
+       * <code>repeated .NodeReference neighborSet = 3;</code>
        */
       public Builder addAllNeighborSet(
           java.lang.Iterable<? extends proto.Pastry.NodeReference> values) {
@@ -3629,12 +3195,12 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 4;</code>
+       * <code>repeated .NodeReference neighborSet = 3;</code>
        */
       public Builder clearNeighborSet() {
         if (neighborSetBuilder_ == null) {
           neighborSet_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000008);
+          bitField0_ = (bitField0_ & ~0x00000004);
           onChanged();
         } else {
           neighborSetBuilder_.clear();
@@ -3642,7 +3208,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 4;</code>
+       * <code>repeated .NodeReference neighborSet = 3;</code>
        */
       public Builder removeNeighborSet(int index) {
         if (neighborSetBuilder_ == null) {
@@ -3655,14 +3221,14 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 4;</code>
+       * <code>repeated .NodeReference neighborSet = 3;</code>
        */
       public proto.Pastry.NodeReference.Builder getNeighborSetBuilder(
           int index) {
         return getNeighborSetFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 4;</code>
+       * <code>repeated .NodeReference neighborSet = 3;</code>
        */
       public proto.Pastry.NodeReferenceOrBuilder getNeighborSetOrBuilder(
           int index) {
@@ -3672,7 +3238,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 4;</code>
+       * <code>repeated .NodeReference neighborSet = 3;</code>
        */
       public java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
            getNeighborSetOrBuilderList() {
@@ -3683,14 +3249,14 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 4;</code>
+       * <code>repeated .NodeReference neighborSet = 3;</code>
        */
       public proto.Pastry.NodeReference.Builder addNeighborSetBuilder() {
         return getNeighborSetFieldBuilder().addBuilder(
             proto.Pastry.NodeReference.getDefaultInstance());
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 4;</code>
+       * <code>repeated .NodeReference neighborSet = 3;</code>
        */
       public proto.Pastry.NodeReference.Builder addNeighborSetBuilder(
           int index) {
@@ -3698,7 +3264,7 @@ public final class Pastry {
             index, proto.Pastry.NodeReference.getDefaultInstance());
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 4;</code>
+       * <code>repeated .NodeReference neighborSet = 3;</code>
        */
       public java.util.List<proto.Pastry.NodeReference.Builder> 
            getNeighborSetBuilderList() {
@@ -3711,7 +3277,7 @@ public final class Pastry {
           neighborSetBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder>(
                   neighborSet_,
-                  ((bitField0_ & 0x00000008) == 0x00000008),
+                  ((bitField0_ & 0x00000004) == 0x00000004),
                   getParentForChildren(),
                   isClean());
           neighborSet_ = null;
@@ -4558,14 +4124,14 @@ public final class Pastry {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string address = 1;</code>
+     * <code>string ip = 1;</code>
      */
-    java.lang.String getAddress();
+    java.lang.String getIp();
     /**
-     * <code>string address = 1;</code>
+     * <code>string ip = 1;</code>
      */
     com.google.protobuf.ByteString
-        getAddressBytes();
+        getIpBytes();
 
     /**
      * <code>int32 port = 2;</code>
@@ -4585,7 +4151,7 @@ public final class Pastry {
       super(builder);
     }
     private NodeReference() {
-      address_ = "";
+      ip_ = "";
       port_ = 0;
     }
 
@@ -4616,7 +4182,7 @@ public final class Pastry {
             case 10: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              address_ = s;
+              ip_ = s;
               break;
             }
             case 16: {
@@ -4656,34 +4222,34 @@ public final class Pastry {
               proto.Pastry.NodeReference.class, proto.Pastry.NodeReference.Builder.class);
     }
 
-    public static final int ADDRESS_FIELD_NUMBER = 1;
-    private volatile java.lang.Object address_;
+    public static final int IP_FIELD_NUMBER = 1;
+    private volatile java.lang.Object ip_;
     /**
-     * <code>string address = 1;</code>
+     * <code>string ip = 1;</code>
      */
-    public java.lang.String getAddress() {
-      java.lang.Object ref = address_;
+    public java.lang.String getIp() {
+      java.lang.Object ref = ip_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        address_ = s;
+        ip_ = s;
         return s;
       }
     }
     /**
-     * <code>string address = 1;</code>
+     * <code>string ip = 1;</code>
      */
     public com.google.protobuf.ByteString
-        getAddressBytes() {
-      java.lang.Object ref = address_;
+        getIpBytes() {
+      java.lang.Object ref = ip_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        address_ = b;
+        ip_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -4713,8 +4279,8 @@ public final class Pastry {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!getAddressBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, address_);
+      if (!getIpBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, ip_);
       }
       if (port_ != 0) {
         output.writeInt32(2, port_);
@@ -4728,8 +4294,8 @@ public final class Pastry {
       if (size != -1) return size;
 
       size = 0;
-      if (!getAddressBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, address_);
+      if (!getIpBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, ip_);
       }
       if (port_ != 0) {
         size += com.google.protobuf.CodedOutputStream
@@ -4751,8 +4317,8 @@ public final class Pastry {
       proto.Pastry.NodeReference other = (proto.Pastry.NodeReference) obj;
 
       boolean result = true;
-      result = result && getAddress()
-          .equals(other.getAddress());
+      result = result && getIp()
+          .equals(other.getIp());
       result = result && (getPort()
           == other.getPort());
       result = result && unknownFields.equals(other.unknownFields);
@@ -4766,8 +4332,8 @@ public final class Pastry {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + ADDRESS_FIELD_NUMBER;
-      hash = (53 * hash) + getAddress().hashCode();
+      hash = (37 * hash) + IP_FIELD_NUMBER;
+      hash = (53 * hash) + getIp().hashCode();
       hash = (37 * hash) + PORT_FIELD_NUMBER;
       hash = (53 * hash) + getPort();
       hash = (29 * hash) + unknownFields.hashCode();
@@ -4903,7 +4469,7 @@ public final class Pastry {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        address_ = "";
+        ip_ = "";
 
         port_ = 0;
 
@@ -4933,7 +4499,7 @@ public final class Pastry {
       @java.lang.Override
       public proto.Pastry.NodeReference buildPartial() {
         proto.Pastry.NodeReference result = new proto.Pastry.NodeReference(this);
-        result.address_ = address_;
+        result.ip_ = ip_;
         result.port_ = port_;
         onBuilt();
         return result;
@@ -4983,8 +4549,8 @@ public final class Pastry {
 
       public Builder mergeFrom(proto.Pastry.NodeReference other) {
         if (other == proto.Pastry.NodeReference.getDefaultInstance()) return this;
-        if (!other.getAddress().isEmpty()) {
-          address_ = other.address_;
+        if (!other.getIp().isEmpty()) {
+          ip_ = other.ip_;
           onChanged();
         }
         if (other.getPort() != 0) {
@@ -5019,71 +4585,71 @@ public final class Pastry {
         return this;
       }
 
-      private java.lang.Object address_ = "";
+      private java.lang.Object ip_ = "";
       /**
-       * <code>string address = 1;</code>
+       * <code>string ip = 1;</code>
        */
-      public java.lang.String getAddress() {
-        java.lang.Object ref = address_;
+      public java.lang.String getIp() {
+        java.lang.Object ref = ip_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          address_ = s;
+          ip_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>string address = 1;</code>
+       * <code>string ip = 1;</code>
        */
       public com.google.protobuf.ByteString
-          getAddressBytes() {
-        java.lang.Object ref = address_;
+          getIpBytes() {
+        java.lang.Object ref = ip_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          address_ = b;
+          ip_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string address = 1;</code>
+       * <code>string ip = 1;</code>
        */
-      public Builder setAddress(
+      public Builder setIp(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        address_ = value;
+        ip_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string address = 1;</code>
+       * <code>string ip = 1;</code>
        */
-      public Builder clearAddress() {
+      public Builder clearIp() {
         
-        address_ = getDefaultInstance().getAddress();
+        ip_ = getDefaultInstance().getIp();
         onChanged();
         return this;
       }
       /**
-       * <code>string address = 1;</code>
+       * <code>string ip = 1;</code>
        */
-      public Builder setAddressBytes(
+      public Builder setIpBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        address_ = value;
+        ip_ = value;
         onChanged();
         return this;
       }
@@ -5206,18 +4772,16 @@ public final class Pastry {
   static {
     java.lang.String[] descriptorData = {
       "\n\014pastry.proto\"\'\n\013JoinRequest\022\n\n\002ip\030\001 \001(" +
-      "\t\022\014\n\004port\030\002 \001(\005\"\007\n\005Empty\"E\n\014JoinResponse" +
-      "\022\035\n\tnodeState\030\001 \003(\0132\n.NodeState\022\026\n\016netwo" +
-      "rkIsEmpty\030\002 \001(\010\"\240\001\n\tNodeState\022#\n\013downLea" +
-      "fSet\030\001 \003(\0132\016.NodeReference\022!\n\tupLeafSet\030" +
-      "\002 \003(\0132\016.NodeReference\022&\n\014routingTable\030\003 " +
-      "\003(\0132\020.RoutingTableRow\022#\n\013neighborSet\030\004 \003" +
-      "(\0132\016.NodeReference\"<\n\017RoutingTableRow\022)\n" +
-      "\021routingTableEntry\030\001 \003(\0132\016.NodeReference" +
-      "\".\n\rNodeReference\022\017\n\007address\030\001 \001(\t\022\014\n\004po" +
-      "rt\030\002 \001(\00526\n\rPastryService\022%\n\004Join\022\014.Join" +
-      "Request\032\r.JoinResponse\"\000B\007\n\005protob\006proto" +
-      "3"
+      "\t\022\014\n\004port\030\002 \001(\005\"\007\n\005Empty\"-\n\014JoinResponse" +
+      "\022\035\n\tnodeState\030\001 \003(\0132\n.NodeState\"y\n\tNodeS" +
+      "tate\022\037\n\007leafSet\030\001 \003(\0132\016.NodeReference\022&\n" +
+      "\014routingTable\030\002 \003(\0132\020.RoutingTableRow\022#\n" +
+      "\013neighborSet\030\003 \003(\0132\016.NodeReference\"<\n\017Ro" +
+      "utingTableRow\022)\n\021routingTableEntry\030\001 \003(\013" +
+      "2\016.NodeReference\")\n\rNodeReference\022\n\n\002ip\030" +
+      "\001 \001(\t\022\014\n\004port\030\002 \001(\00526\n\rPastryService\022%\n\004" +
+      "Join\022\014.JoinRequest\032\r.JoinResponse\"\000B\007\n\005p" +
+      "rotob\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -5248,13 +4812,13 @@ public final class Pastry {
     internal_static_JoinResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_JoinResponse_descriptor,
-        new java.lang.String[] { "NodeState", "NetworkIsEmpty", });
+        new java.lang.String[] { "NodeState", });
     internal_static_NodeState_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_NodeState_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_NodeState_descriptor,
-        new java.lang.String[] { "DownLeafSet", "UpLeafSet", "RoutingTable", "NeighborSet", });
+        new java.lang.String[] { "LeafSet", "RoutingTable", "NeighborSet", });
     internal_static_RoutingTableRow_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_RoutingTableRow_fieldAccessorTable = new
@@ -5266,7 +4830,7 @@ public final class Pastry {
     internal_static_NodeReference_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_NodeReference_descriptor,
-        new java.lang.String[] { "Address", "Port", });
+        new java.lang.String[] { "Ip", "Port", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

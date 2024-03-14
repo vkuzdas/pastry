@@ -79,4 +79,44 @@ public class Util {
 
         return quaternaryNumber.toString();
     }
+
+    /**
+     * To-Base is determined by {@link PastryNode#b}
+     */
+    public static String convertFromDecimal(BigInteger decimalValue) {
+        StringBuilder result = new StringBuilder();
+        BigInteger zero = BigInteger.ZERO;
+        BigInteger baseValue = BigInteger.valueOf((int)Math.pow(2, PastryNode.b));
+
+        while (decimalValue.compareTo(zero) > 0) {
+            BigInteger[] quotientAndRemainder = decimalValue.divideAndRemainder(baseValue);
+            BigInteger remainder = quotientAndRemainder[1];
+            result.insert(0, remainder); // Insert remainder at the beginning of the result
+            decimalValue = quotientAndRemainder[0];
+        }
+
+        return result.toString();
+    }
+
+
+    /**
+     * From-Base is determined by {@link PastryNode#b}
+     */
+    public static BigInteger convertToDecimal(String strNumber) {
+        BigInteger number = new BigInteger(strNumber);
+        BigInteger base = BigInteger.valueOf((int) Math.pow(2, PastryNode.b));
+        BigInteger decimalValue = BigInteger.ZERO;
+        BigInteger power = BigInteger.ZERO;
+
+        while (number.compareTo(BigInteger.ZERO) > 0) {
+            BigInteger[] quotientAndRemainder = number.divideAndRemainder(BigInteger.TEN);
+            BigInteger digit = quotientAndRemainder[1];
+            BigInteger temp = base.pow(power.intValue()).multiply(digit);
+            decimalValue = decimalValue.add(temp);
+            power = power.add(BigInteger.ONE);
+            number = quotientAndRemainder[0];
+        }
+
+        return decimalValue;
+    }
 }

@@ -1,9 +1,9 @@
 package pastry;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.google.common.annotations.VisibleForTesting;
 import io.grpc.*;
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
@@ -12,12 +12,7 @@ import proto.Pastry;
 import proto.PastryServiceGrpc;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
-
-import static pastry.Util.*;
 
 import static pastry.Constants.*;
 
@@ -40,19 +35,19 @@ public class PastryNode {
     /**
      * log(base,N) rows, base columns
      */
-    private List<List<String>> R;
+    private List<List<NodeReference>> routingTable;
     /**
      * Closest nodes per metric
      */
-    private List<String> neighborSet;
+    private List<NodeReference> neighborSet;
     /**
      * Closest nodes per numerical distance, larger values
      */
-    private List<String> upLeafs;
+    private List<NodeReference> upLeafs;
     /**
      * Closest nodes per numerical distance, smaller values
      */
-    private List<String> downLeafs;
+    private List<NodeReference> downLeafs;
     private NodeReference self;
 
     private final Timer stabilizationTimer = new Timer();
@@ -89,23 +84,15 @@ public class PastryNode {
         logger.warn("Server started, listening on {}", self.port);
 
         logger.trace("[{}]  started FIX", self);
+
         // periodic stabilization
         stabilizationTimerTask = new TimerTask() {
             @Override
             public void run() {
-                int rand = new Random().nextInt(3)-1;
-                if (rand == 1) {
-                    rand = new Random().nextInt(80)+10000;
-                    logger.trace("[{}]  ticking onto {}", self, rand);
-//                    ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:"+rand).usePlaintext().build();
-//                    blockingStub = PastryServiceGrpc.newBlockingStub(channel);
-//                    blockingStub.join(Pastry.JoinRequest.newBuilder().setPort(self.port).build());
-//                    channel.shutdown();
-                }
+                logger.trace("[{}]  ticked", self);
             }
         };
         stabilizationTimer.schedule(stabilizationTimerTask,1000, STABILIZATION_INTERVAL);
-
     }
 
     public void stopServer() {
@@ -116,16 +103,16 @@ public class PastryNode {
     }
 
     /**
-     * Newly joined node <b>X</b> will prompt <b>bootstrap</b> to send <i>'join'</i> request around the network <par>
+     * Newly joined node <b>X</b> will prompt <b>bootstrap node A</b> to send <i>'join'</i> request around the network <par>
      * Request is routed to node <b>Z</b> which is closest to <b>X</b> <par>
      * Nodes in the routing path will send the node state to <b>X</b>
-     * @param bootstrap
      */
     public void joinPastry(NodeReference bootstrap) {
         ManagedChannel channel = ManagedChannelBuilder.forTarget(bootstrap.getAddress()).usePlaintext().build();
         blockingStub = PastryServiceGrpc.newBlockingStub(channel);
         Pastry.JoinRequest.Builder request = Pastry.JoinRequest.newBuilder().setIp(self.ip).setPort(self.port);
         Pastry.JoinResponse resp;
+
         try {
             resp = blockingStub.join(request.build());
             channel.shutdown();
@@ -134,15 +121,80 @@ public class PastryNode {
             return;
         }
 
-        // TODO: pokud je network prazdnej, bude v resp.NetworkEmpty, nebo tam bude jenom jeden zaznam?
         updateNodeState(resp);
-
     }
 
-    private void updateNodeState(Pastry.JoinResponse resp) {
+
+    /**
+     * X is the joining node (self)
+     * A is bootstrap node
+     * Z is node onto which join request converges since it has closest nodeId to X
+     */
+    public void updateNodeState(Pastry.JoinResponse resp) {
+        // A usually in proximity to X => A.neighborSet to initialize X.neighborSet (set is updated periodically)
+        List<Pastry.NodeReference> A_neighborSet = resp.getNodeState(0).getNeighborSetList();
+        updateNeighborSet(A_neighborSet);
+
+        // Z has the closest existing nodeId to X, thus its leaf set is the basis for X’s leaf set.
+        int len = resp.getNodeStateCount();
+        List<Pastry.NodeReference> Z_leafs = resp.getNodeState(len).getLeafSetList();
+        updateLeafSet(Z_leafs);
+
+        // Routing table
+        updateRoutingTable(resp);
+    }
+
+
+    /**
+     * Let A be the first node encouteredin path of join request <br>
+     * Let A<sub>0</sub> be the first row of A's routing table <br>
+     * - Nodes in A<sub>0</sub> share no common prefix with A, same is true about X, therefore it can be set as X<sub>0</sub> <br>
+     * - Nodes in B<sub>1</sub> share the first digit with X, since B and X share it. B<sub>1</sub> can be therefore set as X<sub>1</sub> <br>
+     * @param A_routingTable
+     */
+    private void updateRoutingTable(Pastry.JoinResponse response) {
+        int len = response.getNodeStateCount();
         lock.lock();
         try {
+            for (int i = 0; i < len; i++) {
+                List<Pastry.NodeReference> entries = response
+                        .getNodeState(i) // i-th node
+                        .getRoutingTable(i) // i-th row
+                        .getRoutingTableEntryList();
 
+                routingTable.add(new ArrayList<>());
+                entries.forEach(node -> routingTable.get(0).add(new NodeReference(node.getIp(), node.getPort())));
+                // TODO: sort entries by distance to prefer closer nodes
+            }
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    private void updateLeafSet(List<Pastry.NodeReference> Z_leafs) {
+        BigInteger selfId = self.getDecimalId();
+        lock.lock();
+        try {
+            Z_leafs.forEach(node -> {
+                NodeReference leaf = new NodeReference(node.getIp(), node.getPort());
+                if (leaf.getDecimalId().compareTo(selfId) > 0)
+                    upLeafs.add(leaf);
+                else
+                    downLeafs.add(leaf);
+            });
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    private void updateNeighborSet(List<Pastry.NodeReference> neighborSet) {
+        lock.lock();
+        try {
+            neighborSet.forEach(node -> {
+                NodeReference neigh = new NodeReference(node.getIp(), node.getPort());
+                neigh.setDistance(Util.getDistance(neigh.getAddress()));
+                this.neighborSet.add(new NodeReference(node.getIp(), node.getPort()));
+            });
         } finally {
             lock.unlock();
         }
