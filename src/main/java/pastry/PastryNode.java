@@ -228,28 +228,51 @@ public class PastryNode {
         return closest;
     }
 
+    /**
+     * Insert new NodeState corresponding to NodeState of current node <br>
+     * Note that NodeState list is stack-like: Z node is inserted first, A last
+     */
     private Pastry.JoinResponse enrichResponse(Pastry.JoinResponse response) {
-        // TODO: enrich response with node state of current node
-        Pastry.JoinResponse updatedResponse = Pastry.JoinResponse.newBuilder(response)
-//                .setNodeState()
+        Pastry.NodeState.Builder stateBuilder = Pastry.NodeState.newBuilder();
+        Pastry.NodeReference.Builder nodeBuilder = Pastry.NodeReference.newBuilder();
+        Pastry.RoutingTableRow.Builder rowBuilder = Pastry.RoutingTableRow.newBuilder();
+
+        neighborSet.forEach(n ->
+                stateBuilder.addNeighborSet(nodeBuilder.setIp(n.getIp()).setPort(n.getPort()).build())
+        );
+        downLeafs.forEach(n ->
+                stateBuilder.addLeafSet(nodeBuilder.setIp(n.getIp()).setPort(n.getPort()).build())
+        );
+        upLeafs.forEach(n ->
+                stateBuilder.addLeafSet(nodeBuilder.setIp(n.getIp()).setPort(n.getPort()).build())
+        );
+        routingTable.forEach(row -> {
+            row.forEach(n ->
+                    rowBuilder.addRoutingTableEntry(nodeBuilder.setIp(n.getIp()).setPort(n.getPort()).build())
+            );
+            stateBuilder.addRoutingTable(rowBuilder.build());
+        });
+
+        int index = response.getNodeStateCount();
+        return Pastry.JoinResponse.newBuilder(response)
+                .setNodeState(index, stateBuilder.build())
                 .build();
-        return response;
     }
 
 
     /**
-     * X is the joining node (self)
-     * A is bootstrap node
-     * Z is node onto which join request converges since it has closest nodeId to X
+     * X is the joining node (self) <br>
+     * A is bootstrap node <br>
+     * Z is node onto which join request converges since it has closest nodeId to X <br>
      */
     public void updateNodeState(Pastry.JoinResponse resp) {
         // A usually in proximity to X => A.neighborSet to initialize X.neighborSet (set is updated periodically)
-        List<Pastry.NodeReference> A_neighborSet = resp.getNodeState(0).getNeighborSetList();
+        int len = resp.getNodeStateCount();
+        List<Pastry.NodeReference> A_neighborSet = resp.getNodeState(len).getNeighborSetList();
         updateNeighborSet(A_neighborSet);
 
         // Z has the closest existing nodeId to X, thus its leaf set is the basis for X’s leaf set.
-        int len = resp.getNodeStateCount();
-        List<Pastry.NodeReference> Z_leafs = resp.getNodeState(len).getLeafSetList();
+        List<Pastry.NodeReference> Z_leafs = resp.getNodeState(0).getLeafSetList();
         updateLeafSet(Z_leafs);
 
         // Routing table
@@ -327,12 +350,24 @@ public class PastryNode {
      * Server-side of Pastry node
      */
     private class PastryNodeServer extends PastryServiceGrpc.PastryServiceImplBase {
+
+        /**
+         * NodeState in Pastry.JoinResponse.NodeState is stack-like: Z node is inserted first, A last
+         */
         @Override
         public void join(Pastry.JoinRequest request, StreamObserver<Pastry.JoinResponse> responseObserver) {
             NodeReference newNode = new NodeReference(request.getIp(), request.getPort());
 
             // find the closest node to the new node
             NodeReference closest = route(Util.getId(newNode.getAddress()));
+
+            // either node is alone or it is the Z node itself
+            if (closest.equals(self)) {
+                Pastry.JoinResponse response = Pastry.JoinResponse.newBuilder().build();
+                enrichResponse(response);
+                responseObserver.onNext(response);
+                responseObserver.onCompleted();
+            }
 
             // reroute newNode's join request to the closest node
             ManagedChannel channel = ManagedChannelBuilder.forTarget(closest.getAddress()).usePlaintext().build();
