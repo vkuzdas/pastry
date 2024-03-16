@@ -19,6 +19,12 @@ import static pastry.Constants.*;
 public class PastryNode {
 
     private static final Logger logger = LoggerFactory.getLogger(PastryNode.class);
+    /**
+     * Whether Pastry is tested locally, meaning same host, different ports. This would imply same metric distance for all nodes. <br>
+     * The flag therefore simulates constant metric distance defined as port difference between two nodes. <br>
+     * @see Util#getDistance
+     */
+    public static boolean LOCAL_TESTING = true;
     private final ReentrantLock lock = new ReentrantLock();
     /**
      * Config parameter determining base of id: ids are 2^b based <br>
@@ -56,6 +62,10 @@ public class PastryNode {
 
     private final Server server;
     private PastryServiceGrpc.PastryServiceBlockingStub blockingStub;
+
+    public static void setLocalTesting(boolean localTesting) {
+        LOCAL_TESTING = localTesting;
+    }
 
     public static void setBase(int b) {
         if (b != BASE_4_IDS && b != Constants.BASE_8_IDS && b != Constants.BASE_16_IDS) {
@@ -122,6 +132,110 @@ public class PastryNode {
         }
 
         updateNodeState(resp);
+    }
+
+    /**
+     * Return the closest node to the given id (based on prefix or numerically)
+     * @param id_base 4/8/16-based id (given by {@link PastryNode#b})
+     */
+    public NodeReference route(String id_base) {
+        if (neighborSet.isEmpty()) {
+            // network is empty, self is closest by definition
+            return self;
+        }
+
+        BigInteger id_dec = Util.convertToDecimal(id_base);
+        downLeafs.sort(Comparator.comparing(NodeReference::getDecimalId));
+        BigInteger firstLeaf_dec = downLeafs.get(0).getDecimalId();
+        upLeafs.sort(Comparator.comparing(NodeReference::getDecimalId));
+        BigInteger lastLeaf_dec = upLeafs.get(upLeafs.size() - 1).getDecimalId();
+
+        // if id in L range
+        if (firstLeaf_dec.compareTo(id_dec) <= 0 &&  id_dec.compareTo(lastLeaf_dec) <= 0) {
+            logger.trace("[{}]  Routing {} to numerically closest leaf", self, id_base);
+            return getNumericallyClosestLeaf(id_dec);
+        }
+        // routing table
+        else {
+            int l = getSharedPrefixLength(id_base, self.getId());
+            NodeReference longerMatch;
+            try {
+                // forward to a node that shares common prefix with the id_base by at least one more digit
+                // R[l+1][id[l]+1]
+                longerMatch = routingTable.get(l+1).get(id_base.charAt(l));
+                return longerMatch;
+            } catch (IndexOutOfBoundsException e) {
+                // forward to a node that shares prefix with the key at least as long as the local node
+                // and is numerically closer to the key than the present node’s id.
+                // TODO: ...or if R[l+1][idD[l]+1] not reachable
+                return findSameLengthMatch(id_base, l);
+            }
+        }
+    }
+
+    /**
+     * Find to a node that shares prefix with the key at least as long as the local node and is numerically closer to the key than the present node’s id.
+     */
+    private NodeReference findSameLengthMatch(String id_base, int l) {
+        // start by searching R[l] entries (same len entries)
+        for (int i = l; i < routingTable.size(); i++) {
+            List<NodeReference> row = routingTable.get(l);
+            for(NodeReference n : row) {
+                if (neighborSet.contains(n) && (upLeafs.contains(n) || downLeafs.contains(n)) ){
+                    BigInteger t = n.getDecimalId();
+                    BigInteger k = Util.convertToDecimal(id_base);
+                    BigInteger s = self.getDecimalId();
+                    if (t.subtract(k).abs().compareTo(s.subtract(k).abs()) < 0) {
+                        return n;
+                    }
+                }
+            }
+        }
+        return self;
+    }
+
+    private int getSharedPrefixLength(String idBase, String selfId) {
+        int l = 0;
+        for (int i = 0; i < idBase.length(); i++) {
+            if (idBase.charAt(i) == selfId.charAt(i)) {
+                l++;
+            } else {
+                break;
+            }
+        }
+        return l;
+    }
+
+    /**
+     * Return the closest leaf to the given id
+     */
+    private NodeReference getNumericallyClosestLeaf(BigInteger idDec) {
+        NodeReference closest = null;
+        BigInteger minDistance = BigInteger.valueOf(Long.MAX_VALUE);
+        for (NodeReference leaf : upLeafs) {
+            BigInteger distance = leaf.getDecimalId().subtract(idDec).abs();
+            if (distance.compareTo(minDistance) < 0) {
+                minDistance = distance;
+                closest = leaf;
+            }
+        }
+
+        for (NodeReference leaf : downLeafs) {
+            BigInteger distance = leaf.getDecimalId().subtract(idDec).abs();
+            if (distance.compareTo(minDistance) < 0) {
+                minDistance = distance;
+                closest = leaf;
+            }
+        }
+        return closest;
+    }
+
+    private Pastry.JoinResponse enrichResponse(Pastry.JoinResponse response) {
+        // TODO: enrich response with node state of current node
+        Pastry.JoinResponse updatedResponse = Pastry.JoinResponse.newBuilder(response)
+//                .setNodeState()
+                .build();
+        return response;
     }
 
 
@@ -192,7 +306,7 @@ public class PastryNode {
         try {
             neighborSet.forEach(node -> {
                 NodeReference neigh = new NodeReference(node.getIp(), node.getPort());
-                neigh.setDistance(Util.getDistance(neigh.getAddress()));
+                neigh.setDistance(Util.getDistance(neigh.getAddress(), self.getAddress()));
                 this.neighborSet.add(new NodeReference(node.getIp(), node.getPort()));
             });
         } finally {
@@ -200,20 +314,15 @@ public class PastryNode {
         }
     }
 
-    public NodeReference route(String id) {
-        // if network is empty, leafset is empty
 
-
-        // TODO: implement pastry routing logic
-        return self;
-    }
-
-    private Pastry.JoinResponse enrichResponse(Pastry.JoinResponse response) {
-        // TODO: enrich response with node state of current node
-        return response;
+    private void registerNewNode(NodeReference newNode) {
+        //TODO: insert newNode into R, L, M if appropriate
     }
 
 
+    /**
+     * Server-side of Pastry node
+     */
     private class PastryNodeServer extends PastryServiceGrpc.PastryServiceImplBase {
         @Override
         public void join(Pastry.JoinRequest request, StreamObserver<Pastry.JoinResponse> responseObserver) {
@@ -223,7 +332,7 @@ public class PastryNode {
             NodeReference closest = route(Util.getId(newNode.getAddress()));
 
             // reroute newNode's join request to the closest node
-            ManagedChannel channel = ManagedChannelBuilder.forTarget(newNode.getAddress()).usePlaintext().build();
+            ManagedChannel channel = ManagedChannelBuilder.forTarget(closest.getAddress()).usePlaintext().build();
             blockingStub = PastryServiceGrpc.newBlockingStub(channel);
             Pastry.JoinResponse response = blockingStub.join(Pastry.JoinRequest.newBuilder().setIp(request.getIp()).setPort(self.port).build());
             channel.shutdown();
@@ -233,6 +342,9 @@ public class PastryNode {
 
             responseObserver.onNext(response);
             responseObserver.onCompleted();
+
+            // finally register the node into your nodestate
+            registerNewNode(newNode);
         }
     }
 

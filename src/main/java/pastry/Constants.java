@@ -1,6 +1,6 @@
 package pastry;
 
-interface Constants {
+public interface Constants {
     /**
      * b parameter values
      */
