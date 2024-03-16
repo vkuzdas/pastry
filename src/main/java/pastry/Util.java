@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -64,7 +63,7 @@ public class Util {
         BigInteger decimal_16bit = decimal_128bit.mod(BigInteger.valueOf(2L).pow(16));
 
         String quat_16bit = decToQuat(decimal_16bit);
-        int padding = PastryNode.l - quat_16bit.length();
+        int padding = PastryNode.L_PARAMETER - quat_16bit.length();
         if (padding > 0) {
             StringBuilder paddingBuilder = new StringBuilder();
             for (int i = 0; i < padding; i++) {
@@ -95,12 +94,12 @@ public class Util {
     }
 
     /**
-     * To-Base is determined by {@link PastryNode#b}
+     * To-Base is determined by {@link PastryNode#B_PARAMETER}
      */
     public static String convertFromDecimal(BigInteger decimalValue) {
         StringBuilder result = new StringBuilder();
         BigInteger zero = BigInteger.ZERO;
-        BigInteger baseValue = BigInteger.valueOf((int)Math.pow(2, PastryNode.b));
+        BigInteger baseValue = BigInteger.valueOf((int)Math.pow(2, PastryNode.B_PARAMETER));
 
         while (decimalValue.compareTo(zero) > 0) {
             BigInteger[] quotientAndRemainder = decimalValue.divideAndRemainder(baseValue);
@@ -114,11 +113,11 @@ public class Util {
 
 
     /**
-     * From-Base is determined by {@link PastryNode#b}
+     * From-Base is determined by {@link PastryNode#B_PARAMETER}
      */
     public static BigInteger convertToDecimal(String strNumber) {
         BigInteger number = new BigInteger(strNumber);
-        BigInteger base = BigInteger.valueOf((int) Math.pow(2, PastryNode.b));
+        BigInteger base = BigInteger.valueOf((int) Math.pow(2, PastryNode.B_PARAMETER));
         BigInteger decimalValue = BigInteger.ZERO;
         BigInteger power = BigInteger.ZERO;
 

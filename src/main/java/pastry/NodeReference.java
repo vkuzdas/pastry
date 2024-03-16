@@ -29,6 +29,8 @@ public class NodeReference {
 
     public long getDistance() {
         // TODO: should be "getMetric" instead and should support at least one other metric
+        // WARNING: frequent sort according to distance will be slow
+        // TODO: think about saving the distance instead recomputing
         return distance;
     }
 
