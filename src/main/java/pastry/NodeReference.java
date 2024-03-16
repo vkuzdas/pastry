@@ -28,6 +28,7 @@ public class NodeReference {
     }
 
     public long getDistance() {
+        // TODO: should be "getMetric" instead and should support at least one other metric
         return distance;
     }
 

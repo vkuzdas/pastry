@@ -145,9 +145,7 @@ public class PastryNode {
         }
 
         BigInteger id_dec = Util.convertToDecimal(id_base);
-        downLeafs.sort(Comparator.comparing(NodeReference::getDecimalId));
         BigInteger firstLeaf_dec = downLeafs.get(0).getDecimalId();
-        upLeafs.sort(Comparator.comparing(NodeReference::getDecimalId));
         BigInteger lastLeaf_dec = upLeafs.get(upLeafs.size() - 1).getDecimalId();
 
         // if id in L range
@@ -260,11 +258,10 @@ public class PastryNode {
 
 
     /**
-     * Let A be the first node encouteredin path of join request <br>
+     * Let A be the first node encoutered in path of join request <br>
      * Let A<sub>0</sub> be the first row of A's routing table <br>
      * - Nodes in A<sub>0</sub> share no common prefix with A, same is true about X, therefore it can be set as X<sub>0</sub> <br>
      * - Nodes in B<sub>1</sub> share the first digit with X, since B and X share it. B<sub>1</sub> can be therefore set as X<sub>1</sub> <br>
-     * @param A_routingTable
      */
     private void updateRoutingTable(Pastry.JoinResponse response) {
         int len = response.getNodeStateCount();
@@ -278,6 +275,7 @@ public class PastryNode {
 
                 routingTable.add(new ArrayList<>());
                 entries.forEach(node -> routingTable.get(0).add(new NodeReference(node.getIp(), node.getPort())));
+                routingTable.get(0).sort(Comparator.comparing(NodeReference::getDistance));
                 // TODO: sort entries by distance to prefer closer nodes
             }
         } finally {
@@ -291,24 +289,29 @@ public class PastryNode {
         try {
             Z_leafs.forEach(node -> {
                 NodeReference leaf = new NodeReference(node.getIp(), node.getPort());
-                if (leaf.getDecimalId().compareTo(selfId) > 0)
+                if (leaf.getDecimalId().compareTo(selfId) > 0) {
                     upLeafs.add(leaf);
-                else
+                    upLeafs.sort(Comparator.comparing(NodeReference::getDecimalId));
+                }
+                else {
                     downLeafs.add(leaf);
+                    downLeafs.sort(Comparator.comparing(NodeReference::getDecimalId));
+                }
             });
         } finally {
             lock.unlock();
         }
     }
 
-    private void updateNeighborSet(List<Pastry.NodeReference> neighborSet) {
+    private void updateNeighborSet(List<Pastry.NodeReference> A_neighborSet) {
         lock.lock();
         try {
-            neighborSet.forEach(node -> {
+            A_neighborSet.forEach(node -> {
                 NodeReference neigh = new NodeReference(node.getIp(), node.getPort());
                 neigh.setDistance(Util.getDistance(neigh.getAddress(), self.getAddress()));
-                this.neighborSet.add(new NodeReference(node.getIp(), node.getPort()));
+                neighborSet.add(new NodeReference(node.getIp(), node.getPort()));
             });
+            neighborSet.sort(Comparator.comparing(NodeReference::getDistance));
         } finally {
             lock.unlock();
         }
