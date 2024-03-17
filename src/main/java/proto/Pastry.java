@@ -1826,73 +1826,86 @@ public final class Pastry {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>repeated .NodeReference leafSet = 1;</code>
+     * <code>.NodeReference owner = 1;</code>
+     */
+    boolean hasOwner();
+    /**
+     * <code>.NodeReference owner = 1;</code>
+     */
+    proto.Pastry.NodeReference getOwner();
+    /**
+     * <code>.NodeReference owner = 1;</code>
+     */
+    proto.Pastry.NodeReferenceOrBuilder getOwnerOrBuilder();
+
+    /**
+     * <code>repeated .NodeReference leafSet = 2;</code>
      */
     java.util.List<proto.Pastry.NodeReference> 
         getLeafSetList();
     /**
-     * <code>repeated .NodeReference leafSet = 1;</code>
+     * <code>repeated .NodeReference leafSet = 2;</code>
      */
     proto.Pastry.NodeReference getLeafSet(int index);
     /**
-     * <code>repeated .NodeReference leafSet = 1;</code>
+     * <code>repeated .NodeReference leafSet = 2;</code>
      */
     int getLeafSetCount();
     /**
-     * <code>repeated .NodeReference leafSet = 1;</code>
+     * <code>repeated .NodeReference leafSet = 2;</code>
      */
     java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
         getLeafSetOrBuilderList();
     /**
-     * <code>repeated .NodeReference leafSet = 1;</code>
+     * <code>repeated .NodeReference leafSet = 2;</code>
      */
     proto.Pastry.NodeReferenceOrBuilder getLeafSetOrBuilder(
         int index);
 
     /**
-     * <code>repeated .RoutingTableRow routingTable = 2;</code>
+     * <code>repeated .RoutingTableRow routingTable = 3;</code>
      */
     java.util.List<proto.Pastry.RoutingTableRow> 
         getRoutingTableList();
     /**
-     * <code>repeated .RoutingTableRow routingTable = 2;</code>
+     * <code>repeated .RoutingTableRow routingTable = 3;</code>
      */
     proto.Pastry.RoutingTableRow getRoutingTable(int index);
     /**
-     * <code>repeated .RoutingTableRow routingTable = 2;</code>
+     * <code>repeated .RoutingTableRow routingTable = 3;</code>
      */
     int getRoutingTableCount();
     /**
-     * <code>repeated .RoutingTableRow routingTable = 2;</code>
+     * <code>repeated .RoutingTableRow routingTable = 3;</code>
      */
     java.util.List<? extends proto.Pastry.RoutingTableRowOrBuilder> 
         getRoutingTableOrBuilderList();
     /**
-     * <code>repeated .RoutingTableRow routingTable = 2;</code>
+     * <code>repeated .RoutingTableRow routingTable = 3;</code>
      */
     proto.Pastry.RoutingTableRowOrBuilder getRoutingTableOrBuilder(
         int index);
 
     /**
-     * <code>repeated .NodeReference neighborSet = 3;</code>
+     * <code>repeated .NodeReference neighborSet = 4;</code>
      */
     java.util.List<proto.Pastry.NodeReference> 
         getNeighborSetList();
     /**
-     * <code>repeated .NodeReference neighborSet = 3;</code>
+     * <code>repeated .NodeReference neighborSet = 4;</code>
      */
     proto.Pastry.NodeReference getNeighborSet(int index);
     /**
-     * <code>repeated .NodeReference neighborSet = 3;</code>
+     * <code>repeated .NodeReference neighborSet = 4;</code>
      */
     int getNeighborSetCount();
     /**
-     * <code>repeated .NodeReference neighborSet = 3;</code>
+     * <code>repeated .NodeReference neighborSet = 4;</code>
      */
     java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
         getNeighborSetOrBuilderList();
     /**
-     * <code>repeated .NodeReference neighborSet = 3;</code>
+     * <code>repeated .NodeReference neighborSet = 4;</code>
      */
     proto.Pastry.NodeReferenceOrBuilder getNeighborSetOrBuilder(
         int index);
@@ -1940,27 +1953,40 @@ public final class Pastry {
               done = true;
               break;
             case 10: {
-              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+              proto.Pastry.NodeReference.Builder subBuilder = null;
+              if (owner_ != null) {
+                subBuilder = owner_.toBuilder();
+              }
+              owner_ = input.readMessage(proto.Pastry.NodeReference.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(owner_);
+                owner_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
                 leafSet_ = new java.util.ArrayList<proto.Pastry.NodeReference>();
-                mutable_bitField0_ |= 0x00000001;
+                mutable_bitField0_ |= 0x00000002;
               }
               leafSet_.add(
                   input.readMessage(proto.Pastry.NodeReference.parser(), extensionRegistry));
               break;
             }
-            case 18: {
-              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+            case 26: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
                 routingTable_ = new java.util.ArrayList<proto.Pastry.RoutingTableRow>();
-                mutable_bitField0_ |= 0x00000002;
+                mutable_bitField0_ |= 0x00000004;
               }
               routingTable_.add(
                   input.readMessage(proto.Pastry.RoutingTableRow.parser(), extensionRegistry));
               break;
             }
-            case 26: {
-              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
                 neighborSet_ = new java.util.ArrayList<proto.Pastry.NodeReference>();
-                mutable_bitField0_ |= 0x00000004;
+                mutable_bitField0_ |= 0x00000008;
               }
               neighborSet_.add(
                   input.readMessage(proto.Pastry.NodeReference.parser(), extensionRegistry));
@@ -1981,13 +2007,13 @@ public final class Pastry {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
           leafSet_ = java.util.Collections.unmodifiableList(leafSet_);
         }
-        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
           routingTable_ = java.util.Collections.unmodifiableList(routingTable_);
         }
-        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
           neighborSet_ = java.util.Collections.unmodifiableList(neighborSet_);
         }
         this.unknownFields = unknownFields.build();
@@ -2007,105 +2033,127 @@ public final class Pastry {
               proto.Pastry.NodeState.class, proto.Pastry.NodeState.Builder.class);
     }
 
-    public static final int LEAFSET_FIELD_NUMBER = 1;
+    private int bitField0_;
+    public static final int OWNER_FIELD_NUMBER = 1;
+    private proto.Pastry.NodeReference owner_;
+    /**
+     * <code>.NodeReference owner = 1;</code>
+     */
+    public boolean hasOwner() {
+      return owner_ != null;
+    }
+    /**
+     * <code>.NodeReference owner = 1;</code>
+     */
+    public proto.Pastry.NodeReference getOwner() {
+      return owner_ == null ? proto.Pastry.NodeReference.getDefaultInstance() : owner_;
+    }
+    /**
+     * <code>.NodeReference owner = 1;</code>
+     */
+    public proto.Pastry.NodeReferenceOrBuilder getOwnerOrBuilder() {
+      return getOwner();
+    }
+
+    public static final int LEAFSET_FIELD_NUMBER = 2;
     private java.util.List<proto.Pastry.NodeReference> leafSet_;
     /**
-     * <code>repeated .NodeReference leafSet = 1;</code>
+     * <code>repeated .NodeReference leafSet = 2;</code>
      */
     public java.util.List<proto.Pastry.NodeReference> getLeafSetList() {
       return leafSet_;
     }
     /**
-     * <code>repeated .NodeReference leafSet = 1;</code>
+     * <code>repeated .NodeReference leafSet = 2;</code>
      */
     public java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
         getLeafSetOrBuilderList() {
       return leafSet_;
     }
     /**
-     * <code>repeated .NodeReference leafSet = 1;</code>
+     * <code>repeated .NodeReference leafSet = 2;</code>
      */
     public int getLeafSetCount() {
       return leafSet_.size();
     }
     /**
-     * <code>repeated .NodeReference leafSet = 1;</code>
+     * <code>repeated .NodeReference leafSet = 2;</code>
      */
     public proto.Pastry.NodeReference getLeafSet(int index) {
       return leafSet_.get(index);
     }
     /**
-     * <code>repeated .NodeReference leafSet = 1;</code>
+     * <code>repeated .NodeReference leafSet = 2;</code>
      */
     public proto.Pastry.NodeReferenceOrBuilder getLeafSetOrBuilder(
         int index) {
       return leafSet_.get(index);
     }
 
-    public static final int ROUTINGTABLE_FIELD_NUMBER = 2;
+    public static final int ROUTINGTABLE_FIELD_NUMBER = 3;
     private java.util.List<proto.Pastry.RoutingTableRow> routingTable_;
     /**
-     * <code>repeated .RoutingTableRow routingTable = 2;</code>
+     * <code>repeated .RoutingTableRow routingTable = 3;</code>
      */
     public java.util.List<proto.Pastry.RoutingTableRow> getRoutingTableList() {
       return routingTable_;
     }
     /**
-     * <code>repeated .RoutingTableRow routingTable = 2;</code>
+     * <code>repeated .RoutingTableRow routingTable = 3;</code>
      */
     public java.util.List<? extends proto.Pastry.RoutingTableRowOrBuilder> 
         getRoutingTableOrBuilderList() {
       return routingTable_;
     }
     /**
-     * <code>repeated .RoutingTableRow routingTable = 2;</code>
+     * <code>repeated .RoutingTableRow routingTable = 3;</code>
      */
     public int getRoutingTableCount() {
       return routingTable_.size();
     }
     /**
-     * <code>repeated .RoutingTableRow routingTable = 2;</code>
+     * <code>repeated .RoutingTableRow routingTable = 3;</code>
      */
     public proto.Pastry.RoutingTableRow getRoutingTable(int index) {
       return routingTable_.get(index);
     }
     /**
-     * <code>repeated .RoutingTableRow routingTable = 2;</code>
+     * <code>repeated .RoutingTableRow routingTable = 3;</code>
      */
     public proto.Pastry.RoutingTableRowOrBuilder getRoutingTableOrBuilder(
         int index) {
       return routingTable_.get(index);
     }
 
-    public static final int NEIGHBORSET_FIELD_NUMBER = 3;
+    public static final int NEIGHBORSET_FIELD_NUMBER = 4;
     private java.util.List<proto.Pastry.NodeReference> neighborSet_;
     /**
-     * <code>repeated .NodeReference neighborSet = 3;</code>
+     * <code>repeated .NodeReference neighborSet = 4;</code>
      */
     public java.util.List<proto.Pastry.NodeReference> getNeighborSetList() {
       return neighborSet_;
     }
     /**
-     * <code>repeated .NodeReference neighborSet = 3;</code>
+     * <code>repeated .NodeReference neighborSet = 4;</code>
      */
     public java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
         getNeighborSetOrBuilderList() {
       return neighborSet_;
     }
     /**
-     * <code>repeated .NodeReference neighborSet = 3;</code>
+     * <code>repeated .NodeReference neighborSet = 4;</code>
      */
     public int getNeighborSetCount() {
       return neighborSet_.size();
     }
     /**
-     * <code>repeated .NodeReference neighborSet = 3;</code>
+     * <code>repeated .NodeReference neighborSet = 4;</code>
      */
     public proto.Pastry.NodeReference getNeighborSet(int index) {
       return neighborSet_.get(index);
     }
     /**
-     * <code>repeated .NodeReference neighborSet = 3;</code>
+     * <code>repeated .NodeReference neighborSet = 4;</code>
      */
     public proto.Pastry.NodeReferenceOrBuilder getNeighborSetOrBuilder(
         int index) {
@@ -2126,14 +2174,17 @@ public final class Pastry {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      if (owner_ != null) {
+        output.writeMessage(1, getOwner());
+      }
       for (int i = 0; i < leafSet_.size(); i++) {
-        output.writeMessage(1, leafSet_.get(i));
+        output.writeMessage(2, leafSet_.get(i));
       }
       for (int i = 0; i < routingTable_.size(); i++) {
-        output.writeMessage(2, routingTable_.get(i));
+        output.writeMessage(3, routingTable_.get(i));
       }
       for (int i = 0; i < neighborSet_.size(); i++) {
-        output.writeMessage(3, neighborSet_.get(i));
+        output.writeMessage(4, neighborSet_.get(i));
       }
       unknownFields.writeTo(output);
     }
@@ -2144,17 +2195,21 @@ public final class Pastry {
       if (size != -1) return size;
 
       size = 0;
+      if (owner_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getOwner());
+      }
       for (int i = 0; i < leafSet_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, leafSet_.get(i));
+          .computeMessageSize(2, leafSet_.get(i));
       }
       for (int i = 0; i < routingTable_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, routingTable_.get(i));
+          .computeMessageSize(3, routingTable_.get(i));
       }
       for (int i = 0; i < neighborSet_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, neighborSet_.get(i));
+          .computeMessageSize(4, neighborSet_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -2172,6 +2227,11 @@ public final class Pastry {
       proto.Pastry.NodeState other = (proto.Pastry.NodeState) obj;
 
       boolean result = true;
+      result = result && (hasOwner() == other.hasOwner());
+      if (hasOwner()) {
+        result = result && getOwner()
+            .equals(other.getOwner());
+      }
       result = result && getLeafSetList()
           .equals(other.getLeafSetList());
       result = result && getRoutingTableList()
@@ -2189,6 +2249,10 @@ public final class Pastry {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasOwner()) {
+        hash = (37 * hash) + OWNER_FIELD_NUMBER;
+        hash = (53 * hash) + getOwner().hashCode();
+      }
       if (getLeafSetCount() > 0) {
         hash = (37 * hash) + LEAFSET_FIELD_NUMBER;
         hash = (53 * hash) + getLeafSetList().hashCode();
@@ -2337,21 +2401,27 @@ public final class Pastry {
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        if (ownerBuilder_ == null) {
+          owner_ = null;
+        } else {
+          owner_ = null;
+          ownerBuilder_ = null;
+        }
         if (leafSetBuilder_ == null) {
           leafSet_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
+          bitField0_ = (bitField0_ & ~0x00000002);
         } else {
           leafSetBuilder_.clear();
         }
         if (routingTableBuilder_ == null) {
           routingTable_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
+          bitField0_ = (bitField0_ & ~0x00000004);
         } else {
           routingTableBuilder_.clear();
         }
         if (neighborSetBuilder_ == null) {
           neighborSet_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000008);
         } else {
           neighborSetBuilder_.clear();
         }
@@ -2382,33 +2452,40 @@ public final class Pastry {
       public proto.Pastry.NodeState buildPartial() {
         proto.Pastry.NodeState result = new proto.Pastry.NodeState(this);
         int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (ownerBuilder_ == null) {
+          result.owner_ = owner_;
+        } else {
+          result.owner_ = ownerBuilder_.build();
+        }
         if (leafSetBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
             leafSet_ = java.util.Collections.unmodifiableList(leafSet_);
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ = (bitField0_ & ~0x00000002);
           }
           result.leafSet_ = leafSet_;
         } else {
           result.leafSet_ = leafSetBuilder_.build();
         }
         if (routingTableBuilder_ == null) {
-          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          if (((bitField0_ & 0x00000004) == 0x00000004)) {
             routingTable_ = java.util.Collections.unmodifiableList(routingTable_);
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ = (bitField0_ & ~0x00000004);
           }
           result.routingTable_ = routingTable_;
         } else {
           result.routingTable_ = routingTableBuilder_.build();
         }
         if (neighborSetBuilder_ == null) {
-          if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          if (((bitField0_ & 0x00000008) == 0x00000008)) {
             neighborSet_ = java.util.Collections.unmodifiableList(neighborSet_);
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ = (bitField0_ & ~0x00000008);
           }
           result.neighborSet_ = neighborSet_;
         } else {
           result.neighborSet_ = neighborSetBuilder_.build();
         }
+        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -2457,11 +2534,14 @@ public final class Pastry {
 
       public Builder mergeFrom(proto.Pastry.NodeState other) {
         if (other == proto.Pastry.NodeState.getDefaultInstance()) return this;
+        if (other.hasOwner()) {
+          mergeOwner(other.getOwner());
+        }
         if (leafSetBuilder_ == null) {
           if (!other.leafSet_.isEmpty()) {
             if (leafSet_.isEmpty()) {
               leafSet_ = other.leafSet_;
-              bitField0_ = (bitField0_ & ~0x00000001);
+              bitField0_ = (bitField0_ & ~0x00000002);
             } else {
               ensureLeafSetIsMutable();
               leafSet_.addAll(other.leafSet_);
@@ -2474,7 +2554,7 @@ public final class Pastry {
               leafSetBuilder_.dispose();
               leafSetBuilder_ = null;
               leafSet_ = other.leafSet_;
-              bitField0_ = (bitField0_ & ~0x00000001);
+              bitField0_ = (bitField0_ & ~0x00000002);
               leafSetBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getLeafSetFieldBuilder() : null;
@@ -2487,7 +2567,7 @@ public final class Pastry {
           if (!other.routingTable_.isEmpty()) {
             if (routingTable_.isEmpty()) {
               routingTable_ = other.routingTable_;
-              bitField0_ = (bitField0_ & ~0x00000002);
+              bitField0_ = (bitField0_ & ~0x00000004);
             } else {
               ensureRoutingTableIsMutable();
               routingTable_.addAll(other.routingTable_);
@@ -2500,7 +2580,7 @@ public final class Pastry {
               routingTableBuilder_.dispose();
               routingTableBuilder_ = null;
               routingTable_ = other.routingTable_;
-              bitField0_ = (bitField0_ & ~0x00000002);
+              bitField0_ = (bitField0_ & ~0x00000004);
               routingTableBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getRoutingTableFieldBuilder() : null;
@@ -2513,7 +2593,7 @@ public final class Pastry {
           if (!other.neighborSet_.isEmpty()) {
             if (neighborSet_.isEmpty()) {
               neighborSet_ = other.neighborSet_;
-              bitField0_ = (bitField0_ & ~0x00000004);
+              bitField0_ = (bitField0_ & ~0x00000008);
             } else {
               ensureNeighborSetIsMutable();
               neighborSet_.addAll(other.neighborSet_);
@@ -2526,7 +2606,7 @@ public final class Pastry {
               neighborSetBuilder_.dispose();
               neighborSetBuilder_ = null;
               neighborSet_ = other.neighborSet_;
-              bitField0_ = (bitField0_ & ~0x00000004);
+              bitField0_ = (bitField0_ & ~0x00000008);
               neighborSetBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getNeighborSetFieldBuilder() : null;
@@ -2565,12 +2645,129 @@ public final class Pastry {
       }
       private int bitField0_;
 
+      private proto.Pastry.NodeReference owner_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> ownerBuilder_;
+      /**
+       * <code>.NodeReference owner = 1;</code>
+       */
+      public boolean hasOwner() {
+        return ownerBuilder_ != null || owner_ != null;
+      }
+      /**
+       * <code>.NodeReference owner = 1;</code>
+       */
+      public proto.Pastry.NodeReference getOwner() {
+        if (ownerBuilder_ == null) {
+          return owner_ == null ? proto.Pastry.NodeReference.getDefaultInstance() : owner_;
+        } else {
+          return ownerBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.NodeReference owner = 1;</code>
+       */
+      public Builder setOwner(proto.Pastry.NodeReference value) {
+        if (ownerBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          owner_ = value;
+          onChanged();
+        } else {
+          ownerBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.NodeReference owner = 1;</code>
+       */
+      public Builder setOwner(
+          proto.Pastry.NodeReference.Builder builderForValue) {
+        if (ownerBuilder_ == null) {
+          owner_ = builderForValue.build();
+          onChanged();
+        } else {
+          ownerBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.NodeReference owner = 1;</code>
+       */
+      public Builder mergeOwner(proto.Pastry.NodeReference value) {
+        if (ownerBuilder_ == null) {
+          if (owner_ != null) {
+            owner_ =
+              proto.Pastry.NodeReference.newBuilder(owner_).mergeFrom(value).buildPartial();
+          } else {
+            owner_ = value;
+          }
+          onChanged();
+        } else {
+          ownerBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.NodeReference owner = 1;</code>
+       */
+      public Builder clearOwner() {
+        if (ownerBuilder_ == null) {
+          owner_ = null;
+          onChanged();
+        } else {
+          owner_ = null;
+          ownerBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.NodeReference owner = 1;</code>
+       */
+      public proto.Pastry.NodeReference.Builder getOwnerBuilder() {
+        
+        onChanged();
+        return getOwnerFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.NodeReference owner = 1;</code>
+       */
+      public proto.Pastry.NodeReferenceOrBuilder getOwnerOrBuilder() {
+        if (ownerBuilder_ != null) {
+          return ownerBuilder_.getMessageOrBuilder();
+        } else {
+          return owner_ == null ?
+              proto.Pastry.NodeReference.getDefaultInstance() : owner_;
+        }
+      }
+      /**
+       * <code>.NodeReference owner = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> 
+          getOwnerFieldBuilder() {
+        if (ownerBuilder_ == null) {
+          ownerBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder>(
+                  getOwner(),
+                  getParentForChildren(),
+                  isClean());
+          owner_ = null;
+        }
+        return ownerBuilder_;
+      }
+
       private java.util.List<proto.Pastry.NodeReference> leafSet_ =
         java.util.Collections.emptyList();
       private void ensureLeafSetIsMutable() {
-        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
           leafSet_ = new java.util.ArrayList<proto.Pastry.NodeReference>(leafSet_);
-          bitField0_ |= 0x00000001;
+          bitField0_ |= 0x00000002;
          }
       }
 
@@ -2578,7 +2775,7 @@ public final class Pastry {
           proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> leafSetBuilder_;
 
       /**
-       * <code>repeated .NodeReference leafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 2;</code>
        */
       public java.util.List<proto.Pastry.NodeReference> getLeafSetList() {
         if (leafSetBuilder_ == null) {
@@ -2588,7 +2785,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .NodeReference leafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 2;</code>
        */
       public int getLeafSetCount() {
         if (leafSetBuilder_ == null) {
@@ -2598,7 +2795,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .NodeReference leafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 2;</code>
        */
       public proto.Pastry.NodeReference getLeafSet(int index) {
         if (leafSetBuilder_ == null) {
@@ -2608,7 +2805,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .NodeReference leafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 2;</code>
        */
       public Builder setLeafSet(
           int index, proto.Pastry.NodeReference value) {
@@ -2625,7 +2822,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference leafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 2;</code>
        */
       public Builder setLeafSet(
           int index, proto.Pastry.NodeReference.Builder builderForValue) {
@@ -2639,7 +2836,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference leafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 2;</code>
        */
       public Builder addLeafSet(proto.Pastry.NodeReference value) {
         if (leafSetBuilder_ == null) {
@@ -2655,7 +2852,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference leafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 2;</code>
        */
       public Builder addLeafSet(
           int index, proto.Pastry.NodeReference value) {
@@ -2672,7 +2869,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference leafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 2;</code>
        */
       public Builder addLeafSet(
           proto.Pastry.NodeReference.Builder builderForValue) {
@@ -2686,7 +2883,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference leafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 2;</code>
        */
       public Builder addLeafSet(
           int index, proto.Pastry.NodeReference.Builder builderForValue) {
@@ -2700,7 +2897,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference leafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 2;</code>
        */
       public Builder addAllLeafSet(
           java.lang.Iterable<? extends proto.Pastry.NodeReference> values) {
@@ -2715,12 +2912,12 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference leafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 2;</code>
        */
       public Builder clearLeafSet() {
         if (leafSetBuilder_ == null) {
           leafSet_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
+          bitField0_ = (bitField0_ & ~0x00000002);
           onChanged();
         } else {
           leafSetBuilder_.clear();
@@ -2728,7 +2925,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference leafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 2;</code>
        */
       public Builder removeLeafSet(int index) {
         if (leafSetBuilder_ == null) {
@@ -2741,14 +2938,14 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference leafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 2;</code>
        */
       public proto.Pastry.NodeReference.Builder getLeafSetBuilder(
           int index) {
         return getLeafSetFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .NodeReference leafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 2;</code>
        */
       public proto.Pastry.NodeReferenceOrBuilder getLeafSetOrBuilder(
           int index) {
@@ -2758,7 +2955,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .NodeReference leafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 2;</code>
        */
       public java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
            getLeafSetOrBuilderList() {
@@ -2769,14 +2966,14 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .NodeReference leafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 2;</code>
        */
       public proto.Pastry.NodeReference.Builder addLeafSetBuilder() {
         return getLeafSetFieldBuilder().addBuilder(
             proto.Pastry.NodeReference.getDefaultInstance());
       }
       /**
-       * <code>repeated .NodeReference leafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 2;</code>
        */
       public proto.Pastry.NodeReference.Builder addLeafSetBuilder(
           int index) {
@@ -2784,7 +2981,7 @@ public final class Pastry {
             index, proto.Pastry.NodeReference.getDefaultInstance());
       }
       /**
-       * <code>repeated .NodeReference leafSet = 1;</code>
+       * <code>repeated .NodeReference leafSet = 2;</code>
        */
       public java.util.List<proto.Pastry.NodeReference.Builder> 
            getLeafSetBuilderList() {
@@ -2797,7 +2994,7 @@ public final class Pastry {
           leafSetBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder>(
                   leafSet_,
-                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  ((bitField0_ & 0x00000002) == 0x00000002),
                   getParentForChildren(),
                   isClean());
           leafSet_ = null;
@@ -2808,9 +3005,9 @@ public final class Pastry {
       private java.util.List<proto.Pastry.RoutingTableRow> routingTable_ =
         java.util.Collections.emptyList();
       private void ensureRoutingTableIsMutable() {
-        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
           routingTable_ = new java.util.ArrayList<proto.Pastry.RoutingTableRow>(routingTable_);
-          bitField0_ |= 0x00000002;
+          bitField0_ |= 0x00000004;
          }
       }
 
@@ -2818,7 +3015,7 @@ public final class Pastry {
           proto.Pastry.RoutingTableRow, proto.Pastry.RoutingTableRow.Builder, proto.Pastry.RoutingTableRowOrBuilder> routingTableBuilder_;
 
       /**
-       * <code>repeated .RoutingTableRow routingTable = 2;</code>
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
        */
       public java.util.List<proto.Pastry.RoutingTableRow> getRoutingTableList() {
         if (routingTableBuilder_ == null) {
@@ -2828,7 +3025,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 2;</code>
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
        */
       public int getRoutingTableCount() {
         if (routingTableBuilder_ == null) {
@@ -2838,7 +3035,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 2;</code>
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
        */
       public proto.Pastry.RoutingTableRow getRoutingTable(int index) {
         if (routingTableBuilder_ == null) {
@@ -2848,7 +3045,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 2;</code>
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
        */
       public Builder setRoutingTable(
           int index, proto.Pastry.RoutingTableRow value) {
@@ -2865,7 +3062,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 2;</code>
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
        */
       public Builder setRoutingTable(
           int index, proto.Pastry.RoutingTableRow.Builder builderForValue) {
@@ -2879,7 +3076,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 2;</code>
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
        */
       public Builder addRoutingTable(proto.Pastry.RoutingTableRow value) {
         if (routingTableBuilder_ == null) {
@@ -2895,7 +3092,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 2;</code>
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
        */
       public Builder addRoutingTable(
           int index, proto.Pastry.RoutingTableRow value) {
@@ -2912,7 +3109,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 2;</code>
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
        */
       public Builder addRoutingTable(
           proto.Pastry.RoutingTableRow.Builder builderForValue) {
@@ -2926,7 +3123,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 2;</code>
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
        */
       public Builder addRoutingTable(
           int index, proto.Pastry.RoutingTableRow.Builder builderForValue) {
@@ -2940,7 +3137,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 2;</code>
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
        */
       public Builder addAllRoutingTable(
           java.lang.Iterable<? extends proto.Pastry.RoutingTableRow> values) {
@@ -2955,12 +3152,12 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 2;</code>
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
        */
       public Builder clearRoutingTable() {
         if (routingTableBuilder_ == null) {
           routingTable_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
+          bitField0_ = (bitField0_ & ~0x00000004);
           onChanged();
         } else {
           routingTableBuilder_.clear();
@@ -2968,7 +3165,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 2;</code>
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
        */
       public Builder removeRoutingTable(int index) {
         if (routingTableBuilder_ == null) {
@@ -2981,14 +3178,14 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 2;</code>
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
        */
       public proto.Pastry.RoutingTableRow.Builder getRoutingTableBuilder(
           int index) {
         return getRoutingTableFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 2;</code>
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
        */
       public proto.Pastry.RoutingTableRowOrBuilder getRoutingTableOrBuilder(
           int index) {
@@ -2998,7 +3195,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 2;</code>
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
        */
       public java.util.List<? extends proto.Pastry.RoutingTableRowOrBuilder> 
            getRoutingTableOrBuilderList() {
@@ -3009,14 +3206,14 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 2;</code>
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
        */
       public proto.Pastry.RoutingTableRow.Builder addRoutingTableBuilder() {
         return getRoutingTableFieldBuilder().addBuilder(
             proto.Pastry.RoutingTableRow.getDefaultInstance());
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 2;</code>
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
        */
       public proto.Pastry.RoutingTableRow.Builder addRoutingTableBuilder(
           int index) {
@@ -3024,7 +3221,7 @@ public final class Pastry {
             index, proto.Pastry.RoutingTableRow.getDefaultInstance());
       }
       /**
-       * <code>repeated .RoutingTableRow routingTable = 2;</code>
+       * <code>repeated .RoutingTableRow routingTable = 3;</code>
        */
       public java.util.List<proto.Pastry.RoutingTableRow.Builder> 
            getRoutingTableBuilderList() {
@@ -3037,7 +3234,7 @@ public final class Pastry {
           routingTableBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               proto.Pastry.RoutingTableRow, proto.Pastry.RoutingTableRow.Builder, proto.Pastry.RoutingTableRowOrBuilder>(
                   routingTable_,
-                  ((bitField0_ & 0x00000002) == 0x00000002),
+                  ((bitField0_ & 0x00000004) == 0x00000004),
                   getParentForChildren(),
                   isClean());
           routingTable_ = null;
@@ -3048,9 +3245,9 @@ public final class Pastry {
       private java.util.List<proto.Pastry.NodeReference> neighborSet_ =
         java.util.Collections.emptyList();
       private void ensureNeighborSetIsMutable() {
-        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
           neighborSet_ = new java.util.ArrayList<proto.Pastry.NodeReference>(neighborSet_);
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000008;
          }
       }
 
@@ -3058,7 +3255,7 @@ public final class Pastry {
           proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> neighborSetBuilder_;
 
       /**
-       * <code>repeated .NodeReference neighborSet = 3;</code>
+       * <code>repeated .NodeReference neighborSet = 4;</code>
        */
       public java.util.List<proto.Pastry.NodeReference> getNeighborSetList() {
         if (neighborSetBuilder_ == null) {
@@ -3068,7 +3265,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 3;</code>
+       * <code>repeated .NodeReference neighborSet = 4;</code>
        */
       public int getNeighborSetCount() {
         if (neighborSetBuilder_ == null) {
@@ -3078,7 +3275,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 3;</code>
+       * <code>repeated .NodeReference neighborSet = 4;</code>
        */
       public proto.Pastry.NodeReference getNeighborSet(int index) {
         if (neighborSetBuilder_ == null) {
@@ -3088,7 +3285,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 3;</code>
+       * <code>repeated .NodeReference neighborSet = 4;</code>
        */
       public Builder setNeighborSet(
           int index, proto.Pastry.NodeReference value) {
@@ -3105,7 +3302,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 3;</code>
+       * <code>repeated .NodeReference neighborSet = 4;</code>
        */
       public Builder setNeighborSet(
           int index, proto.Pastry.NodeReference.Builder builderForValue) {
@@ -3119,7 +3316,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 3;</code>
+       * <code>repeated .NodeReference neighborSet = 4;</code>
        */
       public Builder addNeighborSet(proto.Pastry.NodeReference value) {
         if (neighborSetBuilder_ == null) {
@@ -3135,7 +3332,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 3;</code>
+       * <code>repeated .NodeReference neighborSet = 4;</code>
        */
       public Builder addNeighborSet(
           int index, proto.Pastry.NodeReference value) {
@@ -3152,7 +3349,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 3;</code>
+       * <code>repeated .NodeReference neighborSet = 4;</code>
        */
       public Builder addNeighborSet(
           proto.Pastry.NodeReference.Builder builderForValue) {
@@ -3166,7 +3363,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 3;</code>
+       * <code>repeated .NodeReference neighborSet = 4;</code>
        */
       public Builder addNeighborSet(
           int index, proto.Pastry.NodeReference.Builder builderForValue) {
@@ -3180,7 +3377,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 3;</code>
+       * <code>repeated .NodeReference neighborSet = 4;</code>
        */
       public Builder addAllNeighborSet(
           java.lang.Iterable<? extends proto.Pastry.NodeReference> values) {
@@ -3195,12 +3392,12 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 3;</code>
+       * <code>repeated .NodeReference neighborSet = 4;</code>
        */
       public Builder clearNeighborSet() {
         if (neighborSetBuilder_ == null) {
           neighborSet_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000008);
           onChanged();
         } else {
           neighborSetBuilder_.clear();
@@ -3208,7 +3405,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 3;</code>
+       * <code>repeated .NodeReference neighborSet = 4;</code>
        */
       public Builder removeNeighborSet(int index) {
         if (neighborSetBuilder_ == null) {
@@ -3221,14 +3418,14 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 3;</code>
+       * <code>repeated .NodeReference neighborSet = 4;</code>
        */
       public proto.Pastry.NodeReference.Builder getNeighborSetBuilder(
           int index) {
         return getNeighborSetFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 3;</code>
+       * <code>repeated .NodeReference neighborSet = 4;</code>
        */
       public proto.Pastry.NodeReferenceOrBuilder getNeighborSetOrBuilder(
           int index) {
@@ -3238,7 +3435,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 3;</code>
+       * <code>repeated .NodeReference neighborSet = 4;</code>
        */
       public java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
            getNeighborSetOrBuilderList() {
@@ -3249,14 +3446,14 @@ public final class Pastry {
         }
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 3;</code>
+       * <code>repeated .NodeReference neighborSet = 4;</code>
        */
       public proto.Pastry.NodeReference.Builder addNeighborSetBuilder() {
         return getNeighborSetFieldBuilder().addBuilder(
             proto.Pastry.NodeReference.getDefaultInstance());
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 3;</code>
+       * <code>repeated .NodeReference neighborSet = 4;</code>
        */
       public proto.Pastry.NodeReference.Builder addNeighborSetBuilder(
           int index) {
@@ -3264,7 +3461,7 @@ public final class Pastry {
             index, proto.Pastry.NodeReference.getDefaultInstance());
       }
       /**
-       * <code>repeated .NodeReference neighborSet = 3;</code>
+       * <code>repeated .NodeReference neighborSet = 4;</code>
        */
       public java.util.List<proto.Pastry.NodeReference.Builder> 
            getNeighborSetBuilderList() {
@@ -3277,7 +3474,7 @@ public final class Pastry {
           neighborSetBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder>(
                   neighborSet_,
-                  ((bitField0_ & 0x00000004) == 0x00000004),
+                  ((bitField0_ & 0x00000008) == 0x00000008),
                   getParentForChildren(),
                   isClean());
           neighborSet_ = null;
@@ -4773,15 +4970,16 @@ public final class Pastry {
     java.lang.String[] descriptorData = {
       "\n\014pastry.proto\"\'\n\013JoinRequest\022\n\n\002ip\030\001 \001(" +
       "\t\022\014\n\004port\030\002 \001(\005\"\007\n\005Empty\"-\n\014JoinResponse" +
-      "\022\035\n\tnodeState\030\001 \003(\0132\n.NodeState\"y\n\tNodeS" +
-      "tate\022\037\n\007leafSet\030\001 \003(\0132\016.NodeReference\022&\n" +
-      "\014routingTable\030\002 \003(\0132\020.RoutingTableRow\022#\n" +
-      "\013neighborSet\030\003 \003(\0132\016.NodeReference\"<\n\017Ro" +
-      "utingTableRow\022)\n\021routingTableEntry\030\001 \003(\013" +
-      "2\016.NodeReference\")\n\rNodeReference\022\n\n\002ip\030" +
-      "\001 \001(\t\022\014\n\004port\030\002 \001(\00526\n\rPastryService\022%\n\004" +
-      "Join\022\014.JoinRequest\032\r.JoinResponse\"\000B\007\n\005p" +
-      "rotob\006proto3"
+      "\022\035\n\tnodeState\030\001 \003(\0132\n.NodeState\"\230\001\n\tNode" +
+      "State\022\035\n\005owner\030\001 \001(\0132\016.NodeReference\022\037\n\007" +
+      "leafSet\030\002 \003(\0132\016.NodeReference\022&\n\014routing" +
+      "Table\030\003 \003(\0132\020.RoutingTableRow\022#\n\013neighbo" +
+      "rSet\030\004 \003(\0132\016.NodeReference\"<\n\017RoutingTab" +
+      "leRow\022)\n\021routingTableEntry\030\001 \003(\0132\016.NodeR" +
+      "eference\")\n\rNodeReference\022\n\n\002ip\030\001 \001(\t\022\014\n" +
+      "\004port\030\002 \001(\00526\n\rPastryService\022%\n\004Join\022\014.J" +
+      "oinRequest\032\r.JoinResponse\"\000B\007\n\005protob\006pr" +
+      "oto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -4818,7 +5016,7 @@ public final class Pastry {
     internal_static_NodeState_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_NodeState_descriptor,
-        new java.lang.String[] { "LeafSet", "RoutingTable", "NeighborSet", });
+        new java.lang.String[] { "Owner", "LeafSet", "RoutingTable", "NeighborSet", });
     internal_static_RoutingTableRow_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_RoutingTableRow_fieldAccessorTable = new

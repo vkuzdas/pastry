@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
+import com.google.common.annotations.VisibleForTesting;
 import io.grpc.*;
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
@@ -41,7 +42,7 @@ public class PastryNode {
     /**
      * log(base,N) rows, base columns
      */
-    private final List<List<NodeReference>> routingTable = new ArrayList<>();
+    private final List<List<NodeReference>> routingTable = new ArrayList<>(8); // TODO: set as number of digits in id
     /**
      * Closest nodes per metric
      */
@@ -85,12 +86,36 @@ public class PastryNode {
         return self;
     }
 
+    @VisibleForTesting
+    public List<NodeReference> getNeighborSet() {
+        return neighborSet;
+    }
+
+    @VisibleForTesting
+    public List<NodeReference> getUpLeafs() {
+        return upLeafs;
+    }
+
+    @VisibleForTesting
+    public List<NodeReference> getDownLeafs() {
+        return downLeafs;
+    }
+
+    @VisibleForTesting
+    public List<List<NodeReference>> getRoutingTable() {
+        return routingTable;
+    }
+
     public PastryNode(String ip, int port) {
         this.self = new NodeReference(ip, port);
 
         server = ServerBuilder.forPort(port)
                 .addService(new PastryNodeServer())
                 .build();
+
+        for (int i = 0; i < 8; i++) {
+            routingTable.add(new ArrayList<>());
+        }
     }
 
     public NodeReference syncGet(int index, List<NodeReference> list) {
@@ -156,6 +181,11 @@ public class PastryNode {
             }
         };
         stabilizationTimer.schedule(stabilizationTimerTask,1000, STABILIZATION_INTERVAL);
+    }
+
+    public void shutdownPastryNode() {
+        stopServer();
+        stabilizationTimer.cancel();
     }
 
     public void stopServer() {
@@ -324,6 +354,7 @@ public class PastryNode {
             lock.unlock();
         }
 
+        stateBuilder.setOwner(nodeBuilder.setIp(self.getIp()).setPort(self.getPort()).build());
         return Pastry.JoinResponse.newBuilder(response)
                 .addNodeState(stateBuilder.build())
                 .build();
@@ -347,6 +378,10 @@ public class PastryNode {
 
         // Routing table
         updateRoutingTable(resp);
+
+        for (Pastry.NodeState node : resp.getNodeStateList()) {
+            registerNewNode(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort()));
+        }
     }
 
 
@@ -450,6 +485,7 @@ public class PastryNode {
         try {
             if (routingTable.get(l).size() < Math.pow(2, B_PARAMETER)-1) {
                 routingTable.get(l).add(newNode);
+                routingTable.get(l).sort(Comparator.comparing(NodeReference::getDistance));
             }
         } finally {
             lock.unlock();
@@ -478,6 +514,7 @@ public class PastryNode {
                 response = enrichResponse(response);
                 responseObserver.onNext(response);
                 responseObserver.onCompleted();
+                registerNewNode(newNode);
                 return;
             }
 

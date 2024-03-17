@@ -15,11 +15,13 @@ message JoinResponse {
 }
 
 message NodeState {
-  repeated NodeReference leafSet = 1;
+  NodeReference owner = 1;
 
-  repeated RoutingTableRow routingTable = 2;
+  repeated NodeReference leafSet = 2;
 
-  repeated NodeReference neighborSet = 3;
+  repeated RoutingTableRow routingTable = 3;
+
+  repeated NodeReference neighborSet = 4;
 }
 
 message RoutingTableRow {
