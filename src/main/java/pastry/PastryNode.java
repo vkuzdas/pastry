@@ -163,9 +163,7 @@ public class PastryNode {
     }
 
     public void initPastry() throws IOException {
-        server.start();
-        logger.warn("Server started, listening on {}", self.port);
-
+        startServer();
         logger.trace("[{}]  started FIX", self);
         startStabilizationThread();
     }
@@ -188,6 +186,11 @@ public class PastryNode {
         stabilizationTimer.cancel();
     }
 
+    private void startServer() throws IOException {
+        server.start();
+        logger.warn("Server started, listening on {}", self.port);
+    }
+
     public void stopServer() {
         if (server != null) {
             server.shutdownNow();
@@ -200,23 +203,25 @@ public class PastryNode {
      * Request is routed to node <b>Z</b> which is closest to <b>X</b> <par>
      * Nodes in the routing path will send the node state to <b>X</b>
      */
-    public void joinPastry(NodeReference bootstrap) {
+    public void joinPastry(NodeReference bootstrap) throws IOException {
+        startServer();
         ManagedChannel channel = ManagedChannelBuilder.forTarget(bootstrap.getAddress()).usePlaintext().build();
         blockingStub = PastryServiceGrpc.newBlockingStub(channel);
         Pastry.JoinRequest.Builder request = Pastry.JoinRequest.newBuilder().setIp(self.ip).setPort(self.port);
         Pastry.JoinResponse resp;
 
         try {
+            logger.trace("[{}]  Joining using {}", self, bootstrap);
             resp = blockingStub.join(request.build());
             channel.shutdown();
         } catch (StatusRuntimeException e) {
+            channel.shutdown();
             logger.error("RPC failed: {}, Wrong bootstrap node specified", e.getStatus());
             return;
         }
 
         updateNodeState(resp);
         startStabilizationThread();
-        // TODO: when joining, add the bootstrap
     }
 
     /**
@@ -229,14 +234,15 @@ public class PastryNode {
             return self;
         }
 
-        BigInteger id_dec = Util.convertToDecimal(id_base);
-        BigInteger firstLeaf_dec = syncGet(0, downLeafs).getDecimalId();
-        BigInteger lastLeaf_dec = syncLastGet(upLeafs).getDecimalId();
-
-        // if id in L range
-        if (firstLeaf_dec.compareTo(id_dec) <= 0 &&  id_dec.compareTo(lastLeaf_dec) <= 0) {
-            logger.trace("[{}]  Routing {} to numerically closest leaf", self, id_base);
-            return getNumericallyClosestLeaf(id_dec);
+        if (syncSizeGet(downLeafs) > 0 && syncSizeGet(upLeafs) > 0) {
+            BigInteger id_dec = Util.convertToDecimal(id_base);
+            BigInteger firstLeaf_dec = syncGet(0, downLeafs).getDecimalId();
+            BigInteger lastLeaf_dec = syncLastGet(upLeafs).getDecimalId();
+            // if id in L range
+            if (firstLeaf_dec.compareTo(id_dec) <= 0 &&  id_dec.compareTo(lastLeaf_dec) <= 0) {
+                logger.trace("[{}]  Routing {} to numerically closest leaf", self, id_base);
+                return getNumericallyClosestLeaf(id_dec);
+            }
         }
         // routing table
         else {
@@ -254,6 +260,7 @@ public class PastryNode {
                 return findSameLengthMatch(id_base, l);
             }
         }
+        return self;
     }
 
     /**
@@ -367,6 +374,7 @@ public class PastryNode {
      * Z is node onto which join request converges since it has closest nodeId to X <br>
      */
     public void updateNodeState(Pastry.JoinResponse resp) {
+        // TODO: unified M, L, R update
         // A usually in proximity to X => A.neighborSet to initialize X.neighborSet (set is updated periodically)
         int len = resp.getNodeStateCount();
         List<Pastry.NodeReference> A_neighborSet = resp.getNodeState(len-1).getNeighborSetList();
@@ -431,12 +439,15 @@ public class PastryNode {
     }
 
     private void updateNeighborSet(List<Pastry.NodeReference> A_neighborSet) {
+        // TODO: unified M, L, R update
         lock.lock();
         try {
             A_neighborSet.forEach(node -> {
                 NodeReference neigh = new NodeReference(node.getIp(), node.getPort());
-                neigh.setDistance(Util.getDistance(neigh.getAddress(), self.getAddress()));
-                neighborSet.add(new NodeReference(node.getIp(), node.getPort()));
+                if (!neighborSet.contains(neigh)) {
+                    neigh.setDistance(Util.getDistance(neigh.getAddress(), self.getAddress()));
+                    neighborSet.add(new NodeReference(node.getIp(), node.getPort()));
+                }
             });
             neighborSet.sort(Comparator.comparing(NodeReference::getDistance));
         } finally {
@@ -446,6 +457,7 @@ public class PastryNode {
 
 
     private void registerNewNode(NodeReference newNode) {
+        // TODO: unified M, L, R update
         lock.lock();
         try {
             // insert & sort if possible
@@ -503,6 +515,7 @@ public class PastryNode {
          */
         @Override
         public void join(Pastry.JoinRequest request, StreamObserver<Pastry.JoinResponse> responseObserver) {
+            logger.trace("[{}]  Join request from {}:{}", self, request.getIp(), request.getPort());
             NodeReference newNode = new NodeReference(request.getIp(), request.getPort());
 
             // find the closest node to the new node
@@ -512,6 +525,7 @@ public class PastryNode {
             if (closest.equals(self)) {
                 Pastry.JoinResponse response = Pastry.JoinResponse.newBuilder().build();
                 response = enrichResponse(response);
+                logger.trace("[{}]  My id is the closest to {}, responding back", self, newNode.getId());
                 responseObserver.onNext(response);
                 responseObserver.onCompleted();
                 registerNewNode(newNode);
@@ -519,9 +533,13 @@ public class PastryNode {
             }
 
             // reroute newNode's join request to the closest node
+            logger.trace("[{}]  Forwarding to {}", self, closest.getAddress());
             ManagedChannel channel = ManagedChannelBuilder.forTarget(closest.getAddress()).usePlaintext().build();
             blockingStub = PastryServiceGrpc.newBlockingStub(channel);
-            Pastry.JoinResponse response = blockingStub.join(Pastry.JoinRequest.newBuilder().setIp(request.getIp()).setPort(self.port).build());
+            Pastry.JoinResponse response = blockingStub.join(Pastry.JoinRequest.newBuilder()
+                    .setIp(request.getIp())
+                    .setPort(request.getPort())
+                    .build());
             channel.shutdown();
 
             // enrich the response with the state of the current node
@@ -536,22 +554,36 @@ public class PastryNode {
     }
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 //        ArrayList<PastryNode> toShutdown = new ArrayList<>();
 //        for (int i = 0; i < 80; i++) {
 //            PastryNode node = new PastryNode("localhost", 10000 + i);
 //            node.initPastry();
 //            toShutdown.add(node);
 //        }
+
         PastryNode bootstrap = new PastryNode("localhost", 10_000);
         bootstrap.initPastry();
 
-
         PastryNode node1 = new PastryNode("localhost", 10_001);
-//        PastryNode node2 = new PastryNode("localhost", 10_002);
-//        PastryNode node3 = new PastryNode("localhost", 10_003);
-//        PastryNode node4 = new PastryNode("localhost", 10_004);
+        PastryNode node2 = new PastryNode("localhost", 10_002);
 
         node1.joinPastry(bootstrap.getNode());
+        node2.joinPastry(node1.getNode());
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

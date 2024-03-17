@@ -56,4 +56,29 @@ public class PastryNodeTest {
         bootstrap.shutdownPastryNode();
         node1.shutdownPastryNode();
     }
+
+    @Test
+    public void testThreeNodes() throws IOException {
+        logger.warn(System.lineSeparator() + System.lineSeparator()
+                + "============== " + "testTwoNodes"
+                + "() =============" + System.lineSeparator());
+        PastryNode.LOCAL_TESTING = true;
+        PastryNode.setBase(BASE_4_IDS);
+        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+
+        PastryNode bootstrap = new PastryNode("localhost", 10_000);
+        bootstrap.initPastry();
+
+        PastryNode node1 = new PastryNode("localhost", 10_001);
+        PastryNode node2 = new PastryNode("localhost", 10_002);
+
+        node1.joinPastry(bootstrap.getNode());
+        node2.joinPastry(node1.getNode());
+
+        // TODO: asserts
+
+        bootstrap.shutdownPastryNode();
+        node1.shutdownPastryNode();
+        node2.shutdownPastryNode();
+    }
 }
