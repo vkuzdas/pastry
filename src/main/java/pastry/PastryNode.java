@@ -41,19 +41,19 @@ public class PastryNode {
     /**
      * log(base,N) rows, base columns
      */
-    private List<List<NodeReference>> routingTable;
+    private final List<List<NodeReference>> routingTable = new ArrayList<>();
     /**
      * Closest nodes per metric
      */
-    private List<NodeReference> neighborSet;
+    private final List<NodeReference> neighborSet = new ArrayList<>();
     /**
      * Closest nodes per numerical distance, larger values
      */
-    private List<NodeReference> upLeafs;
+    private final List<NodeReference> upLeafs = new ArrayList<>();
     /**
      * Closest nodes per numerical distance, smaller values
      */
-    private List<NodeReference> downLeafs;
+    private final List<NodeReference> downLeafs = new ArrayList<>();
     private NodeReference self;
 
     private final Timer stabilizationTimer = new Timer();
@@ -79,6 +79,10 @@ public class PastryNode {
             throw new IllegalArgumentException("L must be 8, 16 or 32");
         }
         PastryNode.L_PARAMETER = size;
+    }
+
+    public NodeReference getNode() {
+        return self;
     }
 
     public PastryNode(String ip, int port) {
@@ -138,12 +142,17 @@ public class PastryNode {
         logger.warn("Server started, listening on {}", self.port);
 
         logger.trace("[{}]  started FIX", self);
+        startStabilizationThread();
+    }
 
+    private void startStabilizationThread() {
         // periodic stabilization
         stabilizationTimerTask = new TimerTask() {
             @Override
             public void run() {
                 logger.trace("[{}]  ticked", self);
+                // TODO: implement M periodic update
+                // See 3.2 Maintaining the network
             }
         };
         stabilizationTimer.schedule(stabilizationTimerTask,1000, STABILIZATION_INTERVAL);
@@ -176,6 +185,8 @@ public class PastryNode {
         }
 
         updateNodeState(resp);
+        startStabilizationThread();
+        // TODO: when joining, add the bootstrap
     }
 
     /**
@@ -313,9 +324,8 @@ public class PastryNode {
             lock.unlock();
         }
 
-        int index = response.getNodeStateCount();
         return Pastry.JoinResponse.newBuilder(response)
-                .setNodeState(index, stateBuilder.build())
+                .addNodeState(stateBuilder.build())
                 .build();
     }
 
@@ -328,7 +338,7 @@ public class PastryNode {
     public void updateNodeState(Pastry.JoinResponse resp) {
         // A usually in proximity to X => A.neighborSet to initialize X.neighborSet (set is updated periodically)
         int len = resp.getNodeStateCount();
-        List<Pastry.NodeReference> A_neighborSet = resp.getNodeState(len).getNeighborSetList();
+        List<Pastry.NodeReference> A_neighborSet = resp.getNodeState(len-1).getNeighborSetList();
         updateNeighborSet(A_neighborSet);
 
         // Z has the closest existing nodeId to X, thus its leaf set is the basis for X’s leaf set.
@@ -350,7 +360,7 @@ public class PastryNode {
         int len = response.getNodeStateCount();
         lock.lock();
         try {
-            for (int i = 0; i < len; i++) {
+            for (int i = 0; i < len-1; i++) {
                 List<Pastry.NodeReference> entries = response
                         .getNodeState(i) // i-th node
                         .getRoutingTable(i) // i-th row
@@ -359,7 +369,6 @@ public class PastryNode {
                 routingTable.add(new ArrayList<>());
                 entries.forEach(node -> routingTable.get(0).add(new NodeReference(node.getIp(), node.getPort())));
                 routingTable.get(0).sort(Comparator.comparing(NodeReference::getDistance));
-                // TODO: sort entries by distance to prefer closer nodes
             }
         } finally {
             lock.unlock();
@@ -466,9 +475,10 @@ public class PastryNode {
             // either node is alone or it is the Z node itself
             if (closest.equals(self)) {
                 Pastry.JoinResponse response = Pastry.JoinResponse.newBuilder().build();
-                enrichResponse(response);
+                response = enrichResponse(response);
                 responseObserver.onNext(response);
                 responseObserver.onCompleted();
+                return;
             }
 
             // reroute newNode's join request to the closest node
@@ -490,11 +500,21 @@ public class PastryNode {
 
 
     public static void main(String[] args) throws IOException {
-        ArrayList<PastryNode> toShutdown = new ArrayList<>();
-        for (int i = 0; i < 80; i++) {
-            PastryNode node = new PastryNode("localhost", 10000 + i);
-            node.initPastry();
-            toShutdown.add(node);
-        }
+//        ArrayList<PastryNode> toShutdown = new ArrayList<>();
+//        for (int i = 0; i < 80; i++) {
+//            PastryNode node = new PastryNode("localhost", 10000 + i);
+//            node.initPastry();
+//            toShutdown.add(node);
+//        }
+        PastryNode bootstrap = new PastryNode("localhost", 10_000);
+        bootstrap.initPastry();
+
+
+        PastryNode node1 = new PastryNode("localhost", 10_001);
+//        PastryNode node2 = new PastryNode("localhost", 10_002);
+//        PastryNode node3 = new PastryNode("localhost", 10_003);
+//        PastryNode node4 = new PastryNode("localhost", 10_004);
+
+        node1.joinPastry(bootstrap.getNode());
     }
 }
