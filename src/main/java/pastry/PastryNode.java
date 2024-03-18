@@ -435,19 +435,17 @@ public class PastryNode {
         int l = getSharedPrefixLength(newNode.getId(), self.getId());
         lock.lock();
         try {
-            final List<NodeReference> row = routingTable.get(l);
-            if (row.size() == Math.pow(2, B_PARAMETER)-1) {
-                NodeReference farthest = row.get(row.size()-1);
-                if (newNode.getDistance() < farthest.getDistance() && !row.contains(newNode)) {
-                    row.remove(farthest);
-                    row.add(newNode);
+            if (routingTable.get(l).size() == Math.pow(2, B_PARAMETER)-1) {
+                NodeReference farthest = routingTable.get(l).get(routingTable.get(l).size()-1);
+                if (newNode.getDistance() < farthest.getDistance()) {
+                    routingTable.get(l).remove(farthest);
+                    routingTable.get(l).add(newNode);
                 }
             }
             else {
-                if (!row.contains(newNode))
-                    row.add(newNode);
+                routingTable.get(l).add(newNode);
             }
-            row.sort(Comparator.comparing(NodeReference::getDistance));
+            routingTable.get(l).sort(Comparator.comparing(NodeReference::getDistance));
         } finally {
             lock.unlock();
         }
