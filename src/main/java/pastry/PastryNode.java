@@ -46,19 +46,18 @@ public class PastryNode {
     /**
      * Closest nodes per metric
      */
-    private final List<NodeReference> neighborSet = new ArrayList<>();
+    private final SortedSet<NodeReference> neighborSet = Collections.synchronizedSortedSet(new TreeSet<>(new NodeReference.NodeReferenceDistanceComparator()));
     /**
      * Closest nodes per numerical distance, larger values
      */
-    private final List<NodeReference> upLeafs = new ArrayList<>();
+    private final SortedSet<NodeReference> upLeafs = Collections.synchronizedSortedSet(new TreeSet<>(new NodeReference.NodeReferenceNumericalComparator()));
     /**
      * Closest nodes per numerical distance, smaller values
      */
-    private final List<NodeReference> downLeafs = new ArrayList<>();
-    private NodeReference self;
+    private final SortedSet<NodeReference> downLeafs = Collections.synchronizedSortedSet(new TreeSet<>(new NodeReference.NodeReferenceNumericalComparator()));
+    private final NodeReference self;
 
     private final Timer stabilizationTimer = new Timer();
-    private TimerTask stabilizationTimerTask;
     public static int STABILIZATION_INTERVAL = 2000;
 
     private final Server server;
@@ -87,17 +86,17 @@ public class PastryNode {
     }
 
     @VisibleForTesting
-    public List<NodeReference> getNeighborSet() {
+    public SortedSet<NodeReference> getNeighborSet() {
         return neighborSet;
     }
 
     @VisibleForTesting
-    public List<NodeReference> getUpLeafs() {
+    public SortedSet<NodeReference> getUpLeafs() {
         return upLeafs;
     }
 
     @VisibleForTesting
-    public List<NodeReference> getDownLeafs() {
+    public SortedSet<NodeReference> getDownLeafs() {
         return downLeafs;
     }
 
@@ -116,39 +115,6 @@ public class PastryNode {
         for (int i = 0; i < 8; i++) {
             routingTable.add(new ArrayList<>());
         }
-    }
-
-    public NodeReference syncGet(int index, List<NodeReference> list) {
-        NodeReference r;
-        lock.lock();
-        try {
-            r = list.get(index);
-        } finally {
-            lock.unlock();
-        }
-        return r;
-    }
-
-    public NodeReference syncLastGet(List<NodeReference> list) {
-        NodeReference r;
-        lock.lock();
-        try {
-            r = list.get(list.size()-1);
-        } finally {
-            lock.unlock();
-        }
-        return r;
-    }
-
-    public int syncSizeGet(List<NodeReference> list) {
-        int s;
-        lock.lock();
-        try {
-            s = list.size();
-        } finally {
-            lock.unlock();
-        }
-        return s;
     }
 
     public NodeReference syncRoutingTableGet(int row, int col, List<List<NodeReference>> rt) {
@@ -170,7 +136,9 @@ public class PastryNode {
 
     private void startStabilizationThread() {
         // periodic stabilization
-        stabilizationTimerTask = new TimerTask() {
+        // TODO: implement M periodic update
+        // See 3.2 Maintaining the network
+        TimerTask stabilizationTimerTask = new TimerTask() {
             @Override
             public void run() {
                 logger.trace("[{}]  ticked", self);
@@ -229,15 +197,15 @@ public class PastryNode {
      * @param id_base 4/8/16-based id (given by {@link PastryNode#B_PARAMETER})
      */
     public NodeReference route(String id_base) {
-        if (syncSizeGet(neighborSet) == 0) {
+        if (neighborSet.isEmpty()) {
             // network is empty, self is closest by definition
             return self;
         }
 
-        if (syncSizeGet(downLeafs) > 0 && syncSizeGet(upLeafs) > 0) {
+        if (!downLeafs.isEmpty() && !upLeafs.isEmpty()) {
             BigInteger id_dec = Util.convertToDecimal(id_base);
-            BigInteger firstLeaf_dec = syncGet(0, downLeafs).getDecimalId();
-            BigInteger lastLeaf_dec = syncLastGet(upLeafs).getDecimalId();
+            BigInteger firstLeaf_dec = downLeafs.first().getDecimalId();
+            BigInteger lastLeaf_dec = upLeafs.last().getDecimalId();
             // if id in L range
             if (firstLeaf_dec.compareTo(id_dec) <= 0 &&  id_dec.compareTo(lastLeaf_dec) <= 0) {
                 logger.trace("[{}]  Routing {} to numerically closest leaf", self, id_base);
@@ -305,6 +273,7 @@ public class PastryNode {
      * Return the closest leaf to the given id
      */
     private NodeReference getNumericallyClosestLeaf(BigInteger idDec) {
+        // Iterating over SynchronizedSortedSet still has to be locked
         lock.lock();
         NodeReference closest = null;
         try {
@@ -340,8 +309,10 @@ public class PastryNode {
         Pastry.NodeReference.Builder nodeBuilder = Pastry.NodeReference.newBuilder();
         Pastry.RoutingTableRow.Builder rowBuilder = Pastry.RoutingTableRow.newBuilder();
 
+
         lock.lock();
         try {
+            // WARN: It is imperative that the user manually synchronize on the sorted set when traversing it
             neighborSet.forEach(n ->
                     stateBuilder.addNeighborSet(nodeBuilder.setIp(n.getIp()).setPort(n.getPort()).build())
             );
@@ -353,9 +324,9 @@ public class PastryNode {
             );
             routingTable.forEach(row -> {
                 row.forEach(n ->
-                    rowBuilder.addRoutingTableEntry(nodeBuilder.setIp(n.getIp()).setPort(n.getPort()).build())
-            );
-                    stateBuilder.addRoutingTable(rowBuilder.build());
+                        rowBuilder.addRoutingTableEntry(nodeBuilder.setIp(n.getIp()).setPort(n.getPort()).build())
+                );
+                stateBuilder.addRoutingTable(rowBuilder.build());
             });
         } finally {
             lock.unlock();
@@ -374,18 +345,21 @@ public class PastryNode {
      * Z is node onto which join request converges since it has closest nodeId to X <br>
      */
     public void updateNodeState(Pastry.JoinResponse resp) {
-        // TODO: unified M, L, R update
         // A usually in proximity to X => A.neighborSet to initialize X.neighborSet (set is updated periodically)
         int len = resp.getNodeStateCount();
         List<Pastry.NodeReference> A_neighborSet = resp.getNodeState(len-1).getNeighborSetList();
-        updateNeighborSet(A_neighborSet);
+        A_neighborSet.forEach(node -> {
+            insertIntoNeighborSet(new NodeReference(node.getIp(), node.getPort()));
+        });
 
         // Z has the closest existing nodeId to X, thus its leaf set is the basis for X’s leaf set.
         List<Pastry.NodeReference> Z_leafs = resp.getNodeState(0).getLeafSetList();
-        updateLeafSet(Z_leafs);
+        Z_leafs.forEach(node -> {
+            insertIntoLeafSet(new NodeReference(node.getIp(), node.getPort()));
+        });
 
         // Routing table
-        updateRoutingTable(resp);
+        initRoutingTable(resp);
 
         for (Pastry.NodeState node : resp.getNodeStateList()) {
             registerNewNode(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort()));
@@ -399,7 +373,7 @@ public class PastryNode {
      * - Nodes in A<sub>0</sub> share no common prefix with A, same is true about X, therefore it can be set as X<sub>0</sub> <br>
      * - Nodes in B<sub>1</sub> share the first digit with X, since B and X share it. B<sub>1</sub> can be therefore set as X<sub>1</sub> <br>
      */
-    private void updateRoutingTable(Pastry.JoinResponse response) {
+    private void initRoutingTable(Pastry.JoinResponse response) {
         int len = response.getNodeStateCount();
         lock.lock();
         try {
@@ -418,90 +392,72 @@ public class PastryNode {
         }
     }
 
-    private void updateLeafSet(List<Pastry.NodeReference> Z_leafs) {
-        BigInteger selfId = self.getDecimalId();
-        lock.lock();
-        try {
-            Z_leafs.forEach(node -> {
-                NodeReference leaf = new NodeReference(node.getIp(), node.getPort());
-                if (leaf.getDecimalId().compareTo(selfId) > 0) {
-                    upLeafs.add(leaf);
-                    upLeafs.sort(Comparator.comparing(NodeReference::getDecimalId));
-                }
-                else {
-                    downLeafs.add(leaf);
-                    downLeafs.sort(Comparator.comparing(NodeReference::getDecimalId));
-                }
-            });
-        } finally {
-            lock.unlock();
-        }
-    }
 
-    private void updateNeighborSet(List<Pastry.NodeReference> A_neighborSet) {
-        // TODO: unified M, L, R update
-        lock.lock();
-        try {
-            A_neighborSet.forEach(node -> {
-                NodeReference neigh = new NodeReference(node.getIp(), node.getPort());
-                if (!neighborSet.contains(neigh)) {
-                    neigh.setDistance(Util.getDistance(neigh.getAddress(), self.getAddress()));
-                    neighborSet.add(new NodeReference(node.getIp(), node.getPort()));
-                }
-            });
-            neighborSet.sort(Comparator.comparing(NodeReference::getDistance));
-        } finally {
-            lock.unlock();
-        }
-    }
-
-
-    private void registerNewNode(NodeReference newNode) {
-        // TODO: unified M, L, R update
-        lock.lock();
-        try {
-            // insert & sort if possible
-            if (neighborSet.size() < L_PARAMETER) {
+    /**
+     * Insert node into neighborSet <br>
+     * If the neighborSet is full and newNode is <b>numerically<b/>closer, remove the farthest node and insert newNode
+     */
+    private void insertIntoNeighborSet(NodeReference newNode) {
+        // if full, insert only if newNode is better
+        if (neighborSet.size() == L_PARAMETER) {
+            if (newNode.getDistance() < neighborSet.last().getDistance()) {
+                neighborSet.remove(neighborSet.last());
                 neighborSet.add(newNode);
-                neighborSet.sort(Comparator.comparing(NodeReference::getDistance));
             }
-            // replace fathest otherwise
-            else {
-                NodeReference farthest = neighborSet.get(neighborSet.size() - 1);
-                if (newNode.getDistance() < farthest.getDistance()) {
-                    neighborSet.remove(farthest);
-                    neighborSet.add(newNode);
-                    neighborSet.sort(Comparator.comparing(NodeReference::getDistance));
-                }
-            }
-        } finally {
-            lock.unlock();
         }
+        else {
+            neighborSet.add(newNode);
+        }
+    }
 
-        lock.lock();
-        try {
-            List<NodeReference> leafSet = upLeafs;
-            if (newNode.getDecimalId().compareTo(self.getDecimalId()) < 0) {
-                leafSet = downLeafs;
-            }
-            if (leafSet.size() < L_PARAMETER) {
+    /**
+     * Insert node into <b>appropriate (up/down)</b> leafSet <br>
+     * If the leaf set is full and newNode is <b>numerically<b/> closer, remove the last node and insert the new node
+     */
+    private void insertIntoLeafSet(NodeReference newNode) {
+        SortedSet<NodeReference> leafSet = newNode.getDecimalId().compareTo(self.getDecimalId()) < 0 ? downLeafs : upLeafs;
+
+        // if full, insert only if newNode is better
+        if (leafSet.size() == L_PARAMETER/2) {
+            // farthest nodes are downleafs.first() or upleafs.last()
+            NodeReference numericallyFarthest = newNode.getDecimalId().compareTo(self.getDecimalId()) < 0 ? downLeafs.first() : upLeafs.last();
+            if( newNode.getDecimalId().compareTo(numericallyFarthest.getDecimalId()) < 0) {
+                leafSet.remove(numericallyFarthest);
                 leafSet.add(newNode);
-                leafSet.sort(Comparator.comparing(NodeReference::getDistance));
             }
-        } finally {
-            lock.unlock();
         }
+        else {
+            leafSet.add(newNode);
+        }
+    }
 
+    private void syncInsertIntoRoutingTable(NodeReference newNode) {
         int l = getSharedPrefixLength(newNode.getId(), self.getId());
         lock.lock();
         try {
-            if (routingTable.get(l).size() < Math.pow(2, B_PARAMETER)-1) {
-                routingTable.get(l).add(newNode);
-                routingTable.get(l).sort(Comparator.comparing(NodeReference::getDistance));
+            if (routingTable.get(l).size() == Math.pow(2, B_PARAMETER)-1) {
+                NodeReference farthest = routingTable.get(l).get(routingTable.get(l).size()-1);
+                if (newNode.getDistance() < farthest.getDistance()) {
+                    routingTable.get(l).remove(farthest);
+                    routingTable.get(l).add(newNode);
+                }
             }
+            else {
+                routingTable.get(l).add(newNode);
+            }
+            routingTable.get(l).sort(Comparator.comparing(NodeReference::getDistance));
         } finally {
             lock.unlock();
         }
+    }
+
+    private void registerNewNode(NodeReference newNode) {
+        if (newNode.getDistance() == Long.MAX_VALUE) {
+            newNode.setDistance(Util.getDistance(newNode.getAddress(), self.getAddress()));
+        }
+        insertIntoNeighborSet(newNode);
+        insertIntoLeafSet(newNode);
+        syncInsertIntoRoutingTable(newNode);
     }
 
 

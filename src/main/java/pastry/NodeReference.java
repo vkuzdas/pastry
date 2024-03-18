@@ -1,6 +1,7 @@
 package pastry;
 
 import java.math.BigInteger;
+import java.util.Comparator;
 
 public class NodeReference {
     public final String ip;
@@ -13,6 +14,13 @@ public class NodeReference {
         this.port = port;
         this.id = Util.getId(this.getAddress());
         this.distance = Integer.MAX_VALUE;
+    }
+
+    public NodeReference(String ip, int port, long distance) {
+        this.ip = ip;
+        this.port = port;
+        this.id = Util.getId(this.getAddress());
+        this.distance = distance;
     }
 
     public void setDistance(long distance) {
@@ -57,4 +65,16 @@ public class NodeReference {
         return this.port == other.port && this.ip.equals(other.ip);
     }
 
+    public static class NodeReferenceDistanceComparator implements Comparator<NodeReference> {
+        @Override
+        public int compare(NodeReference o1, NodeReference o2) {
+            return Long.compare(o1.getDistance(), o2.getDistance());
+        }
+    }
+    public static class NodeReferenceNumericalComparator implements Comparator<NodeReference> {
+        @Override
+        public int compare(NodeReference o1, NodeReference o2) {
+            return o1.getDecimalId().compareTo(o2.getDecimalId());
+        }
+    }
 }
