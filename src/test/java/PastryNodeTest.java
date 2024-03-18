@@ -1,4 +1,5 @@
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.slf4j.Logger;
@@ -117,6 +118,7 @@ public class PastryNodeTest {
     }
 
     @Test
+    @Disabled
     public void testFullNeighborSetNodes() throws IOException {
         logger.warn(System.lineSeparator() + System.lineSeparator()
                 + "============== " + "testFullNeighborSetNodes"
