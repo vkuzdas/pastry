@@ -524,6 +524,7 @@ public class PastryNode {
 
             // find the closest node to the new node
             NodeReference closest = route(Util.getId(newNode.getAddress()));
+            closest = isBetterThanSelf(closest, newNode) ? self : closest;
 
             // either node is alone or it is the Z node itself
             if (closest.equals(self)) {
@@ -557,6 +558,24 @@ public class PastryNode {
         }
     }
 
+    private boolean isBetterThanSelf(NodeReference found, NodeReference newNode) {
+        int foundPrefix = getSharedPrefixLength(found.getId(), newNode.getId());
+        int selfPrefix = getSharedPrefixLength(self.getId(), newNode.getId());
+        if (selfPrefix > foundPrefix) {
+            // self better if prefix longer
+            return false;
+        }
+        if (selfPrefix == foundPrefix) {
+            BigInteger selfDifference = self.getDecimalId().subtract(newNode.getDecimalId()).abs();
+            BigInteger foundDifference = found.getDecimalId().subtract(newNode.getDecimalId()).abs();
+            // self better if diff smaller
+            return foundDifference.compareTo(selfDifference) < 0;
+        }
+        // closest prefix is larger -> found is better
+        return true;
+
+    }
+
 
     public static void main(String[] args) throws IOException, InterruptedException {
 //        ArrayList<PastryNode> toShutdown = new ArrayList<>();
@@ -566,14 +585,23 @@ public class PastryNode {
 //            toShutdown.add(node);
 //        }
 
+        PastryNode.setLocalTesting(true);
+        PastryNode.setBase(BASE_4_IDS);
+        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+
         PastryNode bootstrap = new PastryNode("localhost", 10_000);
         bootstrap.initPastry();
 
-        PastryNode node1 = new PastryNode("localhost", 10_001);
-        PastryNode node2 = new PastryNode("localhost", 10_002);
-
+        PastryNode node1 = new PastryNode("localhost", 10_000 + 1);
         node1.joinPastry(bootstrap.getNode());
-        node2.joinPastry(node1.getNode());
+        Thread.sleep(1000);
+
+        PastryNode node2 = new PastryNode("localhost", 10_000 + 2);
+        node2.joinPastry(bootstrap.getNode());
+        Thread.sleep(1000);
+
+        PastryNode node3 = new PastryNode("localhost", 10_000 + 3);
+        node3.joinPastry(bootstrap.getNode());
     }
 }
 

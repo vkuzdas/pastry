@@ -63,7 +63,7 @@ public class PastryNodeTest {
     @Test
     public void testThreeNodes() throws IOException {
         logger.warn(System.lineSeparator() + System.lineSeparator()
-                + "============== " + "testTwoNodes"
+                + "============== " + "testThreeNodes"
                 + "() =============" + System.lineSeparator());
 
         PastryNode.setLocalTesting(true);
@@ -114,6 +114,25 @@ public class PastryNodeTest {
         assertNoDuplicates(node2.getNeighborSet());
 
         shutdownNodes(bootstrap, node1, node2);
+    }
+
+    @Test
+    public void testFullNeighborSetNodes() throws IOException {
+        logger.warn(System.lineSeparator() + System.lineSeparator()
+                + "============== " + "testFullNeighborSetNodes"
+                + "() =============" + System.lineSeparator());
+
+        PastryNode.setLocalTesting(true);
+        PastryNode.setBase(BASE_4_IDS);
+        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+
+        PastryNode bootstrap = new PastryNode("localhost", 10_000);
+        bootstrap.initPastry();
+
+        for (int i = 1; i <= 2*LEAF_SET_SIZE_8; i++) {
+            PastryNode node = new PastryNode("localhost", 10_000 + i);
+            node.joinPastry(bootstrap.getNode());
+        }
     }
 
     private void assertNoDuplicates(List<NodeReference> set) {
