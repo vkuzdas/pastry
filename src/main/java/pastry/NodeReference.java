@@ -15,6 +15,13 @@ public class NodeReference {
         this.distance = Integer.MAX_VALUE;
     }
 
+    public NodeReference(String ip, int port, long distance) {
+        this.ip = ip;
+        this.port = port;
+        this.id = Util.getId(this.getAddress());
+        this.distance = distance;
+    }
+
     public void setDistance(long distance) {
         this.distance = distance;
     }
@@ -56,5 +63,4 @@ public class NodeReference {
         NodeReference other = (NodeReference) obj;
         return this.port == other.port && this.ip.equals(other.ip);
     }
-
 }
