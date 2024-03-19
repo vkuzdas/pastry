@@ -84,7 +84,7 @@ public class PastryNode {
 
     public static void setBase(int b) {
         if (b != BASE_4_IDS && b != Constants.BASE_8_IDS && b != Constants.BASE_16_IDS) {
-            throw new IllegalArgumentException("b must be 2, 3 or 4");
+            throw new IllegalArgumentException("B must be 2, 3 or 4");
         }
         PastryNode.B_PARAMETER = b;
     }

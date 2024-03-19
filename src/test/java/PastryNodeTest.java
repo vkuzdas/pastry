@@ -1,13 +1,12 @@
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pastry.*;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,6 +18,8 @@ public class PastryNodeTest {
 
     private final Logger logger = LoggerFactory.getLogger(PastryNodeTest.class);
 
+    private final ArrayList<PastryNode> toShutdown = new ArrayList<>();
+
     @BeforeEach
     void printTestNameToConsole(TestInfo testInfo) {
         logger.warn(System.lineSeparator() + System.lineSeparator()
@@ -26,10 +27,15 @@ public class PastryNodeTest {
                 + "() =============" + System.lineSeparator());
     }
 
-    private void shutdownNodes(PastryNode ... nodes) {
-        for (PastryNode node : nodes) {
-            node.shutdownPastryNode();
-        }
+    @AfterEach
+    void shutdownNodes() {
+        // in case a test fails, we want to shutdown all nodes
+        toShutdown.forEach(PastryNode::shutdownPastryNode);
+        toShutdown.clear();
+    }
+
+    private void registerForShutdown(PastryNode ... nodes) {
+        toShutdown.addAll(Arrays.asList(nodes));
     }
 
 
@@ -47,6 +53,8 @@ public class PastryNodeTest {
         bootstrap.initPastry();
 
         PastryNode node1 = new PastryNode("localhost", 10_001);
+        registerForShutdown(bootstrap, node1);
+
         node1.setDistanceCalculator(new PortDifferenceDistanceCalculator());
         node1.joinPastry(bootstrap.getNode());
 
@@ -58,8 +66,6 @@ public class PastryNodeTest {
 
         assertEquals(1, bootstrap.getNeighborSet().size());
         assertEquals(1, node1.getNeighborSet().size());
-
-        shutdownNodes(bootstrap, node1);
     }
 
     @Test
@@ -121,6 +127,7 @@ public class PastryNodeTest {
     }
 
     public void threeNodeTestRun(PastryNode bootstrap, PastryNode node1, PastryNode node2) throws IOException {
+        registerForShutdown(bootstrap, node1, node2);
         bootstrap.initPastry();
 
         node1.joinPastry(bootstrap.getNode());
@@ -160,7 +167,6 @@ public class PastryNodeTest {
         assertNoDuplicates(node2.getLeafs());
         assertNoDuplicates(node2.getNeighborSet());
 
-        shutdownNodes(bootstrap, node1, node2);
     }
 
     @Test
@@ -174,10 +180,12 @@ public class PastryNodeTest {
         PastryNode.setLeafSize(LEAF_SET_SIZE_8);
 
         PastryNode bootstrap = new PastryNode("localhost", 10_000);
+        registerForShutdown(bootstrap);
         bootstrap.initPastry();
 
         for (int i = 1; i <= 2*LEAF_SET_SIZE_8; i++) {
             PastryNode node = new PastryNode("localhost", 10_000 + i);
+            registerForShutdown(node);
             node.joinPastry(bootstrap.getNode());
         }
     }
