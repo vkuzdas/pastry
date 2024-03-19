@@ -67,9 +67,8 @@ public class PastryNodeTest {
         assertEquals(1, bootstrap.getNeighborSet().size());
         assertEquals(1, node1.getNeighborSet().size());
     }
-//
+
 //    @Test
-//    @Disabled
 //    public void testThreeNodes_RealPingDistance() throws IOException {
 //        logger.warn(System.lineSeparator() + System.lineSeparator()
 //                + "============== " + "testThreeNodes_RealPingDistance"
@@ -84,96 +83,93 @@ public class PastryNodeTest {
 //
 //        threeNodeTestRun(bootstrap, node1, node2);
 //    }
-//
+
+    @Test
+    public void testThreeNodes_PingSimulate() throws IOException {
+        logger.warn(System.lineSeparator() + System.lineSeparator()
+                + "============== " + "testThreeNodes_PingSimulate"
+                + "() =============" + System.lineSeparator());
+
+        PastryNode.setBase(BASE_4_IDS);
+        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+
+        PastryNode bootstrap = new PastryNode("localhost", 10_000);
+        bootstrap.setDistanceCalculator(new PingSimulateDistanceCalculator());
+
+        PastryNode node1 = new PastryNode("localhost", 10_001);
+        node1.setDistanceCalculator(new PingSimulateDistanceCalculator());
+
+        PastryNode node2 = new PastryNode("localhost", 10_002);
+        node2.setDistanceCalculator(new PingSimulateDistanceCalculator());
+
+        threeNodeTestRun(bootstrap, node1, node2);
+    }
+
+    @Test
+    public void testThreeNodes_PortDifference() throws IOException {
+        logger.warn(System.lineSeparator() + System.lineSeparator()
+                + "============== " + "testThreeNodes_PortDifference"
+                + "() =============" + System.lineSeparator());
+
+        PastryNode.setBase(BASE_4_IDS);
+        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+
+        PastryNode bootstrap = new PastryNode("localhost", 10_000);
+        bootstrap.setDistanceCalculator(new PortDifferenceDistanceCalculator());
+
+        PastryNode node1 = new PastryNode("localhost", 10_001);
+        node1.setDistanceCalculator(new PortDifferenceDistanceCalculator());
+
+        PastryNode node2 = new PastryNode("localhost", 10_002);
+        node2.setDistanceCalculator(new PortDifferenceDistanceCalculator());
+
+        threeNodeTestRun(bootstrap, node1, node2);
+    }
+
+    public void threeNodeTestRun(PastryNode bootstrap, PastryNode node1, PastryNode node2) throws IOException {
+        registerForShutdown(bootstrap, node1, node2);
+        bootstrap.initPastry();
+
+        node1.joinPastry(bootstrap.getNode());
+
+        assertEquals(1, bootstrap.getLeafs().size());
+        assertEquals(1, bootstrap.getNeighborSet().size());
+        assertEquals(1, getRoutingTableSize(bootstrap.getRoutingTable()));
+
+        assertEquals(1, node1.getLeafs().size());
+        assertEquals(1, node1.getNeighborSet().size());
+        assertEquals(1, getRoutingTableSize(node1.getRoutingTable()));
+
+
+        node2.joinPastry(node1.getNode());
+
+        // bootstrap gets node2 contact since node2 Join is routed there (bootstrap is closest to it)
+        assertEquals(2, bootstrap.getLeafs().size());
+        assertEquals(2, bootstrap.getNeighborSet().size());
+        assertEquals(2, getRoutingTableSize(bootstrap.getRoutingTable()));
+
+        // node1 gets node2 contact since node2 Join is routed through it
+        assertEquals(2, node1.getLeafs().size());
+        assertEquals(2, node1.getNeighborSet().size());
+        assertEquals(2, getRoutingTableSize(node1.getRoutingTable()));
+
+        // node2 gets contacts of both nodes since both of them insert their NodeState to the JoinResponse
+        assertEquals(2, node2.getLeafs().size());
+        assertEquals(2, node2.getNeighborSet().size());
+        assertEquals(2, getRoutingTableSize(node2.getRoutingTable()));
+
+        assertNoDuplicates(bootstrap.getLeafs());
+        assertNoDuplicates(bootstrap.getNeighborSet());
+
+        assertNoDuplicates(node1.getLeafs());
+        assertNoDuplicates(node1.getNeighborSet());
+
+        assertNoDuplicates(node2.getLeafs());
+        assertNoDuplicates(node2.getNeighborSet());
+
+    }
+
 //    @Test
-//    @Disabled
-//    public void testThreeNodes_PingSimulate() throws IOException {
-//        logger.warn(System.lineSeparator() + System.lineSeparator()
-//                + "============== " + "testThreeNodes_PingSimulate"
-//                + "() =============" + System.lineSeparator());
-//
-//        PastryNode.setBase(BASE_4_IDS);
-//        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
-//
-//        PastryNode bootstrap = new PastryNode("localhost", 10_000);
-//        bootstrap.setDistanceCalculator(new PingSimulateDistanceCalculator());
-//
-//        PastryNode node1 = new PastryNode("localhost", 10_001);
-//        node1.setDistanceCalculator(new PingSimulateDistanceCalculator());
-//
-//        PastryNode node2 = new PastryNode("localhost", 10_002);
-//        node2.setDistanceCalculator(new PingSimulateDistanceCalculator());
-//
-//        threeNodeTestRun(bootstrap, node1, node2);
-//    }
-//
-//    @Test
-//    @Disabled
-//    public void testThreeNodes_PortDifference() throws IOException {
-//        logger.warn(System.lineSeparator() + System.lineSeparator()
-//                + "============== " + "testThreeNodes_PortDifference"
-//                + "() =============" + System.lineSeparator());
-//
-//        PastryNode.setBase(BASE_4_IDS);
-//        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
-//
-//        PastryNode bootstrap = new PastryNode("localhost", 10_000);
-//        bootstrap.setDistanceCalculator(new PortDifferenceDistanceCalculator());
-//
-//        PastryNode node1 = new PastryNode("localhost", 10_001);
-//        node1.setDistanceCalculator(new PortDifferenceDistanceCalculator());
-//
-//        PastryNode node2 = new PastryNode("localhost", 10_002);
-//        node2.setDistanceCalculator(new PortDifferenceDistanceCalculator());
-//
-//        threeNodeTestRun(bootstrap, node1, node2);
-//    }
-//
-//    public void threeNodeTestRun(PastryNode bootstrap, PastryNode node1, PastryNode node2) throws IOException {
-//        registerForShutdown(bootstrap, node1, node2);
-//        bootstrap.initPastry();
-//
-//        node1.joinPastry(bootstrap.getNode());
-//
-//        assertEquals(1, bootstrap.getLeafs().size());
-//        assertEquals(1, bootstrap.getNeighborSet().size());
-//        assertEquals(1, getRoutingTableSize(bootstrap.getRoutingTable()));
-//
-//        assertEquals(1, node1.getLeafs().size());
-//        assertEquals(1, node1.getNeighborSet().size());
-//        assertEquals(1, getRoutingTableSize(node1.getRoutingTable()));
-//
-//
-//        node2.joinPastry(node1.getNode());
-//
-//        // bootstrap gets node2 contact since node2 Join is routed there (bootstrap is closest to it)
-//        assertEquals(2, bootstrap.getLeafs().size());
-//        assertEquals(2, bootstrap.getNeighborSet().size());
-//        assertEquals(2, getRoutingTableSize(bootstrap.getRoutingTable()));
-//
-//        // node1 gets node2 contact since node2 Join is routed through it
-//        assertEquals(2, node1.getLeafs().size());
-//        assertEquals(2, node1.getNeighborSet().size());
-//        assertEquals(2, getRoutingTableSize(node1.getRoutingTable()));
-//
-//        // node2 gets contacts of both nodes since both of them insert their NodeState to the JoinResponse
-//        assertEquals(2, node2.getLeafs().size());
-//        assertEquals(2, node2.getNeighborSet().size());
-//        assertEquals(2, getRoutingTableSize(node2.getRoutingTable()));
-//
-//        assertNoDuplicates(bootstrap.getLeafs());
-//        assertNoDuplicates(bootstrap.getNeighborSet());
-//
-//        assertNoDuplicates(node1.getLeafs());
-//        assertNoDuplicates(node1.getNeighborSet());
-//
-//        assertNoDuplicates(node2.getLeafs());
-//        assertNoDuplicates(node2.getNeighborSet());
-//
-//    }
-//
-//    @Test
-//    @Disabled
 //    public void testFullNeighborSetNodes() throws IOException {
 //        logger.warn(System.lineSeparator() + System.lineSeparator()
 //                + "============== " + "testFullNeighborSetNodes"
