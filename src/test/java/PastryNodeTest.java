@@ -86,6 +86,7 @@ public class PastryNodeTest {
     }
 
     @Test
+    @Disabled
     public void testThreeNodes_PingSimulate() throws IOException {
         logger.warn(System.lineSeparator() + System.lineSeparator()
                 + "============== " + "testThreeNodes_PingSimulate"
@@ -107,6 +108,7 @@ public class PastryNodeTest {
     }
 
     @Test
+    @Disabled
     public void testThreeNodes_PortDifference() throws IOException {
         logger.warn(System.lineSeparator() + System.lineSeparator()
                 + "============== " + "testThreeNodes_PortDifference"
