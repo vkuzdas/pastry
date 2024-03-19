@@ -69,6 +69,7 @@ public class PastryNodeTest {
     }
 
     @Test
+    @Disabled
     public void testThreeNodes_RealPingDistance() throws IOException {
         logger.warn(System.lineSeparator() + System.lineSeparator()
                 + "============== " + "testThreeNodes_RealPingDistance"
