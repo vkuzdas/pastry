@@ -56,20 +56,20 @@ public class PastryNode {
 
     private final Server server;
     private PastryServiceGrpc.PastryServiceBlockingStub blockingStub;
-    private DistanceCalculator distanceCalculator = new PortDifferenceDistanceCalculator();
+    private DistanceCalculator distanceCalculator = new PingResponseTimeDistanceCalculator();
 
     public class PingResponseTimeDistanceCalculator implements DistanceCalculator {
+        // TODO: adapter pattern is not congruent: this is the only Calculator that cannot be separated from class
         @Override
         public long calculateDistance(NodeReference self, NodeReference other) {
             ManagedChannel channel = ManagedChannelBuilder.forTarget(other.getAddress()).usePlaintext().build();
             blockingStub = PastryServiceGrpc.newBlockingStub(channel);
 
-            long startTime = System.currentTimeMillis();
+            long startTime = System.nanoTime();
             blockingStub.ping(Pastry.Empty.newBuilder().build());
-            long endTime = System.currentTimeMillis();
+            long endTime = System.nanoTime();
 
             channel.shutdown();
-
             return endTime - startTime;
         }
     }

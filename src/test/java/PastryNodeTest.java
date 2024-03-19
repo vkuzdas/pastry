@@ -4,10 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pastry.DistanceCalculator;
-import pastry.NodeReference;
-import pastry.PastryNode;
-import pastry.PortDifferenceDistanceCalculator;
+import pastry.*;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -35,6 +32,7 @@ public class PastryNodeTest {
         }
     }
 
+
     @Test
     public void testTwoNodes() throws IOException {
         logger.warn(System.lineSeparator() + System.lineSeparator()
@@ -45,9 +43,11 @@ public class PastryNodeTest {
         PastryNode.setLeafSize(LEAF_SET_SIZE_8);
 
         PastryNode bootstrap = new PastryNode("localhost", 10_000);
+        bootstrap.setDistanceCalculator(new PortDifferenceDistanceCalculator());
         bootstrap.initPastry();
 
         PastryNode node1 = new PastryNode("localhost", 10_001);
+        node1.setDistanceCalculator(new PortDifferenceDistanceCalculator());
         node1.joinPastry(bootstrap.getNode());
 
         assertEquals(node1.getNode(), bootstrap.getRoutingTable().get(0).get(0));
@@ -63,19 +63,65 @@ public class PastryNodeTest {
     }
 
     @Test
-    public void testThreeNodes() throws IOException, InterruptedException {
+    public void testThreeNodes_RealPingDistance() throws IOException {
         logger.warn(System.lineSeparator() + System.lineSeparator()
-                + "============== " + "testThreeNodes"
+                + "============== " + "testThreeNodes_RealPingDistance"
                 + "() =============" + System.lineSeparator());
 
         PastryNode.setBase(BASE_4_IDS);
         PastryNode.setLeafSize(LEAF_SET_SIZE_8);
 
         PastryNode bootstrap = new PastryNode("localhost", 10_000);
-        bootstrap.initPastry();
-
         PastryNode node1 = new PastryNode("localhost", 10_001);
         PastryNode node2 = new PastryNode("localhost", 10_002);
+
+        threeNodeTestRun(bootstrap, node1, node2);
+    }
+
+    @Test
+    public void testThreeNodes_PingSimulate() throws IOException {
+        logger.warn(System.lineSeparator() + System.lineSeparator()
+                + "============== " + "testThreeNodes_PingSimulate"
+                + "() =============" + System.lineSeparator());
+
+        PastryNode.setBase(BASE_4_IDS);
+        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+
+        PastryNode bootstrap = new PastryNode("localhost", 10_000);
+        bootstrap.setDistanceCalculator(new PingSimulateDistanceCalculator());
+
+        PastryNode node1 = new PastryNode("localhost", 10_001);
+        node1.setDistanceCalculator(new PingSimulateDistanceCalculator());
+
+        PastryNode node2 = new PastryNode("localhost", 10_002);
+        node2.setDistanceCalculator(new PingSimulateDistanceCalculator());
+
+        threeNodeTestRun(bootstrap, node1, node2);
+    }
+
+    @Test
+    public void testThreeNodes_PortDifference() throws IOException {
+        logger.warn(System.lineSeparator() + System.lineSeparator()
+                + "============== " + "testThreeNodes_PortDifference"
+                + "() =============" + System.lineSeparator());
+
+        PastryNode.setBase(BASE_4_IDS);
+        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+
+        PastryNode bootstrap = new PastryNode("localhost", 10_000);
+        bootstrap.setDistanceCalculator(new PortDifferenceDistanceCalculator());
+
+        PastryNode node1 = new PastryNode("localhost", 10_001);
+        node1.setDistanceCalculator(new PortDifferenceDistanceCalculator());
+
+        PastryNode node2 = new PastryNode("localhost", 10_002);
+        node2.setDistanceCalculator(new PortDifferenceDistanceCalculator());
+
+        threeNodeTestRun(bootstrap, node1, node2);
+    }
+
+    public void threeNodeTestRun(PastryNode bootstrap, PastryNode node1, PastryNode node2) throws IOException {
+        bootstrap.initPastry();
 
         node1.joinPastry(bootstrap.getNode());
 
@@ -89,7 +135,6 @@ public class PastryNodeTest {
 
 
         node2.joinPastry(node1.getNode());
-        Thread.sleep(1200);
 
         // bootstrap gets node2 contact since node2 Join is routed there (bootstrap is closest to it)
         assertEquals(2, bootstrap.getLeafs().size());
