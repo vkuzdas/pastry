@@ -16,20 +16,21 @@ public class UtilTest {
 
     Logger logger = LoggerFactory.getLogger(UtilTest.class);
 
-    @BeforeEach
-    void printTestNameToConsole(TestInfo testInfo) {
-        logger.warn(System.lineSeparator() + System.lineSeparator()
-                + "============== " + testInfo.getTestMethod().map(Method::getName).orElse(null)
-                + "() =============" + System.lineSeparator());
-    }
-
-    @Test
-    public void testGetId() {
-        logger.warn("logger in CI test");
-        PastryNode.LOCAL_TESTING = false;
-        String seznam = "77.75.77.222:80";
-        long id = Util.getDistance(seznam, "localhost:8080");
-        assertNotEquals(Long.MAX_VALUE, id);
-    }
+//    @BeforeEach
+//    void printTestNameToConsole(TestInfo testInfo) {
+//        logger.warn(System.lineSeparator() + System.lineSeparator()
+//                + "============== " + testInfo.getTestMethod().map(Method::getName).orElse(null)
+//                + "() =============" + System.lineSeparator());
+//    }
+//
+//    @Test
+//    public void testGetId() {
+//        logger.warn("logger in CI test");
+//
+//        PastryNode.LOCAL_TESTING = false;
+//        String seznam = "77.75.77.222:80";
+//        long id = Util.getDistance(seznam, "localhost:8080");
+//        assertNotEquals(Long.MAX_VALUE, id);
+//    }
 
 }

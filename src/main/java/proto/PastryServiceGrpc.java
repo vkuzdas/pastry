@@ -59,6 +59,38 @@ public final class PastryServiceGrpc {
      return getJoinMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<proto.Pastry.Empty,
+      proto.Pastry.Empty> getPingMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "Ping",
+      requestType = proto.Pastry.Empty.class,
+      responseType = proto.Pastry.Empty.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<proto.Pastry.Empty,
+      proto.Pastry.Empty> getPingMethod() {
+    io.grpc.MethodDescriptor<proto.Pastry.Empty, proto.Pastry.Empty> getPingMethod;
+    if ((getPingMethod = PastryServiceGrpc.getPingMethod) == null) {
+      synchronized (PastryServiceGrpc.class) {
+        if ((getPingMethod = PastryServiceGrpc.getPingMethod) == null) {
+          PastryServiceGrpc.getPingMethod = getPingMethod = 
+              io.grpc.MethodDescriptor.<proto.Pastry.Empty, proto.Pastry.Empty>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "PastryService", "Ping"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  proto.Pastry.Empty.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  proto.Pastry.Empty.getDefaultInstance()))
+                  .setSchemaDescriptor(new PastryServiceMethodDescriptorSupplier("Ping"))
+                  .build();
+          }
+        }
+     }
+     return getPingMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -93,6 +125,13 @@ public final class PastryServiceGrpc {
       asyncUnimplementedUnaryCall(getJoinMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void ping(proto.Pastry.Empty request,
+        io.grpc.stub.StreamObserver<proto.Pastry.Empty> responseObserver) {
+      asyncUnimplementedUnaryCall(getPingMethod(), responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -102,6 +141,13 @@ public final class PastryServiceGrpc {
                 proto.Pastry.JoinRequest,
                 proto.Pastry.JoinResponse>(
                   this, METHODID_JOIN)))
+          .addMethod(
+            getPingMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                proto.Pastry.Empty,
+                proto.Pastry.Empty>(
+                  this, METHODID_PING)))
           .build();
     }
   }
@@ -131,6 +177,14 @@ public final class PastryServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(getJoinMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void ping(proto.Pastry.Empty request,
+        io.grpc.stub.StreamObserver<proto.Pastry.Empty> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getPingMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -156,6 +210,13 @@ public final class PastryServiceGrpc {
     public proto.Pastry.JoinResponse join(proto.Pastry.JoinRequest request) {
       return blockingUnaryCall(
           getChannel(), getJoinMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public proto.Pastry.Empty ping(proto.Pastry.Empty request) {
+      return blockingUnaryCall(
+          getChannel(), getPingMethod(), getCallOptions(), request);
     }
   }
 
@@ -184,9 +245,18 @@ public final class PastryServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(getJoinMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<proto.Pastry.Empty> ping(
+        proto.Pastry.Empty request) {
+      return futureUnaryCall(
+          getChannel().newCall(getPingMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_JOIN = 0;
+  private static final int METHODID_PING = 1;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -208,6 +278,10 @@ public final class PastryServiceGrpc {
         case METHODID_JOIN:
           serviceImpl.join((proto.Pastry.JoinRequest) request,
               (io.grpc.stub.StreamObserver<proto.Pastry.JoinResponse>) responseObserver);
+          break;
+        case METHODID_PING:
+          serviceImpl.ping((proto.Pastry.Empty) request,
+              (io.grpc.stub.StreamObserver<proto.Pastry.Empty>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -271,6 +345,7 @@ public final class PastryServiceGrpc {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new PastryServiceFileDescriptorSupplier())
               .addMethod(getJoinMethod())
+              .addMethod(getPingMethod())
               .build();
         }
       }

@@ -35,4 +35,5 @@ message NodeReference {
 
 service PastryService {
   rpc Join(JoinRequest) returns (JoinResponse) {}
+  rpc Ping(Empty) returns (Empty) {}
 }

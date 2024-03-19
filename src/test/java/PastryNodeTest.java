@@ -4,8 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pastry.DistanceCalculator;
 import pastry.NodeReference;
 import pastry.PastryNode;
+import pastry.PortDifferenceDistanceCalculator;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -39,7 +41,6 @@ public class PastryNodeTest {
                 + "============== " + "testTwoNodes"
                 + "() =============" + System.lineSeparator());
 
-        PastryNode.setLocalTesting(true);
         PastryNode.setBase(BASE_4_IDS);
         PastryNode.setLeafSize(LEAF_SET_SIZE_8);
 
@@ -62,12 +63,11 @@ public class PastryNodeTest {
     }
 
     @Test
-    public void testThreeNodes() throws IOException {
+    public void testThreeNodes() throws IOException, InterruptedException {
         logger.warn(System.lineSeparator() + System.lineSeparator()
                 + "============== " + "testThreeNodes"
                 + "() =============" + System.lineSeparator());
 
-        PastryNode.setLocalTesting(true);
         PastryNode.setBase(BASE_4_IDS);
         PastryNode.setLeafSize(LEAF_SET_SIZE_8);
 
@@ -89,6 +89,7 @@ public class PastryNodeTest {
 
 
         node2.joinPastry(node1.getNode());
+        Thread.sleep(1200);
 
         // bootstrap gets node2 contact since node2 Join is routed there (bootstrap is closest to it)
         assertEquals(2, bootstrap.getLeafs().size());
@@ -124,7 +125,6 @@ public class PastryNodeTest {
                 + "============== " + "testFullNeighborSetNodes"
                 + "() =============" + System.lineSeparator());
 
-        PastryNode.setLocalTesting(true);
         PastryNode.setBase(BASE_4_IDS);
         PastryNode.setLeafSize(LEAF_SET_SIZE_8);
 

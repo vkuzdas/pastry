@@ -15,35 +15,36 @@ public class Util {
 
     private static final Logger logger = LoggerFactory.getLogger(Util.class);
 
-    /**
-     * Returns ping response time from current to destination address
-     */
-    public static long getDistance(String destAddress, String startAddress) {
-        // for testing purposes, return distance between ports
-        // this metric is good simulation of physical node distance since it is constant
-        if (PastryNode.LOCAL_TESTING) {
-            int destPort = Integer.parseInt(destAddress.split(":")[1]);
-            int startPort = Integer.parseInt(startAddress.split(":")[1]);
-            return Math.abs(destPort - startPort);
-        }
-
-        String[] parts = destAddress.split(":");
-        String host = parts[0];
-        int port = Integer.parseInt(parts[1]);
-
-        try {
-            long startTime = System.currentTimeMillis();
-            try (Socket socket = new Socket()) {
-                socket.connect(new InetSocketAddress(host, port), 2000);
-            }
-
-            return System.currentTimeMillis() - startTime;
-
-        } catch (IOException e) {
-            logger.warn("Host " + host + " on port " + port + " is not reachable: " + e.getMessage());
-            return Long.MAX_VALUE;
-        }
-    }
+//    @Deprecated
+//    /**
+//     * Returns ping response time from current to destination address
+//     */
+//    public static long getDistance(String destAddress, String startAddress) {
+//        // for testing purposes, return distance between ports
+//        // this metric is good simulation of physical node distance since it is constant
+//        if (PastryNode.LOCAL_TESTING) {
+//            int destPort = Integer.parseInt(destAddress.split(":")[1]);
+//            int startPort = Integer.parseInt(startAddress.split(":")[1]);
+//            return Math.abs(destPort - startPort);
+//        }
+//
+//        String[] parts = destAddress.split(":");
+//        String host = parts[0];
+//        int port = Integer.parseInt(parts[1]);
+//
+//        try {
+//            long startTime = System.currentTimeMillis();
+//            try (Socket socket = new Socket()) {
+//                socket.connect(new InetSocketAddress(host, port), 2000);
+//            }
+//
+//            return System.currentTimeMillis() - startTime;
+//
+//        } catch (IOException e) {
+//            logger.warn("Host " + host + " on port " + port + " is not reachable: " + e.getMessage());
+//            return Long.MAX_VALUE;
+//        }
+//    }
 
     /**
      * Given node.address, hash it and return the hash as 4/8/16-base string number

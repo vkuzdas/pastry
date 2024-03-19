@@ -20,12 +20,6 @@ import static pastry.Constants.*;
 public class PastryNode {
 
     private static final Logger logger = LoggerFactory.getLogger(PastryNode.class);
-    /**
-     * Whether Pastry is tested locally, meaning same host, different ports. This would imply same metric distance for all nodes. <br>
-     * The flag therefore simulates constant metric distance defined as port difference between two nodes. <br>
-     * @see Util#getDistance
-     */
-    public static boolean LOCAL_TESTING = true;
     private final ReentrantLock lock = new ReentrantLock();
     /**
      * Config parameter determining base of id: ids are 2^b based <br>
@@ -62,9 +56,30 @@ public class PastryNode {
 
     private final Server server;
     private PastryServiceGrpc.PastryServiceBlockingStub blockingStub;
+    private DistanceCalculator distanceCalculator = new PortDifferenceDistanceCalculator();
 
-    public static void setLocalTesting(boolean localTesting) {
-        LOCAL_TESTING = localTesting;
+    public class PingResponseTimeDistanceCalculator implements DistanceCalculator {
+        @Override
+        public long calculateDistance(NodeReference self, NodeReference other) {
+            ManagedChannel channel = ManagedChannelBuilder.forTarget(other.getAddress()).usePlaintext().build();
+            blockingStub = PastryServiceGrpc.newBlockingStub(channel);
+
+            long startTime = System.currentTimeMillis();
+            blockingStub.ping(Pastry.Empty.newBuilder().build());
+            long endTime = System.currentTimeMillis();
+
+            channel.shutdown();
+
+            return endTime - startTime;
+        }
+    }
+
+    public void setDistanceCalculator(DistanceCalculator distanceCalculator) {
+        this.distanceCalculator = distanceCalculator;
+    }
+
+    public DistanceCalculator getDistanceCalculator() {
+        return distanceCalculator;
     }
 
     public static void setBase(int b) {
@@ -197,7 +212,7 @@ public class PastryNode {
 
     private void startServer() throws IOException {
         server.start();
-        logger.warn("Server started, listening on {}", self.port);
+        logger.warn("[{}]  Server started, listening on {}", self, self.port);
     }
 
     public void stopServer() {
@@ -432,7 +447,7 @@ public class PastryNode {
     private void syncInsertIntoNeighborSet(NodeReference newNode) {
         lock.lock();
         if (newNode.getDistance() == Long.MAX_VALUE) {
-            newNode.setDistance(Util.getDistance(newNode.getAddress(), self.getAddress()));
+            newNode.setDistance(distanceCalculator.calculateDistance(self, newNode));
         }
         try {// if full, insert only if newNode is better
             if (syncSizeGet(neighborSet) == L_PARAMETER) {
@@ -500,7 +515,7 @@ public class PastryNode {
 
     private void registerNewNode(NodeReference newNode) {
         if (newNode.getDistance() == Long.MAX_VALUE) {
-            newNode.setDistance(Util.getDistance(newNode.getAddress(), self.getAddress()));
+            newNode.setDistance(distanceCalculator.calculateDistance(self, newNode));
         }
         syncInsertIntoNeighborSet(newNode);
         syncInsertIntoLeafSet(newNode);
@@ -524,7 +539,7 @@ public class PastryNode {
 
             // find the closest node to the new node
             NodeReference closest = route(Util.getId(newNode.getAddress()));
-            closest = isBetterThanSelf(closest, newNode) ? self : closest;
+            closest = foundBetterThanSelf(closest, newNode) ? closest : self;
 
             // either node is alone or it is the Z node itself
             if (closest.equals(self)) {
@@ -556,24 +571,28 @@ public class PastryNode {
             // finally register the node into your nodestate
             registerNewNode(newNode);
         }
+
+        @Override
+        public void ping(Pastry.Empty request, StreamObserver<Pastry.Empty> responseObserver) {
+            responseObserver.onNext(Pastry.Empty.newBuilder().build());
+            responseObserver.onCompleted();
+        }
     }
 
-    private boolean isBetterThanSelf(NodeReference found, NodeReference newNode) {
+    private boolean foundBetterThanSelf(NodeReference found, NodeReference newNode) {
         int foundPrefix = getSharedPrefixLength(found.getId(), newNode.getId());
         int selfPrefix = getSharedPrefixLength(self.getId(), newNode.getId());
-        if (selfPrefix > foundPrefix) {
-            // self better if prefix longer
-            return false;
+        if (foundPrefix > selfPrefix) {
+            return true;
         }
-        if (selfPrefix == foundPrefix) {
-            BigInteger selfDifference = self.getDecimalId().subtract(newNode.getDecimalId()).abs();
+        if (foundPrefix == selfPrefix) {
             BigInteger foundDifference = found.getDecimalId().subtract(newNode.getDecimalId()).abs();
-            // self better if diff smaller
+            BigInteger selfDifference = self.getDecimalId().subtract(newNode.getDecimalId()).abs();
+            // found better if diff smaller
             return foundDifference.compareTo(selfDifference) < 0;
         }
         // closest prefix is larger -> found is better
-        return true;
-
+        return false;
     }
 
 
@@ -585,23 +604,28 @@ public class PastryNode {
 //            toShutdown.add(node);
 //        }
 
-        PastryNode.setLocalTesting(true);
+//        PastryNode.setLocalTesting(true);
+//        PastryNode.setBase(BASE_4_IDS);
+//        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+//
+//        PastryNode bootstrap = new PastryNode("localhost", 10_000);
+//        bootstrap.initPastry();
+//
+//        for (int i = 1; i <= 2*LEAF_SET_SIZE_8; i++) {
+//            PastryNode node = new PastryNode("localhost", 10_000 + i);
+//            node.joinPastry(bootstrap.getNode());
+//        }
+
+
         PastryNode.setBase(BASE_4_IDS);
         PastryNode.setLeafSize(LEAF_SET_SIZE_8);
 
         PastryNode bootstrap = new PastryNode("localhost", 10_000);
         bootstrap.initPastry();
 
-        PastryNode node1 = new PastryNode("localhost", 10_000 + 1);
+        PastryNode node1 = new PastryNode("localhost", 10_001);
         node1.joinPastry(bootstrap.getNode());
-        Thread.sleep(1000);
 
-        PastryNode node2 = new PastryNode("localhost", 10_000 + 2);
-        node2.joinPastry(bootstrap.getNode());
-        Thread.sleep(1000);
-
-        PastryNode node3 = new PastryNode("localhost", 10_000 + 3);
-        node3.joinPastry(bootstrap.getNode());
     }
 }
 

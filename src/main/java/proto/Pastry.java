@@ -4977,9 +4977,9 @@ public final class Pastry {
       "rSet\030\004 \003(\0132\016.NodeReference\"<\n\017RoutingTab" +
       "leRow\022)\n\021routingTableEntry\030\001 \003(\0132\016.NodeR" +
       "eference\")\n\rNodeReference\022\n\n\002ip\030\001 \001(\t\022\014\n" +
-      "\004port\030\002 \001(\00526\n\rPastryService\022%\n\004Join\022\014.J" +
-      "oinRequest\032\r.JoinResponse\"\000B\007\n\005protob\006pr" +
-      "oto3"
+      "\004port\030\002 \001(\0052P\n\rPastryService\022%\n\004Join\022\014.J" +
+      "oinRequest\032\r.JoinResponse\"\000\022\030\n\004Ping\022\006.Em" +
+      "pty\032\006.Empty\"\000B\007\n\005protob\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

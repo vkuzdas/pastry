@@ -12,7 +12,7 @@ public class NodeReference {
         this.ip = ip;
         this.port = port;
         this.id = Util.getId(this.getAddress());
-        this.distance = Integer.MAX_VALUE;
+        this.distance = Long.MAX_VALUE;
     }
 
     public NodeReference(String ip, int port, long distance) {
