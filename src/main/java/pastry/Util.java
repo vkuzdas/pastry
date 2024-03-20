@@ -109,19 +109,7 @@ public class Util {
             if (remainder < 10) {
                 r.insert(0, remainder);
             } else {
-                if (remainder == 10) {
-                    r.insert(0, 'A');
-                } else if (remainder == 11) {
-                    r.insert(0, 'B');
-                } else if (remainder == 12) {
-                    r.insert(0, 'C');
-                } else if (remainder == 13) {
-                    r.insert(0, 'D');
-                } else if (remainder == 14) {
-                    r.insert(0, 'E');
-                } else if (remainder == 15) {
-                    r.insert(0, 'F');
-                }
+                r.insert(0, (char)('A'+remainder-10));
             }
             decimalValue = quotientAndRemainder[0];
         }
