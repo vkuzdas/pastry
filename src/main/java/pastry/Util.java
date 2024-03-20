@@ -11,6 +11,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import static pastry.Constants.BASE_16_IDS;
+
 public class Util {
 
     private static final Logger logger = LoggerFactory.getLogger(Util.class);
@@ -98,18 +100,33 @@ public class Util {
      * To-Base is determined by {@link PastryNode#B_PARAMETER}
      */
     public static String convertFromDecimal(BigInteger decimalValue) {
-        StringBuilder result = new StringBuilder();
-        BigInteger zero = BigInteger.ZERO;
+        StringBuilder r = new StringBuilder();
         BigInteger baseValue = BigInteger.valueOf((int)Math.pow(2, PastryNode.B_PARAMETER));
 
-        while (decimalValue.compareTo(zero) > 0) {
+        while (decimalValue.compareTo(BigInteger.ZERO) > 0) {
             BigInteger[] quotientAndRemainder = decimalValue.divideAndRemainder(baseValue);
-            BigInteger remainder = quotientAndRemainder[1];
-            result.insert(0, remainder); // Insert remainder at the beginning of the result
+            int remainder = quotientAndRemainder[1].intValue();
+            if (remainder < 10) {
+                r.insert(0, remainder);
+            } else {
+                if (remainder == 10) {
+                    r.insert(0, 'A');
+                } else if (remainder == 11) {
+                    r.insert(0, 'B');
+                } else if (remainder == 12) {
+                    r.insert(0, 'C');
+                } else if (remainder == 13) {
+                    r.insert(0, 'D');
+                } else if (remainder == 14) {
+                    r.insert(0, 'E');
+                } else if (remainder == 15) {
+                    r.insert(0, 'F');
+                }
+            }
             decimalValue = quotientAndRemainder[0];
         }
 
-        return result.toString();
+        return r.toString();
     }
 
 
@@ -117,20 +134,20 @@ public class Util {
      * From-Base is determined by {@link PastryNode#B_PARAMETER}
      */
     public static BigInteger convertToDecimal(String strNumber) {
-        BigInteger number = new BigInteger(strNumber);
-        BigInteger base = BigInteger.valueOf((int) Math.pow(2, PastryNode.B_PARAMETER));
-        BigInteger decimalValue = BigInteger.ZERO;
-        BigInteger power = BigInteger.ZERO;
-
-        while (number.compareTo(BigInteger.ZERO) > 0) {
-            BigInteger[] quotientAndRemainder = number.divideAndRemainder(BigInteger.TEN);
-            BigInteger digit = quotientAndRemainder[1];
-            BigInteger temp = base.pow(power.intValue()).multiply(digit);
-            decimalValue = decimalValue.add(temp);
-            power = power.add(BigInteger.ONE);
-            number = quotientAndRemainder[0];
+        BigInteger r = BigInteger.ZERO;
+        for (int i = 0; i < strNumber.length(); i++) {
+            char dig = strNumber.charAt(i);
+            int d,e;
+            if (dig <= '9') {
+                d = dig - '0';
+                e = strNumber.length()-i-1;
+            } else {
+                d = dig - 'A'+10;
+                e = strNumber.length()-i-1;
+            }
+            BigInteger m = BigInteger.valueOf(2).pow(PastryNode.B_PARAMETER).pow(e);
+            r = r.add(BigInteger.valueOf(d).multiply(m));
         }
-
-        return decimalValue;
+        return r;
     }
 }

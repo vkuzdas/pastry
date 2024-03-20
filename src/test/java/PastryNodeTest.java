@@ -68,21 +68,21 @@ public class PastryNodeTest {
         assertEquals(1, node1.getNeighborSet().size());
     }
 
-//    @Test
-//    public void testThreeNodes_RealPingDistance() throws IOException {
-//        logger.warn(System.lineSeparator() + System.lineSeparator()
-//                + "============== " + "testThreeNodes_RealPingDistance"
-//                + "() =============" + System.lineSeparator());
-//
-//        PastryNode.setBase(BASE_4_IDS);
-//        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
-//
-//        PastryNode bootstrap = new PastryNode("localhost", 10_000);
-//        PastryNode node1 = new PastryNode("localhost", 10_001);
-//        PastryNode node2 = new PastryNode("localhost", 10_002);
-//
-//        threeNodeTestRun(bootstrap, node1, node2);
-//    }
+    @Test
+    public void testThreeNodes_RealPingDistance() throws IOException {
+        logger.warn(System.lineSeparator() + System.lineSeparator()
+                + "============== " + "testThreeNodes_RealPingDistance"
+                + "() =============" + System.lineSeparator());
+
+        PastryNode.setBase(BASE_4_IDS);
+        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+
+        PastryNode bootstrap = new PastryNode("localhost", 10_000);
+        PastryNode node1 = new PastryNode("localhost", 10_001);
+        PastryNode node2 = new PastryNode("localhost", 10_002);
+
+        threeNodeTestRun(bootstrap, node1, node2);
+    }
 
     @Test
     public void testThreeNodes_PingSimulate() throws IOException {
@@ -169,25 +169,23 @@ public class PastryNodeTest {
 
     }
 
-//    @Test
-//    public void testFullNeighborSetNodes() throws IOException {
-//        logger.warn(System.lineSeparator() + System.lineSeparator()
-//                + "============== " + "testFullNeighborSetNodes"
-//                + "() =============" + System.lineSeparator());
-//
-//        PastryNode.setBase(BASE_4_IDS);
-//        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
-//
-//        PastryNode bootstrap = new PastryNode("localhost", 10_000);
-//        registerForShutdown(bootstrap);
-//        bootstrap.initPastry();
-//
-//        for (int i = 1; i <= 2*LEAF_SET_SIZE_8; i++) {
-//            PastryNode node = new PastryNode("localhost", 10_000 + i);
-//            registerForShutdown(node);
-//            node.joinPastry(bootstrap.getNode());
-//        }
-//    }
+    @Test
+    public void testFullNeighborSetNodes() throws IOException {
+        logger.warn(System.lineSeparator() + System.lineSeparator()
+                + "============== " + "testFullNeighborSetNodes"
+                + "() =============" + System.lineSeparator());
+
+        PastryNode.setBase(BASE_4_IDS);
+        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+
+        PastryNode bootstrap = new PastryNode("localhost", 10_000);
+        bootstrap.initPastry();
+
+        for (int i = 1; i <= 2*LEAF_SET_SIZE_8; i++) {
+            PastryNode node = new PastryNode("localhost", 10_000 + i);
+            node.joinPastry(bootstrap.getNode());
+        }
+    }
 
     private void assertNoDuplicates(List<NodeReference> set) {
         assertEquals(set.size(), set.stream().distinct().count());
