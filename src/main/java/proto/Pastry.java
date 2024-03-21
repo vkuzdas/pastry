@@ -4929,6 +4929,1200 @@ public final class Pastry {
 
   }
 
+  public interface NeighborSetRequestOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:NeighborSetRequest)
+      com.google.protobuf.MessageOrBuilder {
+  }
+  /**
+   * Protobuf type {@code NeighborSetRequest}
+   */
+  public  static final class NeighborSetRequest extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:NeighborSetRequest)
+      NeighborSetRequestOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use NeighborSetRequest.newBuilder() to construct.
+    private NeighborSetRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private NeighborSetRequest() {
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private NeighborSetRequest(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return proto.Pastry.internal_static_NeighborSetRequest_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return proto.Pastry.internal_static_NeighborSetRequest_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              proto.Pastry.NeighborSetRequest.class, proto.Pastry.NeighborSetRequest.Builder.class);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof proto.Pastry.NeighborSetRequest)) {
+        return super.equals(obj);
+      }
+      proto.Pastry.NeighborSetRequest other = (proto.Pastry.NeighborSetRequest) obj;
+
+      boolean result = true;
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static proto.Pastry.NeighborSetRequest parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.NeighborSetRequest parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.NeighborSetRequest parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.NeighborSetRequest parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.NeighborSetRequest parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.NeighborSetRequest parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.NeighborSetRequest parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.NeighborSetRequest parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static proto.Pastry.NeighborSetRequest parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.NeighborSetRequest parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static proto.Pastry.NeighborSetRequest parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.NeighborSetRequest parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(proto.Pastry.NeighborSetRequest prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code NeighborSetRequest}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:NeighborSetRequest)
+        proto.Pastry.NeighborSetRequestOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return proto.Pastry.internal_static_NeighborSetRequest_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return proto.Pastry.internal_static_NeighborSetRequest_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                proto.Pastry.NeighborSetRequest.class, proto.Pastry.NeighborSetRequest.Builder.class);
+      }
+
+      // Construct using proto.Pastry.NeighborSetRequest.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return proto.Pastry.internal_static_NeighborSetRequest_descriptor;
+      }
+
+      @java.lang.Override
+      public proto.Pastry.NeighborSetRequest getDefaultInstanceForType() {
+        return proto.Pastry.NeighborSetRequest.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public proto.Pastry.NeighborSetRequest build() {
+        proto.Pastry.NeighborSetRequest result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public proto.Pastry.NeighborSetRequest buildPartial() {
+        proto.Pastry.NeighborSetRequest result = new proto.Pastry.NeighborSetRequest(this);
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof proto.Pastry.NeighborSetRequest) {
+          return mergeFrom((proto.Pastry.NeighborSetRequest)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(proto.Pastry.NeighborSetRequest other) {
+        if (other == proto.Pastry.NeighborSetRequest.getDefaultInstance()) return this;
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        proto.Pastry.NeighborSetRequest parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (proto.Pastry.NeighborSetRequest) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:NeighborSetRequest)
+    }
+
+    // @@protoc_insertion_point(class_scope:NeighborSetRequest)
+    private static final proto.Pastry.NeighborSetRequest DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new proto.Pastry.NeighborSetRequest();
+    }
+
+    public static proto.Pastry.NeighborSetRequest getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<NeighborSetRequest>
+        PARSER = new com.google.protobuf.AbstractParser<NeighborSetRequest>() {
+      @java.lang.Override
+      public NeighborSetRequest parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new NeighborSetRequest(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<NeighborSetRequest> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<NeighborSetRequest> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public proto.Pastry.NeighborSetRequest getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface NeighborSetResponseOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:NeighborSetResponse)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated .NodeReference neighborSet = 1;</code>
+     */
+    java.util.List<proto.Pastry.NodeReference> 
+        getNeighborSetList();
+    /**
+     * <code>repeated .NodeReference neighborSet = 1;</code>
+     */
+    proto.Pastry.NodeReference getNeighborSet(int index);
+    /**
+     * <code>repeated .NodeReference neighborSet = 1;</code>
+     */
+    int getNeighborSetCount();
+    /**
+     * <code>repeated .NodeReference neighborSet = 1;</code>
+     */
+    java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
+        getNeighborSetOrBuilderList();
+    /**
+     * <code>repeated .NodeReference neighborSet = 1;</code>
+     */
+    proto.Pastry.NodeReferenceOrBuilder getNeighborSetOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code NeighborSetResponse}
+   */
+  public  static final class NeighborSetResponse extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:NeighborSetResponse)
+      NeighborSetResponseOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use NeighborSetResponse.newBuilder() to construct.
+    private NeighborSetResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private NeighborSetResponse() {
+      neighborSet_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private NeighborSetResponse(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                neighborSet_ = new java.util.ArrayList<proto.Pastry.NodeReference>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              neighborSet_.add(
+                  input.readMessage(proto.Pastry.NodeReference.parser(), extensionRegistry));
+              break;
+            }
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          neighborSet_ = java.util.Collections.unmodifiableList(neighborSet_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return proto.Pastry.internal_static_NeighborSetResponse_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return proto.Pastry.internal_static_NeighborSetResponse_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              proto.Pastry.NeighborSetResponse.class, proto.Pastry.NeighborSetResponse.Builder.class);
+    }
+
+    public static final int NEIGHBORSET_FIELD_NUMBER = 1;
+    private java.util.List<proto.Pastry.NodeReference> neighborSet_;
+    /**
+     * <code>repeated .NodeReference neighborSet = 1;</code>
+     */
+    public java.util.List<proto.Pastry.NodeReference> getNeighborSetList() {
+      return neighborSet_;
+    }
+    /**
+     * <code>repeated .NodeReference neighborSet = 1;</code>
+     */
+    public java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
+        getNeighborSetOrBuilderList() {
+      return neighborSet_;
+    }
+    /**
+     * <code>repeated .NodeReference neighborSet = 1;</code>
+     */
+    public int getNeighborSetCount() {
+      return neighborSet_.size();
+    }
+    /**
+     * <code>repeated .NodeReference neighborSet = 1;</code>
+     */
+    public proto.Pastry.NodeReference getNeighborSet(int index) {
+      return neighborSet_.get(index);
+    }
+    /**
+     * <code>repeated .NodeReference neighborSet = 1;</code>
+     */
+    public proto.Pastry.NodeReferenceOrBuilder getNeighborSetOrBuilder(
+        int index) {
+      return neighborSet_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (int i = 0; i < neighborSet_.size(); i++) {
+        output.writeMessage(1, neighborSet_.get(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < neighborSet_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, neighborSet_.get(i));
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof proto.Pastry.NeighborSetResponse)) {
+        return super.equals(obj);
+      }
+      proto.Pastry.NeighborSetResponse other = (proto.Pastry.NeighborSetResponse) obj;
+
+      boolean result = true;
+      result = result && getNeighborSetList()
+          .equals(other.getNeighborSetList());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getNeighborSetCount() > 0) {
+        hash = (37 * hash) + NEIGHBORSET_FIELD_NUMBER;
+        hash = (53 * hash) + getNeighborSetList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static proto.Pastry.NeighborSetResponse parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.NeighborSetResponse parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.NeighborSetResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.NeighborSetResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.NeighborSetResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.NeighborSetResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.NeighborSetResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.NeighborSetResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static proto.Pastry.NeighborSetResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.NeighborSetResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static proto.Pastry.NeighborSetResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.NeighborSetResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(proto.Pastry.NeighborSetResponse prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code NeighborSetResponse}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:NeighborSetResponse)
+        proto.Pastry.NeighborSetResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return proto.Pastry.internal_static_NeighborSetResponse_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return proto.Pastry.internal_static_NeighborSetResponse_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                proto.Pastry.NeighborSetResponse.class, proto.Pastry.NeighborSetResponse.Builder.class);
+      }
+
+      // Construct using proto.Pastry.NeighborSetResponse.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getNeighborSetFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        if (neighborSetBuilder_ == null) {
+          neighborSet_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          neighborSetBuilder_.clear();
+        }
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return proto.Pastry.internal_static_NeighborSetResponse_descriptor;
+      }
+
+      @java.lang.Override
+      public proto.Pastry.NeighborSetResponse getDefaultInstanceForType() {
+        return proto.Pastry.NeighborSetResponse.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public proto.Pastry.NeighborSetResponse build() {
+        proto.Pastry.NeighborSetResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public proto.Pastry.NeighborSetResponse buildPartial() {
+        proto.Pastry.NeighborSetResponse result = new proto.Pastry.NeighborSetResponse(this);
+        int from_bitField0_ = bitField0_;
+        if (neighborSetBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            neighborSet_ = java.util.Collections.unmodifiableList(neighborSet_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.neighborSet_ = neighborSet_;
+        } else {
+          result.neighborSet_ = neighborSetBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof proto.Pastry.NeighborSetResponse) {
+          return mergeFrom((proto.Pastry.NeighborSetResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(proto.Pastry.NeighborSetResponse other) {
+        if (other == proto.Pastry.NeighborSetResponse.getDefaultInstance()) return this;
+        if (neighborSetBuilder_ == null) {
+          if (!other.neighborSet_.isEmpty()) {
+            if (neighborSet_.isEmpty()) {
+              neighborSet_ = other.neighborSet_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureNeighborSetIsMutable();
+              neighborSet_.addAll(other.neighborSet_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.neighborSet_.isEmpty()) {
+            if (neighborSetBuilder_.isEmpty()) {
+              neighborSetBuilder_.dispose();
+              neighborSetBuilder_ = null;
+              neighborSet_ = other.neighborSet_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              neighborSetBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getNeighborSetFieldBuilder() : null;
+            } else {
+              neighborSetBuilder_.addAllMessages(other.neighborSet_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        proto.Pastry.NeighborSetResponse parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (proto.Pastry.NeighborSetResponse) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<proto.Pastry.NodeReference> neighborSet_ =
+        java.util.Collections.emptyList();
+      private void ensureNeighborSetIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          neighborSet_ = new java.util.ArrayList<proto.Pastry.NodeReference>(neighborSet_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> neighborSetBuilder_;
+
+      /**
+       * <code>repeated .NodeReference neighborSet = 1;</code>
+       */
+      public java.util.List<proto.Pastry.NodeReference> getNeighborSetList() {
+        if (neighborSetBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(neighborSet_);
+        } else {
+          return neighborSetBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 1;</code>
+       */
+      public int getNeighborSetCount() {
+        if (neighborSetBuilder_ == null) {
+          return neighborSet_.size();
+        } else {
+          return neighborSetBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 1;</code>
+       */
+      public proto.Pastry.NodeReference getNeighborSet(int index) {
+        if (neighborSetBuilder_ == null) {
+          return neighborSet_.get(index);
+        } else {
+          return neighborSetBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 1;</code>
+       */
+      public Builder setNeighborSet(
+          int index, proto.Pastry.NodeReference value) {
+        if (neighborSetBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureNeighborSetIsMutable();
+          neighborSet_.set(index, value);
+          onChanged();
+        } else {
+          neighborSetBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 1;</code>
+       */
+      public Builder setNeighborSet(
+          int index, proto.Pastry.NodeReference.Builder builderForValue) {
+        if (neighborSetBuilder_ == null) {
+          ensureNeighborSetIsMutable();
+          neighborSet_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          neighborSetBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 1;</code>
+       */
+      public Builder addNeighborSet(proto.Pastry.NodeReference value) {
+        if (neighborSetBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureNeighborSetIsMutable();
+          neighborSet_.add(value);
+          onChanged();
+        } else {
+          neighborSetBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 1;</code>
+       */
+      public Builder addNeighborSet(
+          int index, proto.Pastry.NodeReference value) {
+        if (neighborSetBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureNeighborSetIsMutable();
+          neighborSet_.add(index, value);
+          onChanged();
+        } else {
+          neighborSetBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 1;</code>
+       */
+      public Builder addNeighborSet(
+          proto.Pastry.NodeReference.Builder builderForValue) {
+        if (neighborSetBuilder_ == null) {
+          ensureNeighborSetIsMutable();
+          neighborSet_.add(builderForValue.build());
+          onChanged();
+        } else {
+          neighborSetBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 1;</code>
+       */
+      public Builder addNeighborSet(
+          int index, proto.Pastry.NodeReference.Builder builderForValue) {
+        if (neighborSetBuilder_ == null) {
+          ensureNeighborSetIsMutable();
+          neighborSet_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          neighborSetBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 1;</code>
+       */
+      public Builder addAllNeighborSet(
+          java.lang.Iterable<? extends proto.Pastry.NodeReference> values) {
+        if (neighborSetBuilder_ == null) {
+          ensureNeighborSetIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, neighborSet_);
+          onChanged();
+        } else {
+          neighborSetBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 1;</code>
+       */
+      public Builder clearNeighborSet() {
+        if (neighborSetBuilder_ == null) {
+          neighborSet_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          neighborSetBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 1;</code>
+       */
+      public Builder removeNeighborSet(int index) {
+        if (neighborSetBuilder_ == null) {
+          ensureNeighborSetIsMutable();
+          neighborSet_.remove(index);
+          onChanged();
+        } else {
+          neighborSetBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 1;</code>
+       */
+      public proto.Pastry.NodeReference.Builder getNeighborSetBuilder(
+          int index) {
+        return getNeighborSetFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 1;</code>
+       */
+      public proto.Pastry.NodeReferenceOrBuilder getNeighborSetOrBuilder(
+          int index) {
+        if (neighborSetBuilder_ == null) {
+          return neighborSet_.get(index);  } else {
+          return neighborSetBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 1;</code>
+       */
+      public java.util.List<? extends proto.Pastry.NodeReferenceOrBuilder> 
+           getNeighborSetOrBuilderList() {
+        if (neighborSetBuilder_ != null) {
+          return neighborSetBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(neighborSet_);
+        }
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 1;</code>
+       */
+      public proto.Pastry.NodeReference.Builder addNeighborSetBuilder() {
+        return getNeighborSetFieldBuilder().addBuilder(
+            proto.Pastry.NodeReference.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 1;</code>
+       */
+      public proto.Pastry.NodeReference.Builder addNeighborSetBuilder(
+          int index) {
+        return getNeighborSetFieldBuilder().addBuilder(
+            index, proto.Pastry.NodeReference.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .NodeReference neighborSet = 1;</code>
+       */
+      public java.util.List<proto.Pastry.NodeReference.Builder> 
+           getNeighborSetBuilderList() {
+        return getNeighborSetFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> 
+          getNeighborSetFieldBuilder() {
+        if (neighborSetBuilder_ == null) {
+          neighborSetBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder>(
+                  neighborSet_,
+                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  getParentForChildren(),
+                  isClean());
+          neighborSet_ = null;
+        }
+        return neighborSetBuilder_;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:NeighborSetResponse)
+    }
+
+    // @@protoc_insertion_point(class_scope:NeighborSetResponse)
+    private static final proto.Pastry.NeighborSetResponse DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new proto.Pastry.NeighborSetResponse();
+    }
+
+    public static proto.Pastry.NeighborSetResponse getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<NeighborSetResponse>
+        PARSER = new com.google.protobuf.AbstractParser<NeighborSetResponse>() {
+      @java.lang.Override
+      public NeighborSetResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new NeighborSetResponse(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<NeighborSetResponse> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<NeighborSetResponse> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public proto.Pastry.NeighborSetResponse getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_JoinRequest_descriptor;
   private static final 
@@ -4959,6 +6153,16 @@ public final class Pastry {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_NodeReference_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_NeighborSetRequest_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_NeighborSetRequest_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_NeighborSetResponse_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_NeighborSetResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -4977,9 +6181,13 @@ public final class Pastry {
       "rSet\030\004 \003(\0132\016.NodeReference\"<\n\017RoutingTab" +
       "leRow\022)\n\021routingTableEntry\030\001 \003(\0132\016.NodeR" +
       "eference\")\n\rNodeReference\022\n\n\002ip\030\001 \001(\t\022\014\n" +
-      "\004port\030\002 \001(\0052P\n\rPastryService\022%\n\004Join\022\014.J" +
-      "oinRequest\032\r.JoinResponse\"\000\022\030\n\004Ping\022\006.Em" +
-      "pty\032\006.Empty\"\000B\007\n\005protob\006proto3"
+      "\004port\030\002 \001(\005\"\024\n\022NeighborSetRequest\":\n\023Nei" +
+      "ghborSetResponse\022#\n\013neighborSet\030\001 \003(\0132\016." +
+      "NodeReference2\217\001\n\rPastryService\022%\n\004Join\022" +
+      "\014.JoinRequest\032\r.JoinResponse\"\000\022=\n\016GetNei" +
+      "ghborSet\022\023.NeighborSetRequest\032\024.Neighbor" +
+      "SetResponse\"\000\022\030\n\004Ping\022\006.Empty\032\006.Empty\"\000B" +
+      "\007\n\005protob\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -5029,6 +6237,18 @@ public final class Pastry {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_NodeReference_descriptor,
         new java.lang.String[] { "Ip", "Port", });
+    internal_static_NeighborSetRequest_descriptor =
+      getDescriptor().getMessageTypes().get(6);
+    internal_static_NeighborSetRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_NeighborSetRequest_descriptor,
+        new java.lang.String[] { });
+    internal_static_NeighborSetResponse_descriptor =
+      getDescriptor().getMessageTypes().get(7);
+    internal_static_NeighborSetResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_NeighborSetResponse_descriptor,
+        new java.lang.String[] { "NeighborSet", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

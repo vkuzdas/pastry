@@ -52,7 +52,8 @@ public class PastryNode {
     private final NodeReference self;
 
     private final Timer stabilizationTimer = new Timer();
-    public static int STABILIZATION_INTERVAL = 2000;
+    public static int STABILIZATION_INTERVAL = 5000;
+    private static final Pastry.Empty PING = Pastry.Empty.newBuilder().build();
 
     private final Server server;
     private PastryServiceGrpc.PastryServiceBlockingStub blockingStub;
@@ -66,7 +67,7 @@ public class PastryNode {
             blockingStub = PastryServiceGrpc.newBlockingStub(channel);
 
             long startTime = System.nanoTime();
-            blockingStub.ping(Pastry.Empty.newBuilder().build());
+            blockingStub.ping(PING);
             long endTime = System.nanoTime();
 
             channel.shutdown();
@@ -190,19 +191,89 @@ public class PastryNode {
         startStabilizationThread();
     }
 
+    /**
+     * Node attempts to contact each member of the neighborhood set periodically
+     * to see if it is still alive. If a member is not responding,
+     * the node asks other members for their neighborhood tables, checks the distance of
+     * the newly discovered node, and updates it own neighborhood set accordingly.
+     */
     private void startStabilizationThread() {
-        // periodic stabilization
-        // TODO: implement M periodic update
-        // See 3.2 Maintaining the network
         TimerTask stabilizationTimerTask = new TimerTask() {
             @Override
             public void run() {
-                logger.trace("[{}]  ticked", self);
-                // TODO: implement M periodic update
-                // See 3.2 Maintaining the network
+                logger.trace("[{}]  checking neighbors..", self);
+                lock.lock();
+                try {
+                    // iterate over neighbors, check liveness of each
+                    for (NodeReference neighbor : neighborSet) {
+                        ManagedChannel channel = ManagedChannelBuilder.forTarget(neighbor.getAddress()).usePlaintext().build();
+                        blockingStub = PastryServiceGrpc.newBlockingStub(channel);
+                        try {
+                            blockingStub.ping(PING);
+                        }
+                        catch (StatusRuntimeException e) {
+                            // neighbor is down, remove and find new
+                            channel.shutdown();
+                            logger.error("[{}]  status of [{}] is {}, removing from NodeState", self, neighbor, e.getStatus().getCode());
+                            syncRemoveFromNodeState(neighbor);
+                            NodeReference newNeighbor = getNewNeighbor();
+                            if (newNeighbor == null) {
+                                logger.warn("[{}]  No new neighbor found", self);
+                                return;
+                            }
+                            logger.trace("[{}]  found new neighbor: [{}]", self, newNeighbor);
+                            registerNewNode(newNeighbor);
+                            break; // break to avoid concurrent modification, other neighbors will be checked in the next iteration
+                        }
+                        channel.shutdown();
+                    }
+                } finally {
+                    lock.unlock();
+                }
             }
         };
         stabilizationTimer.schedule(stabilizationTimerTask,1000, STABILIZATION_INTERVAL);
+    }
+
+    /**
+     * Return the <b>first</b> neighbor's neighbor that is not in the current neighbor set
+     */
+    private NodeReference getNewNeighbor() {
+        lock.lock();
+        NodeReference newNode = null;
+        try {
+            for (NodeReference neighbor : neighborSet) {
+                ManagedChannel channel = ManagedChannelBuilder.forTarget(neighbor.getAddress()).usePlaintext().build();
+                blockingStub = PastryServiceGrpc.newBlockingStub(channel);
+                Pastry.NeighborSetResponse response = blockingStub.getNeighborSet(Pastry.NeighborSetRequest.newBuilder().build());
+                for (Pastry.NodeReference n : response.getNeighborSetList()) {
+                    newNode = new NodeReference(n.getIp(), n.getPort());
+                    if (!neighborSet.contains(newNode) && !newNode.equals(self)) {
+                        return newNode;
+                    }
+                }
+                channel.shutdown();
+            }
+        } finally {
+            lock.unlock();
+        }
+        return newNode;
+    }
+
+    public void syncRemoveFromNodeState(NodeReference neighbor) {
+        lock.lock();
+        try {
+            neighborSet.remove(neighbor);
+
+            List<NodeReference> leafSet = neighbor.getDecimalId().compareTo(self.getDecimalId()) < 0 ? downLeafs : upLeafs;
+            leafSet.remove(neighbor);
+
+            int l = getSharedPrefixLength(neighbor.getId(), self.getId());
+            List<NodeReference> row = routingTable.get(l);
+            row.remove(neighbor);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public void shutdownPastryNode() {
@@ -514,6 +585,9 @@ public class PastryNode {
     }
 
     private void registerNewNode(NodeReference newNode) {
+        if (newNode.equals(self)) {
+            return;
+        }
         if (newNode.getDistance() == Long.MAX_VALUE) {
             newNode.setDistance(distanceCalculator.calculateDistance(self, newNode));
         }
@@ -573,8 +647,25 @@ public class PastryNode {
         }
 
         @Override
+        public void getNeighborSet(Pastry.NeighborSetRequest request, StreamObserver<Pastry.NeighborSetResponse> responseObserver) {
+            Pastry.NeighborSetResponse.Builder response = Pastry.NeighborSetResponse.newBuilder();
+            lock.lock();
+            try {
+                neighborSet.forEach(n -> response.addNeighborSet(Pastry.NodeReference.newBuilder()
+                        .setIp(n.getIp())
+                        .setPort(n.getPort())
+                        .build()));
+            } finally {
+                lock.unlock();
+            }
+            logger.trace("[{}]  Sending neighbor set", self);
+            responseObserver.onNext(response.build());
+            responseObserver.onCompleted();
+        }
+
+        @Override
         public void ping(Pastry.Empty request, StreamObserver<Pastry.Empty> responseObserver) {
-            responseObserver.onNext(Pastry.Empty.newBuilder().build());
+            responseObserver.onNext(PING);
             responseObserver.onCompleted();
         }
     }
@@ -626,6 +717,12 @@ public class PastryNode {
         PastryNode node1 = new PastryNode("localhost", 10_001);
         node1.joinPastry(bootstrap.getNode());
 
+        Thread.sleep(6000);
+        node1.shutdownPastryNode();
+
+        Thread.sleep(6000);
+        node1.startServer();
+        node1.joinPastry(bootstrap.getNode());
     }
 }
 

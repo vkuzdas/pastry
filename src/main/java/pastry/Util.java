@@ -17,36 +17,6 @@ public class Util {
 
     private static final Logger logger = LoggerFactory.getLogger(Util.class);
 
-//    @Deprecated
-//    /**
-//     * Returns ping response time from current to destination address
-//     */
-//    public static long getDistance(String destAddress, String startAddress) {
-//        // for testing purposes, return distance between ports
-//        // this metric is good simulation of physical node distance since it is constant
-//        if (PastryNode.LOCAL_TESTING) {
-//            int destPort = Integer.parseInt(destAddress.split(":")[1]);
-//            int startPort = Integer.parseInt(startAddress.split(":")[1]);
-//            return Math.abs(destPort - startPort);
-//        }
-//
-//        String[] parts = destAddress.split(":");
-//        String host = parts[0];
-//        int port = Integer.parseInt(parts[1]);
-//
-//        try {
-//            long startTime = System.currentTimeMillis();
-//            try (Socket socket = new Socket()) {
-//                socket.connect(new InetSocketAddress(host, port), 2000);
-//            }
-//
-//            return System.currentTimeMillis() - startTime;
-//
-//        } catch (IOException e) {
-//            logger.warn("Host " + host + " on port " + port + " is not reachable: " + e.getMessage());
-//            return Long.MAX_VALUE;
-//        }
-//    }
 
     /**
      * Given node.address, hash it and return the hash as 4/8/16-base string number
@@ -65,16 +35,16 @@ public class Util {
         // TODO: parametrize according to L and b
         BigInteger decimal_16bit = decimal_128bit.mod(BigInteger.valueOf(2L).pow(16));
 
-        String quat_16bit = decToQuat(decimal_16bit);
-        int padding = PastryNode.L_PARAMETER - quat_16bit.length();
+        String base_16bit = convertFromDecimal(decimal_16bit);
+        int padding = PastryNode.L_PARAMETER - base_16bit.length();
         if (padding > 0) {
             StringBuilder paddingBuilder = new StringBuilder();
             for (int i = 0; i < padding; i++) {
                 paddingBuilder.append("0");
             }
-            quat_16bit = paddingBuilder + quat_16bit;
+            base_16bit = paddingBuilder + base_16bit;
         }
-        return quat_16bit;
+        return base_16bit;
     }
 
     public static String decToQuat(BigInteger decimalNumber) {

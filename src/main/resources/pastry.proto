@@ -33,7 +33,14 @@ message NodeReference {
   int32 port = 2;
 }
 
+message NeighborSetRequest {}
+
+message NeighborSetResponse {
+  repeated NodeReference neighborSet = 1;
+}
+
 service PastryService {
   rpc Join(JoinRequest) returns (JoinResponse) {}
+  rpc GetNeighborSet(NeighborSetRequest) returns (NeighborSetResponse) {}
   rpc Ping(Empty) returns (Empty) {}
 }

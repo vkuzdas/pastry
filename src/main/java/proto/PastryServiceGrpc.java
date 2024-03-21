@@ -59,6 +59,38 @@ public final class PastryServiceGrpc {
      return getJoinMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<proto.Pastry.NeighborSetRequest,
+      proto.Pastry.NeighborSetResponse> getGetNeighborSetMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "GetNeighborSet",
+      requestType = proto.Pastry.NeighborSetRequest.class,
+      responseType = proto.Pastry.NeighborSetResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<proto.Pastry.NeighborSetRequest,
+      proto.Pastry.NeighborSetResponse> getGetNeighborSetMethod() {
+    io.grpc.MethodDescriptor<proto.Pastry.NeighborSetRequest, proto.Pastry.NeighborSetResponse> getGetNeighborSetMethod;
+    if ((getGetNeighborSetMethod = PastryServiceGrpc.getGetNeighborSetMethod) == null) {
+      synchronized (PastryServiceGrpc.class) {
+        if ((getGetNeighborSetMethod = PastryServiceGrpc.getGetNeighborSetMethod) == null) {
+          PastryServiceGrpc.getGetNeighborSetMethod = getGetNeighborSetMethod = 
+              io.grpc.MethodDescriptor.<proto.Pastry.NeighborSetRequest, proto.Pastry.NeighborSetResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "PastryService", "GetNeighborSet"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  proto.Pastry.NeighborSetRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  proto.Pastry.NeighborSetResponse.getDefaultInstance()))
+                  .setSchemaDescriptor(new PastryServiceMethodDescriptorSupplier("GetNeighborSet"))
+                  .build();
+          }
+        }
+     }
+     return getGetNeighborSetMethod;
+  }
+
   private static volatile io.grpc.MethodDescriptor<proto.Pastry.Empty,
       proto.Pastry.Empty> getPingMethod;
 
@@ -127,6 +159,13 @@ public final class PastryServiceGrpc {
 
     /**
      */
+    public void getNeighborSet(proto.Pastry.NeighborSetRequest request,
+        io.grpc.stub.StreamObserver<proto.Pastry.NeighborSetResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getGetNeighborSetMethod(), responseObserver);
+    }
+
+    /**
+     */
     public void ping(proto.Pastry.Empty request,
         io.grpc.stub.StreamObserver<proto.Pastry.Empty> responseObserver) {
       asyncUnimplementedUnaryCall(getPingMethod(), responseObserver);
@@ -141,6 +180,13 @@ public final class PastryServiceGrpc {
                 proto.Pastry.JoinRequest,
                 proto.Pastry.JoinResponse>(
                   this, METHODID_JOIN)))
+          .addMethod(
+            getGetNeighborSetMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                proto.Pastry.NeighborSetRequest,
+                proto.Pastry.NeighborSetResponse>(
+                  this, METHODID_GET_NEIGHBOR_SET)))
           .addMethod(
             getPingMethod(),
             asyncUnaryCall(
@@ -180,6 +226,14 @@ public final class PastryServiceGrpc {
 
     /**
      */
+    public void getNeighborSet(proto.Pastry.NeighborSetRequest request,
+        io.grpc.stub.StreamObserver<proto.Pastry.NeighborSetResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getGetNeighborSetMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
     public void ping(proto.Pastry.Empty request,
         io.grpc.stub.StreamObserver<proto.Pastry.Empty> responseObserver) {
       asyncUnaryCall(
@@ -210,6 +264,13 @@ public final class PastryServiceGrpc {
     public proto.Pastry.JoinResponse join(proto.Pastry.JoinRequest request) {
       return blockingUnaryCall(
           getChannel(), getJoinMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public proto.Pastry.NeighborSetResponse getNeighborSet(proto.Pastry.NeighborSetRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getGetNeighborSetMethod(), getCallOptions(), request);
     }
 
     /**
@@ -248,6 +309,14 @@ public final class PastryServiceGrpc {
 
     /**
      */
+    public com.google.common.util.concurrent.ListenableFuture<proto.Pastry.NeighborSetResponse> getNeighborSet(
+        proto.Pastry.NeighborSetRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getGetNeighborSetMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
     public com.google.common.util.concurrent.ListenableFuture<proto.Pastry.Empty> ping(
         proto.Pastry.Empty request) {
       return futureUnaryCall(
@@ -256,7 +325,8 @@ public final class PastryServiceGrpc {
   }
 
   private static final int METHODID_JOIN = 0;
-  private static final int METHODID_PING = 1;
+  private static final int METHODID_GET_NEIGHBOR_SET = 1;
+  private static final int METHODID_PING = 2;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -278,6 +348,10 @@ public final class PastryServiceGrpc {
         case METHODID_JOIN:
           serviceImpl.join((proto.Pastry.JoinRequest) request,
               (io.grpc.stub.StreamObserver<proto.Pastry.JoinResponse>) responseObserver);
+          break;
+        case METHODID_GET_NEIGHBOR_SET:
+          serviceImpl.getNeighborSet((proto.Pastry.NeighborSetRequest) request,
+              (io.grpc.stub.StreamObserver<proto.Pastry.NeighborSetResponse>) responseObserver);
           break;
         case METHODID_PING:
           serviceImpl.ping((proto.Pastry.Empty) request,
@@ -345,6 +419,7 @@ public final class PastryServiceGrpc {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new PastryServiceFileDescriptorSupplier())
               .addMethod(getJoinMethod())
+              .addMethod(getGetNeighborSetMethod())
               .addMethod(getPingMethod())
               .build();
         }
