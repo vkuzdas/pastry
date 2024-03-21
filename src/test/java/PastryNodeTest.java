@@ -69,7 +69,7 @@ public class PastryNodeTest {
     }
 
     @Test
-    public void testThreeNodes_RealPingDistance() throws IOException {
+    public void testThreeNodes_RealPingDistance() throws IOException, InterruptedException {
         logger.warn(System.lineSeparator() + System.lineSeparator()
                 + "============== " + "testThreeNodes_RealPingDistance"
                 + "() =============" + System.lineSeparator());
@@ -126,11 +126,12 @@ public class PastryNodeTest {
 //        threeNodeTestRun(bootstrap, node1, node2);
 //    }
 
-    public void threeNodeTestRun(PastryNode bootstrap, PastryNode node1, PastryNode node2) throws IOException {
+    public void threeNodeTestRun(PastryNode bootstrap, PastryNode node1, PastryNode node2) throws IOException, InterruptedException {
         registerForShutdown(bootstrap, node1, node2);
         bootstrap.initPastry();
 
         node1.joinPastry(bootstrap.getNode());
+        Thread.sleep(500);
 
         assertEquals(1, bootstrap.getLeafs().size());
         assertEquals(1, bootstrap.getNeighborSet().size());
@@ -142,6 +143,8 @@ public class PastryNodeTest {
 
 
         node2.joinPastry(node1.getNode());
+        Thread.sleep(500);
+
 
         // bootstrap gets node2 contact since node2 Join is routed there (bootstrap is closest to it)
         assertEquals(2, bootstrap.getLeafs().size());
@@ -211,6 +214,7 @@ public class PastryNodeTest {
             lastNode = node;
         }
 
+        Thread.sleep(500);
         assertEquals(LEAF_SET_SIZE_8, bootstrap.getNeighborSet().size());
         assertTrue(bootstrap.getNeighborSet().contains(lastNode.getNode()));
 
