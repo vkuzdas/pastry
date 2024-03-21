@@ -27,36 +27,36 @@ public final class PastryServiceGrpc {
   public static final String SERVICE_NAME = "PastryService";
 
   // Static method descriptors that strictly reflect the proto.
-  private static volatile io.grpc.MethodDescriptor<proto.Pastry.ForwardRequest,
-      proto.Pastry.ForwardResponse> getForwardMethod;
+  private static volatile io.grpc.MethodDescriptor<proto.Pastry.JoinRequest,
+      proto.Pastry.JoinResponse> getJoinMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "Forward",
-      requestType = proto.Pastry.ForwardRequest.class,
-      responseType = proto.Pastry.ForwardResponse.class,
+      fullMethodName = SERVICE_NAME + '/' + "Join",
+      requestType = proto.Pastry.JoinRequest.class,
+      responseType = proto.Pastry.JoinResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<proto.Pastry.ForwardRequest,
-      proto.Pastry.ForwardResponse> getForwardMethod() {
-    io.grpc.MethodDescriptor<proto.Pastry.ForwardRequest, proto.Pastry.ForwardResponse> getForwardMethod;
-    if ((getForwardMethod = PastryServiceGrpc.getForwardMethod) == null) {
+  public static io.grpc.MethodDescriptor<proto.Pastry.JoinRequest,
+      proto.Pastry.JoinResponse> getJoinMethod() {
+    io.grpc.MethodDescriptor<proto.Pastry.JoinRequest, proto.Pastry.JoinResponse> getJoinMethod;
+    if ((getJoinMethod = PastryServiceGrpc.getJoinMethod) == null) {
       synchronized (PastryServiceGrpc.class) {
-        if ((getForwardMethod = PastryServiceGrpc.getForwardMethod) == null) {
-          PastryServiceGrpc.getForwardMethod = getForwardMethod = 
-              io.grpc.MethodDescriptor.<proto.Pastry.ForwardRequest, proto.Pastry.ForwardResponse>newBuilder()
+        if ((getJoinMethod = PastryServiceGrpc.getJoinMethod) == null) {
+          PastryServiceGrpc.getJoinMethod = getJoinMethod = 
+              io.grpc.MethodDescriptor.<proto.Pastry.JoinRequest, proto.Pastry.JoinResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
-                  "PastryService", "Forward"))
+                  "PastryService", "Join"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  proto.Pastry.ForwardRequest.getDefaultInstance()))
+                  proto.Pastry.JoinRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  proto.Pastry.ForwardResponse.getDefaultInstance()))
-                  .setSchemaDescriptor(new PastryServiceMethodDescriptorSupplier("Forward"))
+                  proto.Pastry.JoinResponse.getDefaultInstance()))
+                  .setSchemaDescriptor(new PastryServiceMethodDescriptorSupplier("Join"))
                   .build();
           }
         }
      }
-     return getForwardMethod;
+     return getJoinMethod;
   }
 
   private static volatile io.grpc.MethodDescriptor<proto.Pastry.NeighborSetRequest,
@@ -152,9 +152,9 @@ public final class PastryServiceGrpc {
 
     /**
      */
-    public void forward(proto.Pastry.ForwardRequest request,
-        io.grpc.stub.StreamObserver<proto.Pastry.ForwardResponse> responseObserver) {
-      asyncUnimplementedUnaryCall(getForwardMethod(), responseObserver);
+    public void join(proto.Pastry.JoinRequest request,
+        io.grpc.stub.StreamObserver<proto.Pastry.JoinResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getJoinMethod(), responseObserver);
     }
 
     /**
@@ -174,12 +174,12 @@ public final class PastryServiceGrpc {
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
-            getForwardMethod(),
+            getJoinMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                proto.Pastry.ForwardRequest,
-                proto.Pastry.ForwardResponse>(
-                  this, METHODID_FORWARD)))
+                proto.Pastry.JoinRequest,
+                proto.Pastry.JoinResponse>(
+                  this, METHODID_JOIN)))
           .addMethod(
             getGetNeighborSetMethod(),
             asyncUnaryCall(
@@ -218,10 +218,10 @@ public final class PastryServiceGrpc {
 
     /**
      */
-    public void forward(proto.Pastry.ForwardRequest request,
-        io.grpc.stub.StreamObserver<proto.Pastry.ForwardResponse> responseObserver) {
+    public void join(proto.Pastry.JoinRequest request,
+        io.grpc.stub.StreamObserver<proto.Pastry.JoinResponse> responseObserver) {
       asyncUnaryCall(
-          getChannel().newCall(getForwardMethod(), getCallOptions()), request, responseObserver);
+          getChannel().newCall(getJoinMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
@@ -261,9 +261,9 @@ public final class PastryServiceGrpc {
 
     /**
      */
-    public proto.Pastry.ForwardResponse forward(proto.Pastry.ForwardRequest request) {
+    public proto.Pastry.JoinResponse join(proto.Pastry.JoinRequest request) {
       return blockingUnaryCall(
-          getChannel(), getForwardMethod(), getCallOptions(), request);
+          getChannel(), getJoinMethod(), getCallOptions(), request);
     }
 
     /**
@@ -301,10 +301,10 @@ public final class PastryServiceGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<proto.Pastry.ForwardResponse> forward(
-        proto.Pastry.ForwardRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<proto.Pastry.JoinResponse> join(
+        proto.Pastry.JoinRequest request) {
       return futureUnaryCall(
-          getChannel().newCall(getForwardMethod(), getCallOptions()), request);
+          getChannel().newCall(getJoinMethod(), getCallOptions()), request);
     }
 
     /**
@@ -324,7 +324,7 @@ public final class PastryServiceGrpc {
     }
   }
 
-  private static final int METHODID_FORWARD = 0;
+  private static final int METHODID_JOIN = 0;
   private static final int METHODID_GET_NEIGHBOR_SET = 1;
   private static final int METHODID_PING = 2;
 
@@ -345,9 +345,9 @@ public final class PastryServiceGrpc {
     @java.lang.SuppressWarnings("unchecked")
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
-        case METHODID_FORWARD:
-          serviceImpl.forward((proto.Pastry.ForwardRequest) request,
-              (io.grpc.stub.StreamObserver<proto.Pastry.ForwardResponse>) responseObserver);
+        case METHODID_JOIN:
+          serviceImpl.join((proto.Pastry.JoinRequest) request,
+              (io.grpc.stub.StreamObserver<proto.Pastry.JoinResponse>) responseObserver);
           break;
         case METHODID_GET_NEIGHBOR_SET:
           serviceImpl.getNeighborSet((proto.Pastry.NeighborSetRequest) request,
@@ -418,7 +418,7 @@ public final class PastryServiceGrpc {
         if (result == null) {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new PastryServiceFileDescriptorSupplier())
-              .addMethod(getForwardMethod())
+              .addMethod(getJoinMethod())
               .addMethod(getGetNeighborSetMethod())
               .addMethod(getPingMethod())
               .build();

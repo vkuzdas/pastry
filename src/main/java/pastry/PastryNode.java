@@ -32,7 +32,6 @@ public class PastryNode {
      * It is only recommended to use 16 and 32
      */
     public static int L_PARAMETER = LEAF_SET_SIZE_8;
-    private final NavigableMap<BigInteger, String> localData = new TreeMap<>();
 
     /**
      * log(base,N) rows, base columns
@@ -303,12 +302,12 @@ public class PastryNode {
         startServer();
         ManagedChannel channel = ManagedChannelBuilder.forTarget(bootstrap.getAddress()).usePlaintext().build();
         blockingStub = PastryServiceGrpc.newBlockingStub(channel);
-        Pastry.ForwardRequest.Builder request = Pastry.ForwardRequest.newBuilder().setIp(self.ip).setPort(self.port).setEnrichOnFoward(true);
-        Pastry.ForwardResponse resp;
+        Pastry.JoinRequest.Builder request = Pastry.JoinRequest.newBuilder().setIp(self.ip).setPort(self.port);
+        Pastry.JoinResponse resp;
 
         try {
             logger.trace("[{}]  Joining using {}", self, bootstrap);
-            resp = blockingStub.forward(request.build());
+            resp = blockingStub.join(request.build());
             channel.shutdown();
         } catch (StatusRuntimeException e) {
             channel.shutdown();
@@ -431,7 +430,7 @@ public class PastryNode {
      * Insert new NodeState corresponding to NodeState of current node <br>
      * Note that NodeState list is stack-like: Z node is inserted first, A last
      */
-    private Pastry.ForwardResponse enrichResponse(Pastry.ForwardResponse response) {
+    private Pastry.JoinResponse enrichResponse(Pastry.JoinResponse response) {
         Pastry.NodeState.Builder stateBuilder = Pastry.NodeState.newBuilder();
         Pastry.NodeReference.Builder nodeBuilder = Pastry.NodeReference.newBuilder();
         Pastry.RoutingTableRow.Builder rowBuilder = Pastry.RoutingTableRow.newBuilder();
@@ -458,7 +457,7 @@ public class PastryNode {
         }
 
         stateBuilder.setOwner(nodeBuilder.setIp(self.getIp()).setPort(self.getPort()).build());
-        return Pastry.ForwardResponse.newBuilder(response)
+        return Pastry.JoinResponse.newBuilder(response)
                 .addNodeState(stateBuilder.build())
                 .build();
     }
@@ -468,7 +467,7 @@ public class PastryNode {
      * A is bootstrap node <br>
      * Z is node onto which join request converges since it has closest nodeId to X <br>
      */
-    public void updateNodeState(Pastry.ForwardResponse resp) {
+    public void updateNodeState(Pastry.JoinResponse resp) {
         // TODO: unified M, L, R update
         // A usually in proximity to X => A.neighborSet to initialize X.neighborSet (set is updated periodically)
         int len = resp.getNodeStateCount();
@@ -494,7 +493,7 @@ public class PastryNode {
      * - Nodes in A<sub>0</sub> share no common prefix with A, same is true about X, therefore it can be set as X<sub>0</sub> <br>
      * - Nodes in B<sub>1</sub> share the first digit with X, since B and X share it. B<sub>1</sub> can be therefore set as X<sub>1</sub> <br>
      */
-    private void initRoutingTable(Pastry.ForwardResponse response) {
+    private void initRoutingTable(Pastry.JoinResponse response) {
         int len = response.getNodeStateCount();
         lock.lock();
         try {
@@ -597,15 +596,6 @@ public class PastryNode {
         syncInsertIntoRoutingTable(newNode);
     }
 
-    public void put(String key, String value) {
-        String id = Util.getId(key);
-        NodeReference destination = route(id);
-        Pastry.ForwardRequest req = Pastry.ForwardRequest.newBuilder()
-                .setIp(self.getIp())
-                .setPort(self.getPort())
-                .setEnrichOnFoward(false)
-                .build();
-    }
 
 
     /**
@@ -617,7 +607,7 @@ public class PastryNode {
          * NodeState in Pastry.JoinResponse.NodeState is stack-like: Z node is inserted first, A last
          */
         @Override
-        public void forward(Pastry.ForwardRequest request, StreamObserver<Pastry.ForwardResponse> responseObserver) {
+        public void join(Pastry.JoinRequest request, StreamObserver<Pastry.JoinResponse> responseObserver) {
             logger.trace("[{}]  Join request from {}:{}", self, request.getIp(), request.getPort());
             NodeReference newNode = new NodeReference(request.getIp(), request.getPort());
 
@@ -627,7 +617,7 @@ public class PastryNode {
 
             // either node is alone or it is the Z node itself
             if (closest.equals(self)) {
-                Pastry.ForwardResponse response = Pastry.ForwardResponse.newBuilder().build();
+                Pastry.JoinResponse response = Pastry.JoinResponse.newBuilder().build();
                 response = enrichResponse(response);
                 logger.trace("[{}]  My id is the closest to {}, responding back", self, newNode.getId());
                 responseObserver.onNext(response);
@@ -640,16 +630,14 @@ public class PastryNode {
             logger.trace("[{}]  Forwarding to {}", self, closest.getAddress());
             ManagedChannel channel = ManagedChannelBuilder.forTarget(closest.getAddress()).usePlaintext().build();
             blockingStub = PastryServiceGrpc.newBlockingStub(channel);
-            Pastry.ForwardResponse response = blockingStub.forward(Pastry.ForwardRequest.newBuilder()
+            Pastry.JoinResponse response = blockingStub.join(Pastry.JoinRequest.newBuilder()
                     .setIp(request.getIp())
                     .setPort(request.getPort())
                     .build());
             channel.shutdown();
 
             // enrich the response with the state of the current node
-            if (request.getEnrichOnFoward()) {
-                response = enrichResponse(response);
-            }
+            response = enrichResponse(response);
 
             responseObserver.onNext(response);
             responseObserver.onCompleted();

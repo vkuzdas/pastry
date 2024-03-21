@@ -14,44 +14,38 @@ public final class Pastry {
     registerAllExtensions(
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
-  public interface ForwardRequestOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:ForwardRequest)
+  public interface JoinRequestOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:JoinRequest)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>bool enrichOnFoward = 1;</code>
-     */
-    boolean getEnrichOnFoward();
-
-    /**
-     * <code>string ip = 2;</code>
+     * <code>string ip = 1;</code>
      */
     java.lang.String getIp();
     /**
-     * <code>string ip = 2;</code>
+     * <code>string ip = 1;</code>
      */
     com.google.protobuf.ByteString
         getIpBytes();
 
     /**
-     * <code>int32 port = 3;</code>
+     * <code>int32 port = 2;</code>
      */
     int getPort();
   }
   /**
-   * Protobuf type {@code ForwardRequest}
+   * Protobuf type {@code JoinRequest}
    */
-  public  static final class ForwardRequest extends
+  public  static final class JoinRequest extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:ForwardRequest)
-      ForwardRequestOrBuilder {
+      // @@protoc_insertion_point(message_implements:JoinRequest)
+      JoinRequestOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use ForwardRequest.newBuilder() to construct.
-    private ForwardRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use JoinRequest.newBuilder() to construct.
+    private JoinRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private ForwardRequest() {
-      enrichOnFoward_ = false;
+    private JoinRequest() {
       ip_ = "";
       port_ = 0;
     }
@@ -61,7 +55,7 @@ public final class Pastry {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private ForwardRequest(
+    private JoinRequest(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -80,18 +74,13 @@ public final class Pastry {
             case 0:
               done = true;
               break;
-            case 8: {
-
-              enrichOnFoward_ = input.readBool();
-              break;
-            }
-            case 18: {
+            case 10: {
               java.lang.String s = input.readStringRequireUtf8();
 
               ip_ = s;
               break;
             }
-            case 24: {
+            case 16: {
 
               port_ = input.readInt32();
               break;
@@ -117,30 +106,21 @@ public final class Pastry {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return proto.Pastry.internal_static_ForwardRequest_descriptor;
+      return proto.Pastry.internal_static_JoinRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return proto.Pastry.internal_static_ForwardRequest_fieldAccessorTable
+      return proto.Pastry.internal_static_JoinRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              proto.Pastry.ForwardRequest.class, proto.Pastry.ForwardRequest.Builder.class);
+              proto.Pastry.JoinRequest.class, proto.Pastry.JoinRequest.Builder.class);
     }
 
-    public static final int ENRICHONFOWARD_FIELD_NUMBER = 1;
-    private boolean enrichOnFoward_;
-    /**
-     * <code>bool enrichOnFoward = 1;</code>
-     */
-    public boolean getEnrichOnFoward() {
-      return enrichOnFoward_;
-    }
-
-    public static final int IP_FIELD_NUMBER = 2;
+    public static final int IP_FIELD_NUMBER = 1;
     private volatile java.lang.Object ip_;
     /**
-     * <code>string ip = 2;</code>
+     * <code>string ip = 1;</code>
      */
     public java.lang.String getIp() {
       java.lang.Object ref = ip_;
@@ -155,7 +135,7 @@ public final class Pastry {
       }
     }
     /**
-     * <code>string ip = 2;</code>
+     * <code>string ip = 1;</code>
      */
     public com.google.protobuf.ByteString
         getIpBytes() {
@@ -171,10 +151,10 @@ public final class Pastry {
       }
     }
 
-    public static final int PORT_FIELD_NUMBER = 3;
+    public static final int PORT_FIELD_NUMBER = 2;
     private int port_;
     /**
-     * <code>int32 port = 3;</code>
+     * <code>int32 port = 2;</code>
      */
     public int getPort() {
       return port_;
@@ -194,14 +174,11 @@ public final class Pastry {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (enrichOnFoward_ != false) {
-        output.writeBool(1, enrichOnFoward_);
-      }
       if (!getIpBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, ip_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, ip_);
       }
       if (port_ != 0) {
-        output.writeInt32(3, port_);
+        output.writeInt32(2, port_);
       }
       unknownFields.writeTo(output);
     }
@@ -212,16 +189,12 @@ public final class Pastry {
       if (size != -1) return size;
 
       size = 0;
-      if (enrichOnFoward_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(1, enrichOnFoward_);
-      }
       if (!getIpBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, ip_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, ip_);
       }
       if (port_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(3, port_);
+          .computeInt32Size(2, port_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -233,14 +206,12 @@ public final class Pastry {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof proto.Pastry.ForwardRequest)) {
+      if (!(obj instanceof proto.Pastry.JoinRequest)) {
         return super.equals(obj);
       }
-      proto.Pastry.ForwardRequest other = (proto.Pastry.ForwardRequest) obj;
+      proto.Pastry.JoinRequest other = (proto.Pastry.JoinRequest) obj;
 
       boolean result = true;
-      result = result && (getEnrichOnFoward()
-          == other.getEnrichOnFoward());
       result = result && getIp()
           .equals(other.getIp());
       result = result && (getPort()
@@ -256,9 +227,6 @@ public final class Pastry {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + ENRICHONFOWARD_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-          getEnrichOnFoward());
       hash = (37 * hash) + IP_FIELD_NUMBER;
       hash = (53 * hash) + getIp().hashCode();
       hash = (37 * hash) + PORT_FIELD_NUMBER;
@@ -268,69 +236,69 @@ public final class Pastry {
       return hash;
     }
 
-    public static proto.Pastry.ForwardRequest parseFrom(
+    public static proto.Pastry.JoinRequest parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static proto.Pastry.ForwardRequest parseFrom(
+    public static proto.Pastry.JoinRequest parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static proto.Pastry.ForwardRequest parseFrom(
+    public static proto.Pastry.JoinRequest parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static proto.Pastry.ForwardRequest parseFrom(
+    public static proto.Pastry.JoinRequest parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static proto.Pastry.ForwardRequest parseFrom(byte[] data)
+    public static proto.Pastry.JoinRequest parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static proto.Pastry.ForwardRequest parseFrom(
+    public static proto.Pastry.JoinRequest parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static proto.Pastry.ForwardRequest parseFrom(java.io.InputStream input)
+    public static proto.Pastry.JoinRequest parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static proto.Pastry.ForwardRequest parseFrom(
+    public static proto.Pastry.JoinRequest parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static proto.Pastry.ForwardRequest parseDelimitedFrom(java.io.InputStream input)
+    public static proto.Pastry.JoinRequest parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static proto.Pastry.ForwardRequest parseDelimitedFrom(
+    public static proto.Pastry.JoinRequest parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static proto.Pastry.ForwardRequest parseFrom(
+    public static proto.Pastry.JoinRequest parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static proto.Pastry.ForwardRequest parseFrom(
+    public static proto.Pastry.JoinRequest parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -343,7 +311,7 @@ public final class Pastry {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(proto.Pastry.ForwardRequest prototype) {
+    public static Builder newBuilder(proto.Pastry.JoinRequest prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -359,26 +327,26 @@ public final class Pastry {
       return builder;
     }
     /**
-     * Protobuf type {@code ForwardRequest}
+     * Protobuf type {@code JoinRequest}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:ForwardRequest)
-        proto.Pastry.ForwardRequestOrBuilder {
+        // @@protoc_insertion_point(builder_implements:JoinRequest)
+        proto.Pastry.JoinRequestOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return proto.Pastry.internal_static_ForwardRequest_descriptor;
+        return proto.Pastry.internal_static_JoinRequest_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return proto.Pastry.internal_static_ForwardRequest_fieldAccessorTable
+        return proto.Pastry.internal_static_JoinRequest_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                proto.Pastry.ForwardRequest.class, proto.Pastry.ForwardRequest.Builder.class);
+                proto.Pastry.JoinRequest.class, proto.Pastry.JoinRequest.Builder.class);
       }
 
-      // Construct using proto.Pastry.ForwardRequest.newBuilder()
+      // Construct using proto.Pastry.JoinRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -396,8 +364,6 @@ public final class Pastry {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        enrichOnFoward_ = false;
-
         ip_ = "";
 
         port_ = 0;
@@ -408,17 +374,17 @@ public final class Pastry {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return proto.Pastry.internal_static_ForwardRequest_descriptor;
+        return proto.Pastry.internal_static_JoinRequest_descriptor;
       }
 
       @java.lang.Override
-      public proto.Pastry.ForwardRequest getDefaultInstanceForType() {
-        return proto.Pastry.ForwardRequest.getDefaultInstance();
+      public proto.Pastry.JoinRequest getDefaultInstanceForType() {
+        return proto.Pastry.JoinRequest.getDefaultInstance();
       }
 
       @java.lang.Override
-      public proto.Pastry.ForwardRequest build() {
-        proto.Pastry.ForwardRequest result = buildPartial();
+      public proto.Pastry.JoinRequest build() {
+        proto.Pastry.JoinRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -426,9 +392,8 @@ public final class Pastry {
       }
 
       @java.lang.Override
-      public proto.Pastry.ForwardRequest buildPartial() {
-        proto.Pastry.ForwardRequest result = new proto.Pastry.ForwardRequest(this);
-        result.enrichOnFoward_ = enrichOnFoward_;
+      public proto.Pastry.JoinRequest buildPartial() {
+        proto.Pastry.JoinRequest result = new proto.Pastry.JoinRequest(this);
         result.ip_ = ip_;
         result.port_ = port_;
         onBuilt();
@@ -469,19 +434,16 @@ public final class Pastry {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof proto.Pastry.ForwardRequest) {
-          return mergeFrom((proto.Pastry.ForwardRequest)other);
+        if (other instanceof proto.Pastry.JoinRequest) {
+          return mergeFrom((proto.Pastry.JoinRequest)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(proto.Pastry.ForwardRequest other) {
-        if (other == proto.Pastry.ForwardRequest.getDefaultInstance()) return this;
-        if (other.getEnrichOnFoward() != false) {
-          setEnrichOnFoward(other.getEnrichOnFoward());
-        }
+      public Builder mergeFrom(proto.Pastry.JoinRequest other) {
+        if (other == proto.Pastry.JoinRequest.getDefaultInstance()) return this;
         if (!other.getIp().isEmpty()) {
           ip_ = other.ip_;
           onChanged();
@@ -504,11 +466,11 @@ public final class Pastry {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        proto.Pastry.ForwardRequest parsedMessage = null;
+        proto.Pastry.JoinRequest parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (proto.Pastry.ForwardRequest) e.getUnfinishedMessage();
+          parsedMessage = (proto.Pastry.JoinRequest) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -518,35 +480,9 @@ public final class Pastry {
         return this;
       }
 
-      private boolean enrichOnFoward_ ;
-      /**
-       * <code>bool enrichOnFoward = 1;</code>
-       */
-      public boolean getEnrichOnFoward() {
-        return enrichOnFoward_;
-      }
-      /**
-       * <code>bool enrichOnFoward = 1;</code>
-       */
-      public Builder setEnrichOnFoward(boolean value) {
-        
-        enrichOnFoward_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bool enrichOnFoward = 1;</code>
-       */
-      public Builder clearEnrichOnFoward() {
-        
-        enrichOnFoward_ = false;
-        onChanged();
-        return this;
-      }
-
       private java.lang.Object ip_ = "";
       /**
-       * <code>string ip = 2;</code>
+       * <code>string ip = 1;</code>
        */
       public java.lang.String getIp() {
         java.lang.Object ref = ip_;
@@ -561,7 +497,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>string ip = 2;</code>
+       * <code>string ip = 1;</code>
        */
       public com.google.protobuf.ByteString
           getIpBytes() {
@@ -577,7 +513,7 @@ public final class Pastry {
         }
       }
       /**
-       * <code>string ip = 2;</code>
+       * <code>string ip = 1;</code>
        */
       public Builder setIp(
           java.lang.String value) {
@@ -590,7 +526,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>string ip = 2;</code>
+       * <code>string ip = 1;</code>
        */
       public Builder clearIp() {
         
@@ -599,7 +535,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>string ip = 2;</code>
+       * <code>string ip = 1;</code>
        */
       public Builder setIpBytes(
           com.google.protobuf.ByteString value) {
@@ -615,13 +551,13 @@ public final class Pastry {
 
       private int port_ ;
       /**
-       * <code>int32 port = 3;</code>
+       * <code>int32 port = 2;</code>
        */
       public int getPort() {
         return port_;
       }
       /**
-       * <code>int32 port = 3;</code>
+       * <code>int32 port = 2;</code>
        */
       public Builder setPort(int value) {
         
@@ -630,7 +566,7 @@ public final class Pastry {
         return this;
       }
       /**
-       * <code>int32 port = 3;</code>
+       * <code>int32 port = 2;</code>
        */
       public Builder clearPort() {
         
@@ -651,41 +587,41 @@ public final class Pastry {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:ForwardRequest)
+      // @@protoc_insertion_point(builder_scope:JoinRequest)
     }
 
-    // @@protoc_insertion_point(class_scope:ForwardRequest)
-    private static final proto.Pastry.ForwardRequest DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:JoinRequest)
+    private static final proto.Pastry.JoinRequest DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new proto.Pastry.ForwardRequest();
+      DEFAULT_INSTANCE = new proto.Pastry.JoinRequest();
     }
 
-    public static proto.Pastry.ForwardRequest getDefaultInstance() {
+    public static proto.Pastry.JoinRequest getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<ForwardRequest>
-        PARSER = new com.google.protobuf.AbstractParser<ForwardRequest>() {
+    private static final com.google.protobuf.Parser<JoinRequest>
+        PARSER = new com.google.protobuf.AbstractParser<JoinRequest>() {
       @java.lang.Override
-      public ForwardRequest parsePartialFrom(
+      public JoinRequest parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ForwardRequest(input, extensionRegistry);
+        return new JoinRequest(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<ForwardRequest> parser() {
+    public static com.google.protobuf.Parser<JoinRequest> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<ForwardRequest> getParserForType() {
+    public com.google.protobuf.Parser<JoinRequest> getParserForType() {
       return PARSER;
     }
 
     @java.lang.Override
-    public proto.Pastry.ForwardRequest getDefaultInstanceForType() {
+    public proto.Pastry.JoinRequest getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -1103,8 +1039,8 @@ public final class Pastry {
 
   }
 
-  public interface ForwardResponseOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:ForwardResponse)
+  public interface JoinResponseOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:JoinResponse)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -1132,18 +1068,18 @@ public final class Pastry {
         int index);
   }
   /**
-   * Protobuf type {@code ForwardResponse}
+   * Protobuf type {@code JoinResponse}
    */
-  public  static final class ForwardResponse extends
+  public  static final class JoinResponse extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:ForwardResponse)
-      ForwardResponseOrBuilder {
+      // @@protoc_insertion_point(message_implements:JoinResponse)
+      JoinResponseOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use ForwardResponse.newBuilder() to construct.
-    private ForwardResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use JoinResponse.newBuilder() to construct.
+    private JoinResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private ForwardResponse() {
+    private JoinResponse() {
       nodeState_ = java.util.Collections.emptyList();
     }
 
@@ -1152,7 +1088,7 @@ public final class Pastry {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private ForwardResponse(
+    private JoinResponse(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -1204,15 +1140,15 @@ public final class Pastry {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return proto.Pastry.internal_static_ForwardResponse_descriptor;
+      return proto.Pastry.internal_static_JoinResponse_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return proto.Pastry.internal_static_ForwardResponse_fieldAccessorTable
+      return proto.Pastry.internal_static_JoinResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              proto.Pastry.ForwardResponse.class, proto.Pastry.ForwardResponse.Builder.class);
+              proto.Pastry.JoinResponse.class, proto.Pastry.JoinResponse.Builder.class);
     }
 
     public static final int NODESTATE_FIELD_NUMBER = 1;
@@ -1290,10 +1226,10 @@ public final class Pastry {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof proto.Pastry.ForwardResponse)) {
+      if (!(obj instanceof proto.Pastry.JoinResponse)) {
         return super.equals(obj);
       }
-      proto.Pastry.ForwardResponse other = (proto.Pastry.ForwardResponse) obj;
+      proto.Pastry.JoinResponse other = (proto.Pastry.JoinResponse) obj;
 
       boolean result = true;
       result = result && getNodeStateList()
@@ -1318,69 +1254,69 @@ public final class Pastry {
       return hash;
     }
 
-    public static proto.Pastry.ForwardResponse parseFrom(
+    public static proto.Pastry.JoinResponse parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static proto.Pastry.ForwardResponse parseFrom(
+    public static proto.Pastry.JoinResponse parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static proto.Pastry.ForwardResponse parseFrom(
+    public static proto.Pastry.JoinResponse parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static proto.Pastry.ForwardResponse parseFrom(
+    public static proto.Pastry.JoinResponse parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static proto.Pastry.ForwardResponse parseFrom(byte[] data)
+    public static proto.Pastry.JoinResponse parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static proto.Pastry.ForwardResponse parseFrom(
+    public static proto.Pastry.JoinResponse parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static proto.Pastry.ForwardResponse parseFrom(java.io.InputStream input)
+    public static proto.Pastry.JoinResponse parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static proto.Pastry.ForwardResponse parseFrom(
+    public static proto.Pastry.JoinResponse parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static proto.Pastry.ForwardResponse parseDelimitedFrom(java.io.InputStream input)
+    public static proto.Pastry.JoinResponse parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static proto.Pastry.ForwardResponse parseDelimitedFrom(
+    public static proto.Pastry.JoinResponse parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static proto.Pastry.ForwardResponse parseFrom(
+    public static proto.Pastry.JoinResponse parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static proto.Pastry.ForwardResponse parseFrom(
+    public static proto.Pastry.JoinResponse parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1393,7 +1329,7 @@ public final class Pastry {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(proto.Pastry.ForwardResponse prototype) {
+    public static Builder newBuilder(proto.Pastry.JoinResponse prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -1409,26 +1345,26 @@ public final class Pastry {
       return builder;
     }
     /**
-     * Protobuf type {@code ForwardResponse}
+     * Protobuf type {@code JoinResponse}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:ForwardResponse)
-        proto.Pastry.ForwardResponseOrBuilder {
+        // @@protoc_insertion_point(builder_implements:JoinResponse)
+        proto.Pastry.JoinResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return proto.Pastry.internal_static_ForwardResponse_descriptor;
+        return proto.Pastry.internal_static_JoinResponse_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return proto.Pastry.internal_static_ForwardResponse_fieldAccessorTable
+        return proto.Pastry.internal_static_JoinResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                proto.Pastry.ForwardResponse.class, proto.Pastry.ForwardResponse.Builder.class);
+                proto.Pastry.JoinResponse.class, proto.Pastry.JoinResponse.Builder.class);
       }
 
-      // Construct using proto.Pastry.ForwardResponse.newBuilder()
+      // Construct using proto.Pastry.JoinResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1459,17 +1395,17 @@ public final class Pastry {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return proto.Pastry.internal_static_ForwardResponse_descriptor;
+        return proto.Pastry.internal_static_JoinResponse_descriptor;
       }
 
       @java.lang.Override
-      public proto.Pastry.ForwardResponse getDefaultInstanceForType() {
-        return proto.Pastry.ForwardResponse.getDefaultInstance();
+      public proto.Pastry.JoinResponse getDefaultInstanceForType() {
+        return proto.Pastry.JoinResponse.getDefaultInstance();
       }
 
       @java.lang.Override
-      public proto.Pastry.ForwardResponse build() {
-        proto.Pastry.ForwardResponse result = buildPartial();
+      public proto.Pastry.JoinResponse build() {
+        proto.Pastry.JoinResponse result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -1477,8 +1413,8 @@ public final class Pastry {
       }
 
       @java.lang.Override
-      public proto.Pastry.ForwardResponse buildPartial() {
-        proto.Pastry.ForwardResponse result = new proto.Pastry.ForwardResponse(this);
+      public proto.Pastry.JoinResponse buildPartial() {
+        proto.Pastry.JoinResponse result = new proto.Pastry.JoinResponse(this);
         int from_bitField0_ = bitField0_;
         if (nodeStateBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -1527,16 +1463,16 @@ public final class Pastry {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof proto.Pastry.ForwardResponse) {
-          return mergeFrom((proto.Pastry.ForwardResponse)other);
+        if (other instanceof proto.Pastry.JoinResponse) {
+          return mergeFrom((proto.Pastry.JoinResponse)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(proto.Pastry.ForwardResponse other) {
-        if (other == proto.Pastry.ForwardResponse.getDefaultInstance()) return this;
+      public Builder mergeFrom(proto.Pastry.JoinResponse other) {
+        if (other == proto.Pastry.JoinResponse.getDefaultInstance()) return this;
         if (nodeStateBuilder_ == null) {
           if (!other.nodeState_.isEmpty()) {
             if (nodeState_.isEmpty()) {
@@ -1578,11 +1514,11 @@ public final class Pastry {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        proto.Pastry.ForwardResponse parsedMessage = null;
+        proto.Pastry.JoinResponse parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (proto.Pastry.ForwardResponse) e.getUnfinishedMessage();
+          parsedMessage = (proto.Pastry.JoinResponse) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -1845,41 +1781,41 @@ public final class Pastry {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:ForwardResponse)
+      // @@protoc_insertion_point(builder_scope:JoinResponse)
     }
 
-    // @@protoc_insertion_point(class_scope:ForwardResponse)
-    private static final proto.Pastry.ForwardResponse DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:JoinResponse)
+    private static final proto.Pastry.JoinResponse DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new proto.Pastry.ForwardResponse();
+      DEFAULT_INSTANCE = new proto.Pastry.JoinResponse();
     }
 
-    public static proto.Pastry.ForwardResponse getDefaultInstance() {
+    public static proto.Pastry.JoinResponse getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<ForwardResponse>
-        PARSER = new com.google.protobuf.AbstractParser<ForwardResponse>() {
+    private static final com.google.protobuf.Parser<JoinResponse>
+        PARSER = new com.google.protobuf.AbstractParser<JoinResponse>() {
       @java.lang.Override
-      public ForwardResponse parsePartialFrom(
+      public JoinResponse parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ForwardResponse(input, extensionRegistry);
+        return new JoinResponse(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<ForwardResponse> parser() {
+    public static com.google.protobuf.Parser<JoinResponse> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<ForwardResponse> getParserForType() {
+    public com.google.protobuf.Parser<JoinResponse> getParserForType() {
       return PARSER;
     }
 
     @java.lang.Override
-    public proto.Pastry.ForwardResponse getDefaultInstanceForType() {
+    public proto.Pastry.JoinResponse getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -6188,20 +6124,20 @@ public final class Pastry {
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_ForwardRequest_descriptor;
+    internal_static_JoinRequest_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_ForwardRequest_fieldAccessorTable;
+      internal_static_JoinRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_Empty_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_Empty_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_ForwardResponse_descriptor;
+    internal_static_JoinResponse_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_ForwardResponse_fieldAccessorTable;
+      internal_static_JoinResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_NodeState_descriptor;
   private static final 
@@ -6236,23 +6172,22 @@ public final class Pastry {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\014pastry.proto\"B\n\016ForwardRequest\022\026\n\016enri" +
-      "chOnFoward\030\001 \001(\010\022\n\n\002ip\030\002 \001(\t\022\014\n\004port\030\003 \001" +
-      "(\005\"\007\n\005Empty\"0\n\017ForwardResponse\022\035\n\tnodeSt" +
-      "ate\030\001 \003(\0132\n.NodeState\"\230\001\n\tNodeState\022\035\n\005o" +
-      "wner\030\001 \001(\0132\016.NodeReference\022\037\n\007leafSet\030\002 " +
-      "\003(\0132\016.NodeReference\022&\n\014routingTable\030\003 \003(" +
-      "\0132\020.RoutingTableRow\022#\n\013neighborSet\030\004 \003(\013" +
-      "2\016.NodeReference\"<\n\017RoutingTableRow\022)\n\021r" +
-      "outingTableEntry\030\001 \003(\0132\016.NodeReference\")" +
-      "\n\rNodeReference\022\n\n\002ip\030\001 \001(\t\022\014\n\004port\030\002 \001(" +
-      "\005\"\024\n\022NeighborSetRequest\":\n\023NeighborSetRe" +
-      "sponse\022#\n\013neighborSet\030\001 \003(\0132\016.NodeRefere" +
-      "nce2\230\001\n\rPastryService\022.\n\007Forward\022\017.Forwa" +
-      "rdRequest\032\020.ForwardResponse\"\000\022=\n\016GetNeig" +
-      "hborSet\022\023.NeighborSetRequest\032\024.NeighborS" +
-      "etResponse\"\000\022\030\n\004Ping\022\006.Empty\032\006.Empty\"\000B\007" +
-      "\n\005protob\006proto3"
+      "\n\014pastry.proto\"\'\n\013JoinRequest\022\n\n\002ip\030\001 \001(" +
+      "\t\022\014\n\004port\030\002 \001(\005\"\007\n\005Empty\"-\n\014JoinResponse" +
+      "\022\035\n\tnodeState\030\001 \003(\0132\n.NodeState\"\230\001\n\tNode" +
+      "State\022\035\n\005owner\030\001 \001(\0132\016.NodeReference\022\037\n\007" +
+      "leafSet\030\002 \003(\0132\016.NodeReference\022&\n\014routing" +
+      "Table\030\003 \003(\0132\020.RoutingTableRow\022#\n\013neighbo" +
+      "rSet\030\004 \003(\0132\016.NodeReference\"<\n\017RoutingTab" +
+      "leRow\022)\n\021routingTableEntry\030\001 \003(\0132\016.NodeR" +
+      "eference\")\n\rNodeReference\022\n\n\002ip\030\001 \001(\t\022\014\n" +
+      "\004port\030\002 \001(\005\"\024\n\022NeighborSetRequest\":\n\023Nei" +
+      "ghborSetResponse\022#\n\013neighborSet\030\001 \003(\0132\016." +
+      "NodeReference2\217\001\n\rPastryService\022%\n\004Join\022" +
+      "\014.JoinRequest\032\r.JoinResponse\"\000\022=\n\016GetNei" +
+      "ghborSet\022\023.NeighborSetRequest\032\024.Neighbor" +
+      "SetResponse\"\000\022\030\n\004Ping\022\006.Empty\032\006.Empty\"\000B" +
+      "\007\n\005protob\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -6266,23 +6201,23 @@ public final class Pastry {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
-    internal_static_ForwardRequest_descriptor =
+    internal_static_JoinRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
-    internal_static_ForwardRequest_fieldAccessorTable = new
+    internal_static_JoinRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_ForwardRequest_descriptor,
-        new java.lang.String[] { "EnrichOnFoward", "Ip", "Port", });
+        internal_static_JoinRequest_descriptor,
+        new java.lang.String[] { "Ip", "Port", });
     internal_static_Empty_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_Empty_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Empty_descriptor,
         new java.lang.String[] { });
-    internal_static_ForwardResponse_descriptor =
+    internal_static_JoinResponse_descriptor =
       getDescriptor().getMessageTypes().get(2);
-    internal_static_ForwardResponse_fieldAccessorTable = new
+    internal_static_JoinResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_ForwardResponse_descriptor,
+        internal_static_JoinResponse_descriptor,
         new java.lang.String[] { "NodeState", });
     internal_static_NodeState_descriptor =
       getDescriptor().getMessageTypes().get(3);
