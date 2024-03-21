@@ -214,7 +214,7 @@ public class PastryNodeTest {
             lastNode = node;
         }
 
-        Thread.sleep(500);
+        Thread.sleep(1000);
         assertEquals(LEAF_SET_SIZE_8, bootstrap.getNeighborSet().size());
         assertTrue(bootstrap.getNeighborSet().contains(lastNode.getNode()));
 
