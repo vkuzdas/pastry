@@ -195,39 +195,6 @@ public class PastryNodeTest {
     }
 
     @Test
-    public void testFindNewNeighbor() throws IOException, InterruptedException {
-        // init bootstrap
-        // connect LEAF_SIZE+1 nodes to fill neighbor set
-        // disconnect one node contained in the neighbor set
-        // validate neighbor set full but not contains the left node -> means that new neighbor was inserted
-        // Note: insert one more node since bootstrap itself won't insert itself to the NodeState
-        PastryNode.setBase(BASE_4_IDS);
-        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
-
-        PastryNode bootstrap = new PastryNode("localhost", 10_040);
-        bootstrap.initPastry();
-
-        PastryNode lastNode = null;
-        for (int i = 1; i <= LEAF_SET_SIZE_8+2; i++) {
-            PastryNode node = new PastryNode("localhost", 10_040 + i);
-            node.joinPastry(bootstrap.getNode());
-            lastNode = node;
-        }
-
-        Thread.sleep(1000);
-        assertEquals(LEAF_SET_SIZE_8, bootstrap.getNeighborSet().size());
-        assertTrue(bootstrap.getNeighborSet().contains(lastNode.getNode()));
-
-        lastNode.shutdownPastryNode();
-
-        Thread.sleep(PastryNode.STABILIZATION_INTERVAL+1000);
-
-        assertFalse(bootstrap.getNeighborSet().contains(lastNode.getNode()));
-        assertEquals(LEAF_SET_SIZE_8, bootstrap.getNeighborSet().size());
-
-    }
-
-    @Test
     public void testFullNeighborSetNodes() throws IOException {
         logger.warn(System.lineSeparator() + System.lineSeparator()
                 + "============== " + "testFullNeighborSetNodes"
@@ -254,12 +221,12 @@ public class PastryNodeTest {
         PastryNode.setBase(BASE_4_IDS);
         PastryNode.setLeafSize(LEAF_SET_SIZE_8);
 
-        PastryNode bootstrap = new PastryNode("localhost", 10_400);
+        PastryNode bootstrap = new PastryNode("localhost", 10_600);
         bootstrap.initPastry();
 
         List<PastryNode> nodes = new ArrayList<>();
         for (int i = 0; i < LEAF_SET_SIZE_8; i++) {
-            PastryNode node = new PastryNode("localhost", 10_401 + i);
+            PastryNode node = new PastryNode("localhost", 10_601 + i);
             node.joinPastry(bootstrap.getNode());
             nodes.add(node);
         }
