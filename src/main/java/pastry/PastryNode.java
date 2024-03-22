@@ -192,43 +192,61 @@ public class PastryNode {
     }
 
     /**
-     * Node attempts to contact each member of the neighborhood set periodically
-     * to see if it is still alive. If a member is not responding,
+     * <i>Node attempts to contact each member
+     * of the neighborhood set periodically to see if it is still alive. If a member is not responding,
      * the node asks other members for their neighborhood tables, checks the distance of
-     * the newly discovered node, and updates it own neighborhood set accordingly.
+     * each of the newly discovered nodes, and updates it own neighborhood set accordingly.</i>
+     * <p>
+     *     There is probably no other way around it then to always send back whole neighbor set. <br>
+     *     This is probably pretty costly and therefore the timer should tick less frequently. <br>
+     * </p>
      */
     private void startStabilizationThread() {
         TimerTask stabilizationTimerTask = new TimerTask() {
             @Override
             public void run() {
                 logger.trace("[{}]  checking neighbors..", self);
+                // make copy of current neighbor set
+                // iterate over it and request their neighbors
+                // fill neighborCandidates
+                List<NodeReference> currentNeigborSet;
+                List<NodeReference> neighborCandidates = new ArrayList<>();
+                List<NodeReference> toRemove = new ArrayList<>();
+
                 lock.lock();
                 try {
-                    // iterate over neighbors, check liveness of each
-                    for (NodeReference neighbor : neighborSet) {
-                        ManagedChannel channel = ManagedChannelBuilder.forTarget(neighbor.getAddress()).usePlaintext().build();
-                        blockingStub = PastryServiceGrpc.newBlockingStub(channel);
-                        try {
-                            blockingStub.ping(PING);
-                        }
-                        catch (StatusRuntimeException e) {
-                            // neighbor is down, remove and find new
-                            channel.shutdown();
-                            logger.error("[{}]  status of [{}] is {}, removing from NodeState", self, neighbor, e.getStatus().getCode());
-                            syncRemoveFromNodeState(neighbor);
-                            NodeReference newNeighbor = getNewNeighbor();
-                            if (newNeighbor == null) {
-                                logger.warn("[{}]  No new neighbor found", self);
-                                return;
-                            }
-                            logger.trace("[{}]  found new neighbor: [{}]", self, newNeighbor);
-                            registerNewNode(newNeighbor);
-                            break; // break to avoid concurrent modification, other neighbors will be checked in the next iteration
-                        }
-                        channel.shutdown();
-                    }
+                    currentNeigborSet = new ArrayList<>(neighborSet);
                 } finally {
                     lock.unlock();
+                }
+
+                // iterate over neighbors, check liveness of each
+                for (NodeReference neighbor : currentNeigborSet) {
+                    ManagedChannel channel = ManagedChannelBuilder.forTarget(neighbor.getAddress()).usePlaintext().build();
+                    blockingStub = PastryServiceGrpc.newBlockingStub(channel);
+                    Pastry.NeighborSetResponse response;
+                    try { 
+                        response = blockingStub.getNeighborSet(Pastry.NeighborSetRequest.newBuilder().build());
+                        for (Pastry.NodeReference n : response.getNeighborSetList()) {
+                            neighborCandidates.add(new NodeReference(n.getIp(), n.getPort()));
+                        }
+                    }
+                    catch (StatusRuntimeException e) {
+                        // neighbor is down, remove and find new
+                        channel.shutdown();
+                        logger.error("[{}]  status of [{}] is {}, removing from NodeState", self, neighbor, e.getStatus().getCode());
+                        toRemove.add(neighbor);
+                    }
+                    channel.shutdown();
+                }
+                for(NodeReference n : toRemove) {
+                    syncRemoveFromNodeState(n);
+                }
+                for (NodeReference candidate : neighborCandidates) {
+                    if (!toRemove.contains(candidate)) {
+                        // register has "already-contains" check
+                        registerNewNode(candidate);
+                    }
                 }
             }
         };
@@ -710,19 +728,21 @@ public class PastryNode {
 
         PastryNode.setBase(BASE_4_IDS);
         PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+        PastryNode.STABILIZATION_INTERVAL = 2000;
 
-        PastryNode bootstrap = new PastryNode("localhost", 10_000);
+        PastryNode bootstrap = new PastryNode("localhost", 10_400);
         bootstrap.initPastry();
 
-        PastryNode node1 = new PastryNode("localhost", 10_001);
+        PastryNode node1 = new PastryNode("localhost", 10_401);
         node1.joinPastry(bootstrap.getNode());
 
-        Thread.sleep(6000);
-        node1.shutdownPastryNode();
+        PastryNode node2 = new PastryNode("localhost", 10_402);
+        node2.joinPastry(node1.getNode());
 
-        Thread.sleep(6000);
-        node1.startServer();
-        node1.joinPastry(bootstrap.getNode());
+        PastryNode node3 = new PastryNode("localhost", 10_403);
+        node3.joinPastry(node2.getNode());
+        Thread.sleep(10000);
+        System.out.println("Shutting down node 3");
     }
 }
 

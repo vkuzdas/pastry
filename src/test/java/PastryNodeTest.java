@@ -245,6 +245,34 @@ public class PastryNodeTest {
         }
     }
 
+    @Test
+    public void testChainJoin2() throws IOException, InterruptedException {
+        logger.warn(System.lineSeparator() + System.lineSeparator()
+                + "============== " + "testChainJoin"
+                + "() =============" + System.lineSeparator());
+
+        PastryNode.setBase(BASE_4_IDS);
+        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+
+        PastryNode bootstrap = new PastryNode("localhost", 10_400);
+        bootstrap.initPastry();
+
+        List<PastryNode> nodes = new ArrayList<>();
+        for (int i = 0; i < LEAF_SET_SIZE_8; i++) {
+            PastryNode node = new PastryNode("localhost", 10_401 + i);
+            node.joinPastry(bootstrap.getNode());
+            nodes.add(node);
+        }
+
+        // after single stabilization, all nodes should have whole network as neighbors
+        Thread.sleep(PastryNode.STABILIZATION_INTERVAL+1000);
+
+        for(PastryNode node : nodes) {
+            assertEquals(LEAF_SET_SIZE_8, node.getNeighborSet().size());
+        }
+
+    }
+
     private void assertNoDuplicates(List<NodeReference> set) {
         assertEquals(set.size(), set.stream().distinct().count());
     }
