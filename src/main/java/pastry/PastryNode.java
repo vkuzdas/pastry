@@ -361,7 +361,7 @@ public class PastryNode {
         BigInteger id_dec = Util.convertToDecimal(id_base);
         // if id ∈ (upLeaf.first, upLeafs.last)
         if (syncSizeGet(downLeafs) > 0 && syncSizeGet(upLeafs) > 0
-                && syncGet(0, downLeafs).getDecimalId().compareTo(id_dec) <= 0
+                && syncLastGet(downLeafs).getDecimalId().compareTo(id_dec) <= 0
                 &&  id_dec.compareTo(syncLastGet(upLeafs).getDecimalId()) <= 0) {
             NodeReference leaf = getNumericallyClosestLeaf(id_dec);
             logger.trace("[{}]  Routing {} to numerically closest leaf [{}]", self, id_base, leaf);
@@ -610,7 +610,7 @@ public class PastryNode {
             if (!downLeafs.contains(newNode)) {
                 int i = 0;
                 for (NodeReference curr : downLeafs) {
-                    if (curr.getId().compareTo(newNode.getId()) > 0) {
+                    if (curr.getId().compareTo(newNode.getId()) < 0) {
                         break;
                     }
                     i++;
