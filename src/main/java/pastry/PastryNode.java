@@ -592,20 +592,6 @@ public class PastryNode {
      * If the leaf set is full and newNode is <b>numerically<b/> closer, remove the last node and insert the new node
      */
     private void syncInsertIntoLeafSet(NodeReference newNode) {
-//        List<NodeReference> set = newNode.getId().compareTo(self.getId()) > 0 ?  upLeafs : downLeafs;
-//        if (!set.contains(newNode)) {
-//            int i = 0;
-//            for (NodeReference curr : set) {
-//                if (curr.getId().compareTo(newNode.getId()) > 0) {
-//                    break;
-//                }
-//                i++;
-//            }
-//            set.add(i, newNode);
-//            if (set.size() > L_PARAMETER / 2) {
-//                set.remove(set.size() - 1);
-//            }
-//        }
         if (newNode.getId().compareTo(self.getId()) > 0) {
             if (!upLeafs.contains(newNode)) {
                 int i = 0;
@@ -624,7 +610,7 @@ public class PastryNode {
             if (!downLeafs.contains(newNode)) {
                 int i = 0;
                 for (NodeReference curr : downLeafs) {
-                    if (curr.getId().compareTo(newNode.getId()) < 0) {
+                    if (curr.getId().compareTo(newNode.getId()) > 0) {
                         break;
                     }
                     i++;

@@ -276,11 +276,8 @@ public class PastryNodeTest {
      * Closest in terms of digit match and numerical distance
      */
     private void assertNumericallyClosestOfAll(NodeReference node, NodeReference closest, List<PastryNode> nodes) {
-        BigInteger actual = node.getDecimalId().subtract(closest.getDecimalId()).abs();
-        for (PastryNode n : nodes) {
-            BigInteger expected = node.getDecimalId().subtract(n.getNode().getDecimalId()).abs();
-            assertTrue(actual.compareTo(expected) <= 0, "Node " + n.getNode() + " is closer to " + node + " than " + closest);
-        }
+        nodes.sort(Comparator.comparing(o -> o.getNode().getDecimalId().subtract(node.getDecimalId()).abs()));
+        assertEquals(nodes.get(0).getNode(), closest, "Actual closest to " + node + " is " + nodes.get(0).getNode() + ", not " + closest);
     }
 
 
