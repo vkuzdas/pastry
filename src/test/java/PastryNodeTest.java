@@ -5,9 +5,9 @@ import pastry.*;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.math.BigInteger;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static pastry.Constants.BASE_4_IDS;
@@ -213,7 +213,7 @@ public class PastryNodeTest {
     }
 
     @Test
-    public void testChainJoin2() throws IOException, InterruptedException {
+    public void testChainJoin() throws IOException, InterruptedException {
         logger.warn(System.lineSeparator() + System.lineSeparator()
                 + "============== " + "testChainJoin"
                 + "() =============" + System.lineSeparator());
@@ -237,8 +237,52 @@ public class PastryNodeTest {
         for(PastryNode node : nodes) {
             assertEquals(LEAF_SET_SIZE_8, node.getNeighborSet().size());
         }
-
+        // no assert can be made about leafs since a node can have highest or lowest id
+        for(PastryNode node : nodes) {
+            assertEquals(LEAF_SET_SIZE_8, getRoutingTableSize(node.getRoutingTable()));
+        }
     }
+
+
+    // no matter the NodeState, node should always join the closest node
+    // validate manually by looking at logs
+    @Test
+    public void testRandomJoin_alwaysJoinClosest() throws IOException {
+        logger.warn(System.lineSeparator() + System.lineSeparator()
+                + "============== " + "testRandomJoin_alwaysJoinClosest"
+                + "() =============" + System.lineSeparator());
+
+
+        PastryNode.setBase(BASE_4_IDS);
+        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+        PastryNode.STABILIZATION_INTERVAL = 60_000; // prevent stabilization (might interfere with closest check)
+
+        PastryNode bootstrap = new PastryNode("localhost", 10_700);
+        bootstrap.initPastry();
+
+        List<PastryNode> nodes = new ArrayList<>();
+        nodes.add(bootstrap);
+        PastryNode lastNode = bootstrap;
+        for (int i = 0; i < 50; i++) {
+            PastryNode node = new PastryNode("localhost", 10_701 + i);
+//            NodeReference closest = node.joinPastry(nodes.get(new Random().nextInt(nodes.size())).getNode());
+            NodeReference closest = node.joinPastry(lastNode.getNode());
+            assertNumericallyClosestOfAll(node.getNode(), closest, nodes);
+            nodes.add(node);
+        }
+    }
+
+    /**
+     * Closest in terms of digit match and numerical distance
+     */
+    private void assertNumericallyClosestOfAll(NodeReference node, NodeReference closest, List<PastryNode> nodes) {
+        BigInteger actual = node.getDecimalId().subtract(closest.getDecimalId()).abs();
+        for (PastryNode n : nodes) {
+            BigInteger expected = node.getDecimalId().subtract(n.getNode().getDecimalId()).abs();
+            assertTrue(actual.compareTo(expected) <= 0, "Node " + n.getNode() + " is closer to " + node + " than " + closest);
+        }
+    }
+
 
     private void assertNoDuplicates(List<NodeReference> set) {
         assertEquals(set.size(), set.stream().distinct().count());

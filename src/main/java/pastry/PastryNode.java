@@ -137,7 +137,11 @@ public class PastryNode {
                 .build();
 
         for (int i = 0; i < 8; i++) {
-            routingTable.add(new ArrayList<>());
+            ArrayList<NodeReference> emptyRow = new ArrayList<>();
+            for (int j = 0; j < (int)Math.pow(2, B_PARAMETER); j++) {
+                emptyRow.add(null);
+            }
+            routingTable.add(emptyRow);
         }
     }
 
@@ -250,7 +254,7 @@ public class PastryNode {
                 }
             }
         };
-        stabilizationTimer.schedule(stabilizationTimerTask,1000, STABILIZATION_INTERVAL);
+//        stabilizationTimer.schedule(stabilizationTimerTask,1000, STABILIZATION_INTERVAL);
     }
 
     /**
@@ -316,7 +320,7 @@ public class PastryNode {
      * Request is routed to node <b>Z</b> which is closest to <b>X</b> <par>
      * Nodes in the routing path will send the node state to <b>X</b>
      */
-    public void joinPastry(NodeReference bootstrap) throws IOException {
+    public NodeReference joinPastry(NodeReference bootstrap) throws IOException {
         startServer();
         ManagedChannel channel = ManagedChannelBuilder.forTarget(bootstrap.getAddress()).usePlaintext().build();
         blockingStub = PastryServiceGrpc.newBlockingStub(channel);
@@ -330,11 +334,17 @@ public class PastryNode {
         } catch (StatusRuntimeException e) {
             channel.shutdown();
             logger.error("RPC failed: {}, Wrong bootstrap node specified", e.getStatus());
-            return;
+            return self;
         }
+
+        Pastry.NodeReference owner = resp.getNodeState(0).getOwner();
+        NodeReference closest = new NodeReference(owner.getIp(), owner.getPort());
 
         updateNodeState(resp);
         startStabilizationThread();
+
+        // this is not in actual Pastry API, it is however used to verify that we have reached the actual CLOSEST node
+        return closest;
     }
 
     /**
@@ -342,41 +352,56 @@ public class PastryNode {
      * @param id_base 4/8/16-based id (given by {@link PastryNode#B_PARAMETER})
      */
     public NodeReference route(String id_base) {
+        printNodeState();
         if (syncSizeGet(neighborSet) == 0) {
             // network is empty, self is closest by definition
             return self;
         }
 
-        if (syncSizeGet(downLeafs) > 0 && syncSizeGet(upLeafs) > 0) {
-            BigInteger id_dec = Util.convertToDecimal(id_base);
-            BigInteger firstLeaf_dec = syncGet(0, downLeafs).getDecimalId();
-            BigInteger lastLeaf_dec = syncLastGet(upLeafs).getDecimalId();
-            // if id in L range
-            if (firstLeaf_dec.compareTo(id_dec) <= 0 &&  id_dec.compareTo(lastLeaf_dec) <= 0) {
-                logger.trace("[{}]  Routing {} to numerically closest leaf", self, id_base);
-                return getNumericallyClosestLeaf(id_dec);
-            }
+        BigInteger id_dec = Util.convertToDecimal(id_base);
+        // if id ∈ (upLeaf.first, upLeafs.last)
+        if (syncSizeGet(downLeafs) > 0 && syncSizeGet(upLeafs) > 0
+                && syncGet(0, downLeafs).getDecimalId().compareTo(id_dec) <= 0
+                &&  id_dec.compareTo(syncLastGet(upLeafs).getDecimalId()) <= 0) {
+            NodeReference leaf = getNumericallyClosestLeaf(id_dec);
+            logger.trace("[{}]  Routing {} to numerically closest leaf [{}]", self, id_base, leaf);
+
+            return leaf;
         }
         // routing table
         else {
             int l = getSharedPrefixLength(id_base, self.getId());
-            NodeReference longerMatch;
-            try {
-                // forward to a node that shares common prefix with the id_base by at least one more digit
-                // R[l+1][id[l]+1]
-                longerMatch = syncRoutingTableGet(l+1, id_base.charAt(l), routingTable);
-                return longerMatch;
-            } catch (IndexOutOfBoundsException e) {
-                // forward to a node that shares prefix with the key at least as long as the local node
-                // and is numerically closer to the key than the present node’s id.
-                // TODO: ...or if R[l+1][idD[l]+1] not reachable
+            int matchDigit = Integer.parseInt(id_base.charAt(l)+"");
+            NodeReference r;
+            r = syncRoutingTableGet(l, matchDigit, routingTable);// TODO: should I insert self?
+            if (r == null) {
+                logger.trace("[{}]  Routing {} same len match [{}]", self, id_base, r);
                 return findSameLengthMatch(id_base, l);
             }
+            logger.trace("[{}]  Routing {} longer prefix match [{}]", self, id_base, r);
+            return r;
         }
-        return self;
+    }
+
+    private void printNodeState() {
+        lock.lock();
+        try {
+            logger.trace("[{}]  Node state: ", self);
+            logger.trace("  Neighbor set: {}", neighborSet);
+            logger.trace("  Down leafs: {}", downLeafs);
+            logger.trace("  Up leafs: {}", upLeafs);
+
+            logger.trace("  Routing table: ");
+            for (int i = 0; i < routingTable.size(); i++) {
+                logger.trace("    Row {}: {}", i, routingTable.get(i));
+            }
+        } finally {
+            lock.unlock();
+        }
     }
 
     /**
+     * <i> forward to T ∈ (L ∪ R ∪ M), s.th. shl(T, D) >= l && |T - D| < |A - D|</i>
      * Find to a node that shares prefix with the key at least as long as the local node and is numerically closer to the key than the present node’s id.
      */
     private NodeReference findSameLengthMatch(String id_base, int l) {
@@ -384,9 +409,9 @@ public class PastryNode {
         try {
             // start by searching R[l] entries (same len entries)
             for (int i = l; i < routingTable.size(); i++) {
-                List<NodeReference> row = routingTable.get(l);
+                List<NodeReference> row = routingTable.get(i);
                 for(NodeReference n : row) {
-                    if (neighborSet.contains(n) && (upLeafs.contains(n) || downLeafs.contains(n)) ){
+                    if (neighborSet.contains(n) || (upLeafs.contains(n) || downLeafs.contains(n)) ){
                         BigInteger t = n.getDecimalId();
                         BigInteger k = Util.convertToDecimal(id_base);
                         BigInteger s = self.getDecimalId();
@@ -419,9 +444,9 @@ public class PastryNode {
      */
     private NodeReference getNumericallyClosestLeaf(BigInteger idDec) {
         lock.lock();
-        NodeReference closest = null;
+        NodeReference closest = self;
         try {
-            BigInteger minDistance = BigInteger.valueOf(Long.MAX_VALUE);
+            BigInteger minDistance = self.getDecimalId().subtract(idDec).abs();
             for (NodeReference leaf : upLeafs) {
                 BigInteger distance = leaf.getDecimalId().subtract(idDec).abs();
                 if (distance.compareTo(minDistance) < 0) {
@@ -465,8 +490,10 @@ public class PastryNode {
                     stateBuilder.addLeafSet(nodeBuilder.setIp(n.getIp()).setPort(n.getPort()).build())
             );
             routingTable.forEach(row -> {
-                row.forEach(n ->
-                    rowBuilder.addRoutingTableEntry(nodeBuilder.setIp(n.getIp()).setPort(n.getPort()).build())
+                row.forEach(n -> {
+                    if(n != null)
+                        rowBuilder.addRoutingTableEntry(nodeBuilder.setIp(n.getIp()).setPort(n.getPort()).build());
+                }
             );
                     stateBuilder.addRoutingTable(rowBuilder.build());
             });
@@ -515,14 +542,20 @@ public class PastryNode {
         int len = response.getNodeStateCount();
         lock.lock();
         try {
-            for (int i = 0; i < len-1; i++) {
-                List<Pastry.NodeReference> entries = response
-                        .getNodeState(i) // i-th node
-                        .getRoutingTable(i) // i-th row
-                        .getRoutingTableEntryList();
+            int j = 0;
+            for (int i = len-1; i >= 0; i--) { // iterate over nodes A, B, C, ...
+                List<NodeReference> jthRow = routingTable.get(j);
+                int selfIndex = Integer.parseInt(self.getId().charAt(j)+"");
 
-                entries.forEach(node -> routingTable.get(0).add(new NodeReference(node.getIp(), node.getPort())));
-                routingTable.get(0).sort(Comparator.comparing(NodeReference::getDistance));
+                for (Pastry.NodeReference n : response.getNodeStateList().get(i).getRoutingTableList().get(j).getRoutingTableEntryList()) {
+                    NodeReference newNode = new NodeReference(n.getIp(), n.getPort());
+                    int newNodeIndex = Integer.parseInt(newNode.getId().substring(j, j+1));
+                    int l = getSharedPrefixLength(newNode.getId(), self.getId());
+                    if (selfIndex != newNodeIndex && l == j) { // prefix must match since join could be routed through non-longer matching prefix
+                        jthRow.set(newNodeIndex, newNode);
+                    }
+                }
+                j++; // iterate from first row
             }
         } finally {
             lock.unlock();
@@ -531,7 +564,7 @@ public class PastryNode {
 
     /**
      * Insert node into neighborSet <br>
-     * If the neighborSet is full and newNode is <b>numerically<b/>closer, remove the farthest node and insert newNode
+     * If the neighborSet is full and newNode is <b>numerically<b/> closer, remove the farthest node and insert newNode
      */
     private void syncInsertIntoNeighborSet(NodeReference newNode) {
         lock.lock();
@@ -559,44 +592,65 @@ public class PastryNode {
      * If the leaf set is full and newNode is <b>numerically<b/> closer, remove the last node and insert the new node
      */
     private void syncInsertIntoLeafSet(NodeReference newNode) {
-        List<NodeReference> leafSet = newNode.getDecimalId().compareTo(self.getDecimalId()) < 0 ? downLeafs : upLeafs;
-
-        lock.lock();
-        try {// if full, insert only if newNode is better
-            if (leafSet.size() == L_PARAMETER / 2) {
-                // farthest nodes are downleafs.first() or upleafs.last()
-                NodeReference numericallyFarthest = newNode.getDecimalId().compareTo(self.getDecimalId()) < 0 ? syncGet(0, downLeafs) : syncLastGet(upLeafs);
-                if (newNode.getDecimalId().compareTo(numericallyFarthest.getDecimalId()) < 0 && !leafSet.contains(newNode)) {
-                    leafSet.remove(numericallyFarthest);
-                    leafSet.add(newNode);
+//        List<NodeReference> set = newNode.getId().compareTo(self.getId()) > 0 ?  upLeafs : downLeafs;
+//        if (!set.contains(newNode)) {
+//            int i = 0;
+//            for (NodeReference curr : set) {
+//                if (curr.getId().compareTo(newNode.getId()) > 0) {
+//                    break;
+//                }
+//                i++;
+//            }
+//            set.add(i, newNode);
+//            if (set.size() > L_PARAMETER / 2) {
+//                set.remove(set.size() - 1);
+//            }
+//        }
+        if (newNode.getId().compareTo(self.getId()) > 0) {
+            if (!upLeafs.contains(newNode)) {
+                int i = 0;
+                for (NodeReference curr : upLeafs) {
+                    if (curr.getId().compareTo(newNode.getId()) > 0) {
+                        break;
+                    }
+                    i++;
                 }
-            } else {
-                if (!leafSet.contains(newNode))
-                    leafSet.add(newNode);
+                upLeafs.add(i, newNode);
+                if (upLeafs.size() > L_PARAMETER / 2) {
+                    upLeafs.remove(upLeafs.size() - 1);
+                }
             }
-            leafSet.sort(Comparator.comparing(NodeReference::getDecimalId));
-        } finally {
-            lock.unlock();
+        } else {
+            if (!downLeafs.contains(newNode)) {
+                int i = 0;
+                for (NodeReference curr : downLeafs) {
+                    if (curr.getId().compareTo(newNode.getId()) < 0) {
+                        break;
+                    }
+                    i++;
+                }
+                downLeafs.add(i, newNode);
+                if (downLeafs.size() > L_PARAMETER / 2) {
+                    downLeafs.remove(downLeafs.size() - 1);
+                }
+            }
         }
     }
 
     private void syncInsertIntoRoutingTable(NodeReference newNode) {
-        int l = getSharedPrefixLength(newNode.getId(), self.getId());
+        int i = getSharedPrefixLength(newNode.getId(), self.getId());
+        int j = Integer.parseInt(newNode.getId().substring(i, i+1));
         lock.lock();
         try {
-            final List<NodeReference> row = routingTable.get(l);
-            if (row.size() == Math.pow(2, B_PARAMETER)-1) {
-                NodeReference farthest = row.get(row.size()-1);
-                if (newNode.getDistance() < farthest.getDistance() && !row.contains(newNode)) {
-                    row.remove(farthest);
-                    row.add(newNode);
-                }
+            List<NodeReference> row = routingTable.get(i);
+            // a node corresponding to self is empty in each row
+            if (row.get(j) == null) {
+                row.set(j, newNode);
             }
-            else {
-                if (!row.contains(newNode))
-                    row.add(newNode);
+            // nodes with better distance are prefered
+            else if (row.get(j).getDistance() > newNode.getDistance()) {
+                row.set(j, newNode);
             }
-            row.sort(Comparator.comparing(NodeReference::getDistance));
         } finally {
             lock.unlock();
         }
@@ -631,7 +685,11 @@ public class PastryNode {
 
             // find the closest node to the new node
             NodeReference closest = route(Util.getId(newNode.getAddress()));
-            closest = foundBetterThanSelf(closest, newNode) ? closest : self;
+//            if (!foundBetterThanSelf(closest, newNode)) {
+//                logger.trace("[{}]  My id is actually better then the one found", self);
+//                closest = self;
+//            }
+//            closest = foundBetterThanSelf(closest, newNode) ? closest : self;
 
             // either node is alone or it is the Z node itself
             if (closest.equals(self)) {
@@ -699,6 +757,30 @@ public class PastryNode {
             BigInteger selfDifference = self.getDecimalId().subtract(newNode.getDecimalId()).abs();
             // found better if diff smaller
             return foundDifference.compareTo(selfDifference) < 0;
+        }
+        // closest prefix is larger -> found is better
+        return false;
+    }
+
+    /**
+     * Return whether the <b>found</b> node is better than <b>previous</b> node w.r.t to: <br>
+     * <li> 1) prefix match to reference node <br>
+     * <li> 2) numerical distance <br>
+     * @param found new best node candidate
+     * @param id_base id of node to which the prefix and difference is related to, id is in a given base
+     * @param previous current best node
+     */
+    private boolean foundBetterThanPrevious(NodeReference found, String id_base, NodeReference previous) {
+        int foundPrefix = getSharedPrefixLength(found.getId(), id_base);
+        int previousPrefix = getSharedPrefixLength(previous.getId(), id_base);
+        if (foundPrefix > previousPrefix) {
+            return true;
+        }
+        if (foundPrefix == previousPrefix) {
+            BigInteger foundDifference = found.getDecimalId().subtract(Util.convertToDecimal(id_base)).abs();
+            BigInteger previousDifference = previous.getDecimalId().subtract(Util.convertToDecimal(id_base)).abs();
+            // found better if diff smaller
+            return foundDifference.compareTo(previousDifference) < 0;
         }
         // closest prefix is larger -> found is better
         return false;
