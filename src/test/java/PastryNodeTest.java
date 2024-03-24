@@ -243,11 +243,8 @@ public class PastryNodeTest {
         }
     }
 
-
-    // no matter the NodeState, node should always join the closest node
-    // validate manually by looking at logs
     @Test
-    public void testRandomJoin_alwaysJoinClosest() throws IOException {
+    public void testBootstrapJoin_alwaysJoinClosest_Custom() throws IOException, InterruptedException {
         logger.warn(System.lineSeparator() + System.lineSeparator()
                 + "============== " + "testRandomJoin_alwaysJoinClosest"
                 + "() =============" + System.lineSeparator());
@@ -255,18 +252,101 @@ public class PastryNodeTest {
 
         PastryNode.setBase(BASE_4_IDS);
         PastryNode.setLeafSize(LEAF_SET_SIZE_8);
-        PastryNode.STABILIZATION_INTERVAL = 60_000; // prevent stabilization (might interfere with closest check)
 
-        PastryNode bootstrap = new PastryNode("localhost", 10_700);
+        PastryNode bootstrap = new PastryNode("localhost", 10_900);
         bootstrap.initPastry();
+        bootstrap.turnOffStabilization();
 
         List<PastryNode> nodes = new ArrayList<>();
         nodes.add(bootstrap);
-        PastryNode lastNode = bootstrap;
+
+        PastryNode node1 = new PastryNode("localhost", 10908);
+        NodeReference closest = node1.joinPastry(bootstrap.getNode());
+        node1.turnOffStabilization();
+        assertNumericallyClosestOfAll(node1.getNode(), closest, nodes);
+        nodes.add(node1);
+
+        PastryNode node2 = new PastryNode("localhost", 10904);
+        closest = node2.joinPastry(bootstrap.getNode());
+        node2.turnOffStabilization();
+        assertNumericallyClosestOfAll(node2.getNode(), closest, nodes);
+        nodes.add(node2);
+
+        PastryNode node3 = new PastryNode("localhost", 10907);
+        closest = node3.joinPastry(bootstrap.getNode());
+        node3.turnOffStabilization();
+        assertNumericallyClosestOfAll(node3.getNode(), closest, nodes);
+        nodes.add(node3);
+
+        PastryNode node4 = new PastryNode("localhost", 10903);
+        closest = node4.joinPastry(bootstrap.getNode());
+        node4.turnOffStabilization();
+        assertNumericallyClosestOfAll(node4.getNode(), closest, nodes);
+        nodes.add(node4);
+
+        PastryNode node5 = new PastryNode("localhost", 10909);
+        closest = node5.joinPastry(bootstrap.getNode());
+        node5.turnOffStabilization();
+        assertNumericallyClosestOfAll(node5.getNode(), closest, nodes);
+        nodes.add(node5);
+
+        PastryNode node6 = new PastryNode("localhost", 10912);
+        closest = node6.joinPastry(bootstrap.getNode());
+        node6.turnOffStabilization();
+        assertNumericallyClosestOfAll(node6.getNode(), closest, nodes);
+        nodes.add(node6);
+
+    }
+
+
+        // no matter the NodeState, node should always join the closest node
+    // validate manually by looking at logs
+    @Test
+    public void testBootstrapJoin_alwaysJoinClosest() throws IOException, InterruptedException {
+        logger.warn(System.lineSeparator() + System.lineSeparator()
+                + "============== " + "testBootstrapJoin_alwaysJoinClosest"
+                + "() =============" + System.lineSeparator());
+
+
+        PastryNode.setBase(BASE_4_IDS);
+        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+
+        PastryNode bootstrap = new PastryNode("localhost", 10_900);
+        bootstrap.initPastry();
+        bootstrap.turnOffStabilization();
+
+        List<PastryNode> nodes = new ArrayList<>();
+        nodes.add(bootstrap);
+        for (int i = 0; i < 75; i++) {
+//            Thread.sleep(3000); // there is extensive locking in the code, so we need to wait a bit
+            PastryNode node = new PastryNode("localhost", 10_901 + i);
+            NodeReference closest = node.joinPastry(bootstrap.getNode());
+            node.turnOffStabilization();
+            assertNumericallyClosestOfAll(node.getNode(), closest, nodes);
+            nodes.add(node);
+        }
+    }
+
+    @Test
+    public void testRandomJoin_alwaysJoinClosest() throws IOException, InterruptedException {
+        logger.warn(System.lineSeparator() + System.lineSeparator()
+                + "============== " + "testBootstrapJoin_alwaysJoinClosest"
+                + "() =============" + System.lineSeparator());
+
+
+        PastryNode.setBase(BASE_4_IDS);
+        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+
+        PastryNode bootstrap = new PastryNode("localhost", 10_900);
+        bootstrap.initPastry();
+        bootstrap.turnOffStabilization();
+
+        List<PastryNode> nodes = new ArrayList<>();
+        nodes.add(bootstrap);
         for (int i = 0; i < 50; i++) {
-            PastryNode node = new PastryNode("localhost", 10_701 + i);
-//            NodeReference closest = node.joinPastry(nodes.get(new Random().nextInt(nodes.size())).getNode());
-            NodeReference closest = node.joinPastry(lastNode.getNode());
+            PastryNode node = new PastryNode("localhost", 10_901 + i);
+            NodeReference closest = node.joinPastry(nodes.get(new Random().nextInt(nodes.size())).getNode());
+            node.turnOffStabilization();
             assertNumericallyClosestOfAll(node.getNode(), closest, nodes);
             nodes.add(node);
         }

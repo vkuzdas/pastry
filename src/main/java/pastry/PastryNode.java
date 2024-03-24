@@ -14,6 +14,7 @@ import proto.PastryServiceGrpc;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static pastry.Constants.*;
 
@@ -42,11 +43,11 @@ public class PastryNode {
      */
     private final List<NodeReference> neighborSet = new ArrayList<>();
     /**
-     * Closest nodes per numerical distance, larger values
+     * Numerically closest larger nodeIds
      */
     private final List<NodeReference> upLeafs = new ArrayList<>();
     /**
-     * Closest nodes per numerical distance, smaller values
+     * Nodes with numerically closest smaller nodeIds
      */
     private final List<NodeReference> downLeafs = new ArrayList<>();
     private final NodeReference self;
@@ -127,6 +128,11 @@ public class PastryNode {
     @VisibleForTesting
     public List<List<NodeReference>> getRoutingTable() {
         return routingTable;
+    }
+
+    @VisibleForTesting
+    public void turnOffStabilization() {
+        stabilizationTimer.cancel();
     }
 
     public PastryNode(String ip, int port) {
@@ -254,7 +260,7 @@ public class PastryNode {
                 }
             }
         };
-//        stabilizationTimer.schedule(stabilizationTimerTask,1000, STABILIZATION_INTERVAL);
+        stabilizationTimer.schedule(stabilizationTimerTask,1000, STABILIZATION_INTERVAL);
     }
 
     /**
@@ -424,6 +430,7 @@ public class PastryNode {
         } finally {
             lock.unlock();
         }
+        logger.trace("[{}]  No same length match found for {}, routing to self", self, id_base);
         return self;
     }
 
@@ -513,23 +520,49 @@ public class PastryNode {
      * Z is node onto which join request converges since it has closest nodeId to X <br>
      */
     public void updateNodeState(Pastry.JoinResponse resp) {
-        // TODO: unified M, L, R update
-        // A usually in proximity to X => A.neighborSet to initialize X.neighborSet (set is updated periodically)
-        int len = resp.getNodeStateCount();
-        List<Pastry.NodeReference> A_neighborSet = resp.getNodeState(len-1).getNeighborSetList();
-        A_neighborSet.forEach(node -> syncInsertIntoNeighborSet(new NodeReference(node.getIp(), node.getPort())));
+        // statement about joining and copying node state from nodes A and Z does not hold
+        // a DHT should be able to handle join no matter the boostrap distance
+        // we should therefore copy ALL nodes that we can get from joinResponse
+        // note that number of join hops should be log of the number of nodes in the network
+        // therefore it should not be expensive to copy all nodes from all NodeStates
 
-        // Z has the closest existing nodeId to X, thus its leaf set is the basis for X’s leaf set.
-        List<Pastry.NodeReference> Z_leafs = resp.getNodeState(0).getLeafSetList();
-        Z_leafs.forEach(node -> syncInsertIntoLeafSet(new NodeReference(node.getIp(), node.getPort())));
-
-        // Routing table
-        initRoutingTable(resp);
-
-        // register each forwarding node
+        ArrayList<NodeReference> allNodes = new ArrayList<>();
         for (Pastry.NodeState node : resp.getNodeStateList()) {
-            registerNewNode(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort()));
+            if (!allNodes.contains(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort())))
+                allNodes.add(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort()));
+            for (Pastry.NodeReference n : node.getNeighborSetList()) {
+                if (!allNodes.contains(new NodeReference(n.getIp(), n.getPort())))
+                    allNodes.add(new NodeReference(n.getIp(), n.getPort()));
+            }
+            for (Pastry.NodeReference n : node.getLeafSetList()) {
+                if (!allNodes.contains(new NodeReference(n.getIp(), n.getPort())))
+                    allNodes.add(new NodeReference(n.getIp(), n.getPort()));
+            }
+            for (Pastry.RoutingTableRow row : node.getRoutingTableList()) {
+                for (Pastry.NodeReference n : row.getRoutingTableEntryList()) {
+                    if (!allNodes.contains(new NodeReference(n.getIp(), n.getPort())))
+                        allNodes.add(new NodeReference(n.getIp(), n.getPort()));
+                }
+            }
         }
+        allNodes.forEach(n -> registerNewNode(n));
+
+//        // A usually in proximity to X => A.neighborSet to initialize X.neighborSet (set is updated periodically)
+//        int len = resp.getNodeStateCount();
+//        List<Pastry.NodeReference> A_neighborSet = resp.getNodeState(len-1).getNeighborSetList();
+//        A_neighborSet.forEach(node -> syncInsertIntoNeighborSet(new NodeReference(node.getIp(), node.getPort())));
+//
+//        // Z has the closest existing nodeId to X, thus its leaf set is the basis for X’s leaf set.
+//        List<Pastry.NodeReference> Z_leafs = resp.getNodeState(0).getLeafSetList();
+//        Z_leafs.forEach(node -> syncInsertIntoLeafSet(new NodeReference(node.getIp(), node.getPort())));
+//
+//        // Routing table
+//        initRoutingTable(resp);
+//
+//        // register each forwarding node
+//        for (Pastry.NodeState node : resp.getNodeStateList()) {
+//            registerNewNode(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort()));
+//        }
     }
 
     /**

@@ -55,7 +55,9 @@ public class NodeReference {
 
     @Override
     public String toString() {
-        return ip + ":" + port + ":" + id + ":" + getDecimalId();
+        return
+//                ip + ":" +
+                        port + ":" + id + ":" + getDecimalId();
     }
 
     @Override
