@@ -245,7 +245,7 @@ public class PastryNodeTest {
 
 
     @Test
-    public void testBootstrapJoin_alwaysJoinClosest() throws IOException, InterruptedException {
+    public void testBootstrapJoin_alwaysJoinClosest() throws IOException {
         logger.warn(System.lineSeparator() + System.lineSeparator()
                 + "============== " + "testBootstrapJoin_alwaysJoinClosest"
                 + "() =============" + System.lineSeparator());
@@ -254,14 +254,14 @@ public class PastryNodeTest {
         PastryNode.setBase(BASE_4_IDS);
         PastryNode.setLeafSize(LEAF_SET_SIZE_8);
 
-        PastryNode bootstrap = new PastryNode("localhost", 10_900);
+        PastryNode bootstrap = new PastryNode("localhost", 10_700);
         bootstrap.initPastry();
         bootstrap.turnOffStabilization();
 
         List<PastryNode> nodes = new ArrayList<>();
         nodes.add(bootstrap);
         for (int i = 0; i < 50 ; i++) {
-            PastryNode node = new PastryNode("localhost", 10_901 + i);
+            PastryNode node = new PastryNode("localhost", 10_701 + i);
             NodeReference closest = node.joinPastry(bootstrap.getNode());
             node.turnOffStabilization();
             assertNumericallyClosestOfAll(node.getNode(), closest, nodes);
@@ -269,30 +269,30 @@ public class PastryNodeTest {
         }
     }
 
-//    @Test
-//    public void testRandomJoin_alwaysJoinClosest() throws IOException, InterruptedException {
-//        logger.warn(System.lineSeparator() + System.lineSeparator()
-//                + "============== " + "testBootstrapJoin_alwaysJoinClosest"
-//                + "() =============" + System.lineSeparator());
-//
-//
-//        PastryNode.setBase(BASE_4_IDS);
-//        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
-//
-//        PastryNode bootstrap = new PastryNode("localhost", 10_900);
-//        bootstrap.initPastry();
-//        bootstrap.turnOffStabilization();
-//
-//        List<PastryNode> nodes = new ArrayList<>();
-//        nodes.add(bootstrap);
-//        for (int i = 0; i < 50; i++) {
-//            PastryNode node = new PastryNode("localhost", 10_901 + i);
-//            NodeReference closest = node.joinPastry(nodes.get(new Random().nextInt(nodes.size())).getNode());
-//            node.turnOffStabilization();
-//            assertNumericallyClosestOfAll(node.getNode(), closest, nodes);
-//            nodes.add(node);
-//        }
-//    }
+    @Test
+    public void testRandomJoin_alwaysJoinClosest() throws IOException {
+        logger.warn(System.lineSeparator() + System.lineSeparator()
+                + "============== " + "testBootstrapJoin_alwaysJoinClosest"
+                + "() =============" + System.lineSeparator());
+
+
+        PastryNode.setBase(BASE_4_IDS);
+        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+
+        PastryNode bootstrap = new PastryNode("localhost", 10_800);
+        bootstrap.initPastry();
+        bootstrap.turnOffStabilization();
+
+        List<PastryNode> nodes = new ArrayList<>();
+        nodes.add(bootstrap);
+        for (int i = 0; i < 50; i++) {
+            PastryNode node = new PastryNode("localhost", 10_801 + i);
+            NodeReference closest = node.joinPastry(nodes.get(new Random().nextInt(nodes.size())).getNode());
+            node.turnOffStabilization();
+            assertNumericallyClosestOfAll(node.getNode(), closest, nodes);
+            nodes.add(node);
+        }
+    }
 
     /**
      * Closest in terms of digit match and numerical distance

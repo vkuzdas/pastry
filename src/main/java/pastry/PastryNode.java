@@ -740,10 +740,10 @@ public class PastryNode {
             if (row.get(j) == null) {
                 row.set(j, newNode);
             }
-            // nodes with better distance are prefered
-            else if (row.get(j).getDistance() > newNode.getDistance()) {
-                row.set(j, newNode);
-            }
+//            // nodes with better distance are prefered
+//            else if (row.get(j).getDistance() > newNode.getDistance()) {
+//                row.set(j, newNode);
+//            }
         } finally {
             lock.unlock();
         }
