@@ -14,7 +14,6 @@ import proto.PastryServiceGrpc;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static pastry.Constants.*;
 
@@ -347,7 +346,7 @@ public class PastryNode {
         NodeReference closest = new NodeReference(owner.getIp(), owner.getPort());
 
         updateNodeState(resp);
-        notifyAboutMyself();
+        notifyAboutMyself(bootstrap);
 //        startStabilizationThread();
 
         // this is not in actual Pastry API, it is however used to verify that we have reached the actual CLOSEST node
@@ -355,9 +354,82 @@ public class PastryNode {
     }
 
     /**
-     * NewNode should be inserted in appropriate NodeStates <br>
+     * <i>Once X has constructed its leaf set and routing table, X sends its contents to all nodes identified in
+     * the leaf set and the routing table. The nodes that receive these updates, adjust their own tables to
+     * incorporate the node. </i> <br> <br>
+     *
+     * The joining node will gather all known nodes and notify them about itself and its NodeState <br>
+     * The addressed nodes will reflect joining node in its NodeState, <br>
+     * as well as send back nodes from its NodeState that have not been sent by the joining node. <br>
+     * Joining node will then notify newly discovered nodes about itself and its NodeState <br>
+     * Finally, joining node will reflect all newly discovered nodes into its NodeState
+     * @see PastryNodeServer#notifyExistence(Pastry.NodeState, StreamObserver)
      */
-    private void notifyAboutMyself() {
+    private void notifyAboutMyself(NodeReference bootstrap) {
+        ArrayList<NodeReference> myNodes = getAllMyNodes();
+        myNodes.remove(bootstrap);
+        ArrayList<NodeReference> toNotify = new ArrayList<>(myNodes);
+        ArrayList<NodeReference> newlyDiscovered = new ArrayList<>();
+        ArrayList<NodeReference> notified = new ArrayList<>();
+
+        while (!toNotify.isEmpty()) {
+            NodeReference n = toNotify.remove(0);
+
+            ManagedChannel channel = ManagedChannelBuilder.forTarget(n.getAddress()).usePlaintext().build();
+            blockingStub = PastryServiceGrpc.newBlockingStub(channel);
+            Pastry.NewNodes newNodes = blockingStub.notifyExistence(getMyNodeState());
+            channel.shutdown();
+
+            newNodes.getNodesList().forEach(newNode -> {
+                NodeReference newRef = new NodeReference(newNode.getIp(), newNode.getPort());
+
+                if (self.equals(newRef)) return;//skip self
+
+                if (!notified.contains(newRef) && !toNotify.contains(newRef)) {
+                    toNotify.add(newRef);
+                }
+                if (!myNodes.contains(newRef) && !newlyDiscovered.contains(newRef)) {
+                    newlyDiscovered.add(newRef);
+                }
+            });
+
+            notified.add(n);
+            newlyDiscovered.forEach(node -> {
+                if (!toNotify.contains(node) && !notified.contains(node)) {
+                    toNotify.add(node);
+                }
+            });
+        }
+
+        newlyDiscovered.forEach(this::registerNewNode);
+        logger.trace("[{}]  Notified: {}", self, notified);
+        logger.trace("[{}]  Newly discovered: {}", self, newlyDiscovered);
+    }
+
+    public ArrayList<NodeReference> getAllMyNodes() {
+        ArrayList<NodeReference> allMyNodes = new ArrayList<>();
+        lock.lock();
+        try {
+//            neighborSet.forEach(n -> {
+//                if (!allMyNodes.contains(n))
+//                    allMyNodes.add(n);
+//            });
+            downLeafs.forEach(n -> {
+                if (!allMyNodes.contains(n))
+                    allMyNodes.add(n);
+            });
+            upLeafs.forEach(n -> {
+                if (!allMyNodes.contains(n))
+                    allMyNodes.add(n);
+            });
+            routingTable.forEach(row -> row.forEach(n -> {
+                if (n != null && !allMyNodes.contains(n))
+                    allMyNodes.add(n);
+            }));
+        } finally {
+            lock.unlock();
+        }
+        return allMyNodes;
     }
 
     private Pastry.NodeState getMyNodeState() {
@@ -404,7 +476,7 @@ public class PastryNode {
 //        }
 
         BigInteger id_dec = Util.convertToDecimal(id_base);
-        // if id ∈ (upLeaf.first, upLeafs.last)
+        // if id ∈ (leafSet)
         if (syncSizeGet(downLeafs) > 0 && syncSizeGet(upLeafs) > 0
                 && syncLastGet(downLeafs).getDecimalId().compareTo(id_dec) <= 0
                 &&  id_dec.compareTo(syncLastGet(upLeafs).getDecimalId()) <= 0) {
@@ -528,43 +600,43 @@ public class PastryNode {
         // note that number of join hops should be log of the number of nodes in the network
         // therefore it should not be expensive to copy all nodes from all NodeStates
 
-//        ArrayList<NodeReference> allNodes = new ArrayList<>();
-//        for (Pastry.NodeState node : resp.getNodeStateList()) {
-//            if (!allNodes.contains(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort())))
-//                allNodes.add(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort()));
-//            for (Pastry.NodeReference n : node.getNeighborSetList()) {
-//                if (!allNodes.contains(new NodeReference(n.getIp(), n.getPort())))
-//                    allNodes.add(new NodeReference(n.getIp(), n.getPort()));
-//            }
-//            for (Pastry.NodeReference n : node.getLeafSetList()) {
-//                if (!allNodes.contains(new NodeReference(n.getIp(), n.getPort())))
-//                    allNodes.add(new NodeReference(n.getIp(), n.getPort()));
-//            }
-//            for (Pastry.RoutingTableRow row : node.getRoutingTableList()) {
-//                for (Pastry.NodeReference n : row.getRoutingTableEntryList()) {
-//                    if (!allNodes.contains(new NodeReference(n.getIp(), n.getPort())))
-//                        allNodes.add(new NodeReference(n.getIp(), n.getPort()));
-//                }
-//            }
-//        }
-//        allNodes.forEach(n -> registerNewNode(n));
+        ArrayList<NodeReference> allNodes = new ArrayList<>();
+        for (Pastry.NodeState node : resp.getNodeStateList()) {
+            if (!allNodes.contains(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort())))
+                allNodes.add(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort()));
+            for (Pastry.NodeReference n : node.getNeighborSetList()) {
+                if (!allNodes.contains(new NodeReference(n.getIp(), n.getPort())))
+                    allNodes.add(new NodeReference(n.getIp(), n.getPort()));
+            }
+            for (Pastry.NodeReference n : node.getLeafSetList()) {
+                if (!allNodes.contains(new NodeReference(n.getIp(), n.getPort())))
+                    allNodes.add(new NodeReference(n.getIp(), n.getPort()));
+            }
+            for (Pastry.RoutingTableRow row : node.getRoutingTableList()) {
+                for (Pastry.NodeReference n : row.getRoutingTableEntryList()) {
+                    if (!allNodes.contains(new NodeReference(n.getIp(), n.getPort())))
+                        allNodes.add(new NodeReference(n.getIp(), n.getPort()));
+                }
+            }
+        }
+        allNodes.forEach(n -> registerNewNode(n));
 
         // A usually in proximity to X => A.neighborSet to initialize X.neighborSet (set is updated periodically)
-        int len = resp.getNodeStateCount();
-//        List<Pastry.NodeReference> A_neighborSet = resp.getNodeState(len-1).getNeighborSetList();
-//        A_neighborSet.forEach(node -> syncInsertIntoNeighborSet(new NodeReference(node.getIp(), node.getPort())));
-
-        // Z has the closest existing nodeId to X, thus its leaf set is the basis for X’s leaf set.
-        List<Pastry.NodeReference> Z_leafs = resp.getNodeState(0).getLeafSetList();
-        Z_leafs.forEach(node -> syncInsertIntoLeafSet(new NodeReference(node.getIp(), node.getPort())));
-
-        // Routing table
-        initRoutingTable(resp);
-
-        // register each forwarding node
-        for (Pastry.NodeState node : resp.getNodeStateList()) {
-            registerNewNode(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort()));
-        }
+//        int len = resp.getNodeStateCount();
+////        List<Pastry.NodeReference> A_neighborSet = resp.getNodeState(len-1).getNeighborSetList();
+////        A_neighborSet.forEach(node -> syncInsertIntoNeighborSet(new NodeReference(node.getIp(), node.getPort())));
+//
+//        // Z has the closest existing nodeId to X, thus its leaf set is the basis for X’s leaf set.
+//        List<Pastry.NodeReference> Z_leafs = resp.getNodeState(0).getLeafSetList();
+//        Z_leafs.forEach(node -> syncInsertIntoLeafSet(new NodeReference(node.getIp(), node.getPort())));
+//
+//        // Routing table
+//        initRoutingTable(resp);
+//
+//        // register each forwarding node
+//        for (Pastry.NodeState node : resp.getNodeStateList()) {
+//            registerNewNode(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort()));
+//        }
         printNodeState();
     }
 
@@ -738,16 +810,39 @@ public class PastryNode {
             registerNewNode(newNode);
         }
 
-//        /**
-//         * This node got notified by requestor about its existence
-//         */
-//        @Override
-//        public void notifyExistence(Pastry.NodeState request, StreamObserver<Pastry.Empty> responseObserver) {
-//            NodeReference newNode = new NodeReference(request.getOwner().getIp(), request.getOwner().getPort());
-//            registerNewNode(newNode);
-//            responseObserver.onNext(Pastry.Empty.newBuilder().build());
-//            responseObserver.onCompleted();
-//        }
+        /**
+         * This node got notified by requestor about its existence <br>
+         * Will reflect requestors existence in its NodeState, as well as send back nodes that did not come from requestor <br>
+         */
+        @Override
+        public void notifyExistence(Pastry.NodeState request, StreamObserver<Pastry.NewNodes> responseObserver) {
+            NodeReference newNode = new NodeReference(request.getOwner());
+            registerNewNode(newNode);
+
+            ArrayList<NodeReference> newNodes = new ArrayList<>();
+            request.getRoutingTableList().forEach(row -> row.getRoutingTableEntryList().forEach(n -> {
+                if(!newNodes.contains(new NodeReference(n)))
+                    newNodes.add(new NodeReference(n));
+            }));
+            request.getLeafSetList().forEach(n -> {
+                if(!newNodes.contains(new NodeReference(n)))
+                    newNodes.add(new NodeReference(n));
+            });
+
+            // send back a Set of nodes corresponding to difference between two NodeStates
+            Pastry.NewNodes.Builder response = Pastry.NewNodes.newBuilder();
+            getAllMyNodes().forEach(n -> {
+                if (!newNodes.contains(n)) {
+                    response.addNodes(Pastry.NodeReference.newBuilder()
+                            .setIp(n.getIp())
+                            .setPort(n.getPort())
+                            .build());
+                }
+            });
+
+            responseObserver.onNext(response.build());
+            responseObserver.onCompleted();
+        }
 
 //        @Override
 //        public void getNeighborSet(Pastry.NeighborSetRequest request, StreamObserver<Pastry.NeighborSetResponse> responseObserver) {

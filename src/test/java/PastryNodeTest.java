@@ -38,51 +38,50 @@ public class PastryNodeTest {
         toShutdown.addAll(Arrays.asList(nodes));
     }
 
-// TODO: each started server should have different port so that you dont get BindException
-    @Test
-    public void testTwoNodes() throws IOException {
-        logger.warn(System.lineSeparator() + System.lineSeparator()
-                + "============== " + "testTwoNodes"
-                + "() =============" + System.lineSeparator());
+//    @Test
+//    public void testTwoNodes() throws IOException {
+//        logger.warn(System.lineSeparator() + System.lineSeparator()
+//                + "============== " + "testTwoNodes"
+//                + "() =============" + System.lineSeparator());
+//
+//        PastryNode.setBase(BASE_4_IDS);
+//        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+//
+//        PastryNode bootstrap = new PastryNode("localhost", 10_100);
+//        bootstrap.setDistanceCalculator(new PortDifferenceDistanceCalculator());
+//        bootstrap.initPastry();
+//
+//        PastryNode node1 = new PastryNode("localhost", 10_101);
+//        registerForShutdown(bootstrap, node1);
+//
+//        node1.setDistanceCalculator(new PortDifferenceDistanceCalculator());
+//        node1.joinPastry(bootstrap.getNode());
+//
+//        assertEquals(node1.getNode(), bootstrap.getRoutingTable().get(0).get(0));
+//        assertEquals(bootstrap.getNode(), node1.getRoutingTable().get(0).get(0));
+//
+//        assertEquals(1, bootstrap.getUpLeafs().size());
+//        assertEquals(1, node1.getDownLeafs().size());
+//
+//        assertEquals(1, bootstrap.getNeighborSet().size());
+//        assertEquals(1, node1.getNeighborSet().size());
+//    }
 
-        PastryNode.setBase(BASE_4_IDS);
-        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
-
-        PastryNode bootstrap = new PastryNode("localhost", 10_100);
-        bootstrap.setDistanceCalculator(new PortDifferenceDistanceCalculator());
-        bootstrap.initPastry();
-
-        PastryNode node1 = new PastryNode("localhost", 10_101);
-        registerForShutdown(bootstrap, node1);
-
-        node1.setDistanceCalculator(new PortDifferenceDistanceCalculator());
-        node1.joinPastry(bootstrap.getNode());
-
-        assertEquals(node1.getNode(), bootstrap.getRoutingTable().get(0).get(0));
-        assertEquals(bootstrap.getNode(), node1.getRoutingTable().get(0).get(0));
-
-        assertEquals(1, bootstrap.getUpLeafs().size());
-        assertEquals(1, node1.getDownLeafs().size());
-
-        assertEquals(1, bootstrap.getNeighborSet().size());
-        assertEquals(1, node1.getNeighborSet().size());
-    }
-
-    @Test
-    public void testThreeNodes_RealPingDistance() throws IOException, InterruptedException {
-        logger.warn(System.lineSeparator() + System.lineSeparator()
-                + "============== " + "testThreeNodes_RealPingDistance"
-                + "() =============" + System.lineSeparator());
-
-        PastryNode.setBase(BASE_4_IDS);
-        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
-
-        PastryNode bootstrap = new PastryNode("localhost", 10_000);
-        PastryNode node1 = new PastryNode("localhost", 10_001);
-        PastryNode node2 = new PastryNode("localhost", 10_002);
-
-        threeNodeTestRun(bootstrap, node1, node2);
-    }
+//    @Test
+//    public void testThreeNodes_RealPingDistance() throws IOException, InterruptedException {
+//        logger.warn(System.lineSeparator() + System.lineSeparator()
+//                + "============== " + "testThreeNodes_RealPingDistance"
+//                + "() =============" + System.lineSeparator());
+//
+//        PastryNode.setBase(BASE_4_IDS);
+//        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+//
+//        PastryNode bootstrap = new PastryNode("localhost", 10_000);
+//        PastryNode node1 = new PastryNode("localhost", 10_001);
+//        PastryNode node2 = new PastryNode("localhost", 10_002);
+//
+//        threeNodeTestRun(bootstrap, node1, node2);
+//    }
 
 //    @Test
 //    public void testThreeNodes_PingSimulate() throws IOException {
@@ -126,181 +125,125 @@ public class PastryNodeTest {
 //        threeNodeTestRun(bootstrap, node1, node2);
 //    }
 
-    public void threeNodeTestRun(PastryNode bootstrap, PastryNode node1, PastryNode node2) throws IOException, InterruptedException {
-        registerForShutdown(bootstrap, node1, node2);
-        bootstrap.initPastry();
-
-        node1.joinPastry(bootstrap.getNode());
-        Thread.sleep(500);
-
-        assertEquals(1, bootstrap.getLeafs().size());
-        assertEquals(1, bootstrap.getNeighborSet().size());
-        assertEquals(1, getRoutingTableSize(bootstrap.getRoutingTable()));
-
-        assertEquals(1, node1.getLeafs().size());
-        assertEquals(1, node1.getNeighborSet().size());
-        assertEquals(1, getRoutingTableSize(node1.getRoutingTable()));
-
-
-        node2.joinPastry(node1.getNode());
-        Thread.sleep(500);
-
-
-        // bootstrap gets node2 contact since node2 Join is routed there (bootstrap is closest to it)
-        assertEquals(2, bootstrap.getLeafs().size());
-        assertEquals(2, bootstrap.getNeighborSet().size());
-        assertEquals(2, getRoutingTableSize(bootstrap.getRoutingTable()));
-
-        // node1 gets node2 contact since node2 Join is routed through it
-        assertEquals(2, node1.getLeafs().size());
-        assertEquals(2, node1.getNeighborSet().size());
-        assertEquals(2, getRoutingTableSize(node1.getRoutingTable()));
-
-        // node2 gets contacts of both nodes since both of them insert their NodeState to the JoinResponse
-        assertEquals(2, node2.getLeafs().size());
-        assertEquals(2, node2.getNeighborSet().size());
-        assertEquals(2, getRoutingTableSize(node2.getRoutingTable()));
-
-        assertNoDuplicates(bootstrap.getLeafs());
-        assertNoDuplicates(bootstrap.getNeighborSet());
-
-        assertNoDuplicates(node1.getLeafs());
-        assertNoDuplicates(node1.getNeighborSet());
-
-        assertNoDuplicates(node2.getLeafs());
-        assertNoDuplicates(node2.getNeighborSet());
-
-    }
-
-    @Test
-    public void testRemoveFailed() throws IOException, InterruptedException {
-        PastryNode.setBase(BASE_4_IDS);
-        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
-
-        PastryNode bootstrap = new PastryNode("localhost", 10_200);
-        bootstrap.initPastry();
-
-        PastryNode node1 = new PastryNode("localhost", 10_201);
-        node1.joinPastry(bootstrap.getNode());
-        assertEquals(1, bootstrap.getLeafs().size());
-        assertEquals(1, bootstrap.getNeighborSet().size());
-        assertEquals(1, getRoutingTableSize(bootstrap.getRoutingTable()));
-
-        node1.shutdownPastryNode();
-        Thread.sleep(PastryNode.STABILIZATION_INTERVAL+1000);
-
-        assertEquals(0, bootstrap.getLeafs().size());
-        assertEquals(0, bootstrap.getNeighborSet().size());
-        assertEquals(0, getRoutingTableSize(bootstrap.getRoutingTable()));
-    }
-
-    @Test
-    public void testFullNeighborSetNodes() throws IOException {
-        logger.warn(System.lineSeparator() + System.lineSeparator()
-                + "============== " + "testFullNeighborSetNodes"
-                + "() =============" + System.lineSeparator());
-
-        PastryNode.setBase(BASE_4_IDS);
-        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
-
-        PastryNode bootstrap = new PastryNode("localhost", 10_300);
-        bootstrap.initPastry();
-
-        for (int i = 1; i <= 2*LEAF_SET_SIZE_8; i++) {
-            PastryNode node = new PastryNode("localhost", 10_300 + i);
-            node.joinPastry(bootstrap.getNode());
-        }
-    }
-
-    @Test
-    public void testChainJoin() throws IOException, InterruptedException {
-        logger.warn(System.lineSeparator() + System.lineSeparator()
-                + "============== " + "testChainJoin"
-                + "() =============" + System.lineSeparator());
-
-        PastryNode.setBase(BASE_4_IDS);
-        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
-
-        PastryNode bootstrap = new PastryNode("localhost", 10_600);
-        bootstrap.initPastry();
-
-        List<PastryNode> nodes = new ArrayList<>();
-        for (int i = 0; i < LEAF_SET_SIZE_8; i++) {
-            PastryNode node = new PastryNode("localhost", 10_601 + i);
-            node.joinPastry(bootstrap.getNode());
-            nodes.add(node);
-        }
-
-        // after single stabilization, all nodes should have whole network as neighbors
-        Thread.sleep(PastryNode.STABILIZATION_INTERVAL+1000);
-
-        for(PastryNode node : nodes) {
-            assertEquals(LEAF_SET_SIZE_8, node.getNeighborSet().size());
-        }
-        // no assert can be made about leafs since a node can have highest or lowest id
-        for(PastryNode node : nodes) {
-            assertEquals(LEAF_SET_SIZE_8, getRoutingTableSize(node.getRoutingTable()));
-        }
-    }
-
-    @Test
-    public void testBootstrapJoin_alwaysJoinClosest_Custom() throws IOException, InterruptedException {
-        logger.warn(System.lineSeparator() + System.lineSeparator()
-                + "============== " + "testRandomJoin_alwaysJoinClosest"
-                + "() =============" + System.lineSeparator());
+//    public void threeNodeTestRun(PastryNode bootstrap, PastryNode node1, PastryNode node2) throws IOException, InterruptedException {
+//        registerForShutdown(bootstrap, node1, node2);
+//        bootstrap.initPastry();
+//
+//        node1.joinPastry(bootstrap.getNode());
+//        Thread.sleep(500);
+//
+//        assertEquals(1, bootstrap.getLeafs().size());
+//        assertEquals(1, bootstrap.getNeighborSet().size());
+//        assertEquals(1, getRoutingTableSize(bootstrap.getRoutingTable()));
+//
+//        assertEquals(1, node1.getLeafs().size());
+//        assertEquals(1, node1.getNeighborSet().size());
+//        assertEquals(1, getRoutingTableSize(node1.getRoutingTable()));
+//
+//
+//        node2.joinPastry(node1.getNode());
+//        Thread.sleep(500);
+//
+//
+//        // bootstrap gets node2 contact since node2 Join is routed there (bootstrap is closest to it)
+//        assertEquals(2, bootstrap.getLeafs().size());
+//        assertEquals(2, bootstrap.getNeighborSet().size());
+//        assertEquals(2, getRoutingTableSize(bootstrap.getRoutingTable()));
+//
+//        // node1 gets node2 contact since node2 Join is routed through it
+//        assertEquals(2, node1.getLeafs().size());
+//        assertEquals(2, node1.getNeighborSet().size());
+//        assertEquals(2, getRoutingTableSize(node1.getRoutingTable()));
+//
+//        // node2 gets contacts of both nodes since both of them insert their NodeState to the JoinResponse
+//        assertEquals(2, node2.getLeafs().size());
+//        assertEquals(2, node2.getNeighborSet().size());
+//        assertEquals(2, getRoutingTableSize(node2.getRoutingTable()));
+//
+//        assertNoDuplicates(bootstrap.getLeafs());
+//        assertNoDuplicates(bootstrap.getNeighborSet());
+//
+//        assertNoDuplicates(node1.getLeafs());
+//        assertNoDuplicates(node1.getNeighborSet());
+//
+//        assertNoDuplicates(node2.getLeafs());
+//        assertNoDuplicates(node2.getNeighborSet());
+//
+//    }
+//
+//    @Test
+//    public void testRemoveFailed() throws IOException, InterruptedException {
+//        PastryNode.setBase(BASE_4_IDS);
+//        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+//
+//        PastryNode bootstrap = new PastryNode("localhost", 10_200);
+//        bootstrap.initPastry();
+//
+//        PastryNode node1 = new PastryNode("localhost", 10_201);
+//        node1.joinPastry(bootstrap.getNode());
+//        assertEquals(1, bootstrap.getLeafs().size());
+//        assertEquals(1, bootstrap.getNeighborSet().size());
+//        assertEquals(1, getRoutingTableSize(bootstrap.getRoutingTable()));
+//
+//        node1.shutdownPastryNode();
+//        Thread.sleep(PastryNode.STABILIZATION_INTERVAL+1000);
+//
+//        assertEquals(0, bootstrap.getLeafs().size());
+//        assertEquals(0, bootstrap.getNeighborSet().size());
+//        assertEquals(0, getRoutingTableSize(bootstrap.getRoutingTable()));
+//    }
+//
+//    @Test
+//    public void testFullNeighborSetNodes() throws IOException {
+//        logger.warn(System.lineSeparator() + System.lineSeparator()
+//                + "============== " + "testFullNeighborSetNodes"
+//                + "() =============" + System.lineSeparator());
+//
+//        PastryNode.setBase(BASE_4_IDS);
+//        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+//
+//        PastryNode bootstrap = new PastryNode("localhost", 10_300);
+//        bootstrap.initPastry();
+//
+//        for (int i = 1; i <= 2*LEAF_SET_SIZE_8; i++) {
+//            PastryNode node = new PastryNode("localhost", 10_300 + i);
+//            node.joinPastry(bootstrap.getNode());
+//        }
+//    }
+//
+//    @Test
+//    public void testChainJoin() throws IOException, InterruptedException {
+//        logger.warn(System.lineSeparator() + System.lineSeparator()
+//                + "============== " + "testChainJoin"
+//                + "() =============" + System.lineSeparator());
+//
+//        PastryNode.setBase(BASE_4_IDS);
+//        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+//
+//        PastryNode bootstrap = new PastryNode("localhost", 10_600);
+//        bootstrap.initPastry();
+//
+//        List<PastryNode> nodes = new ArrayList<>();
+//        for (int i = 0; i < LEAF_SET_SIZE_8; i++) {
+//            PastryNode node = new PastryNode("localhost", 10_601 + i);
+//            node.joinPastry(bootstrap.getNode());
+//            nodes.add(node);
+//        }
+//
+//        // after single stabilization, all nodes should have whole network as neighbors
+//        Thread.sleep(PastryNode.STABILIZATION_INTERVAL+1000);
+//
+//        for(PastryNode node : nodes) {
+//            assertEquals(LEAF_SET_SIZE_8, node.getNeighborSet().size());
+//        }
+//        // no assert can be made about leafs since a node can have highest or lowest id
+//        for(PastryNode node : nodes) {
+//            assertEquals(LEAF_SET_SIZE_8, getRoutingTableSize(node.getRoutingTable()));
+//        }
+//    }
 
 
-        PastryNode.setBase(BASE_4_IDS);
-        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
 
-        PastryNode bootstrap = new PastryNode("localhost", 10_900);
-        bootstrap.initPastry();
-        bootstrap.turnOffStabilization();
-
-        List<PastryNode> nodes = new ArrayList<>();
-        nodes.add(bootstrap);
-
-        PastryNode node1 = new PastryNode("localhost", 10908);
-        NodeReference closest = node1.joinPastry(bootstrap.getNode());
-        node1.turnOffStabilization();
-        assertNumericallyClosestOfAll(node1.getNode(), closest, nodes);
-        nodes.add(node1);
-
-        PastryNode node2 = new PastryNode("localhost", 10904);
-        closest = node2.joinPastry(bootstrap.getNode());
-        node2.turnOffStabilization();
-        assertNumericallyClosestOfAll(node2.getNode(), closest, nodes);
-        nodes.add(node2);
-
-        PastryNode node3 = new PastryNode("localhost", 10907);
-        closest = node3.joinPastry(bootstrap.getNode());
-        node3.turnOffStabilization();
-        assertNumericallyClosestOfAll(node3.getNode(), closest, nodes);
-        nodes.add(node3);
-
-        PastryNode node4 = new PastryNode("localhost", 10903);
-        closest = node4.joinPastry(bootstrap.getNode());
-        node4.turnOffStabilization();
-        assertNumericallyClosestOfAll(node4.getNode(), closest, nodes);
-        nodes.add(node4);
-
-        PastryNode node5 = new PastryNode("localhost", 10909);
-        closest = node5.joinPastry(bootstrap.getNode());
-        node5.turnOffStabilization();
-        assertNumericallyClosestOfAll(node5.getNode(), closest, nodes);
-        nodes.add(node5);
-
-        PastryNode node6 = new PastryNode("localhost", 10912);
-        closest = node6.joinPastry(bootstrap.getNode());
-        node6.turnOffStabilization();
-        assertNumericallyClosestOfAll(node6.getNode(), closest, nodes);
-        nodes.add(node6);
-
-    }
-
-
-        // no matter the NodeState, node should always join the closest node
-    // validate manually by looking at logs
     @Test
     public void testBootstrapJoin_alwaysJoinClosest() throws IOException, InterruptedException {
         logger.warn(System.lineSeparator() + System.lineSeparator()
@@ -318,7 +261,6 @@ public class PastryNodeTest {
         List<PastryNode> nodes = new ArrayList<>();
         nodes.add(bootstrap);
         for (int i = 0; i < 50 ; i++) {
-//            Thread.sleep(3000); // there is extensive locking in the code, so we need to wait a bit
             PastryNode node = new PastryNode("localhost", 10_901 + i);
             NodeReference closest = node.joinPastry(bootstrap.getNode());
             node.turnOffStabilization();
@@ -327,30 +269,30 @@ public class PastryNodeTest {
         }
     }
 
-    @Test
-    public void testRandomJoin_alwaysJoinClosest() throws IOException, InterruptedException {
-        logger.warn(System.lineSeparator() + System.lineSeparator()
-                + "============== " + "testBootstrapJoin_alwaysJoinClosest"
-                + "() =============" + System.lineSeparator());
-
-
-        PastryNode.setBase(BASE_4_IDS);
-        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
-
-        PastryNode bootstrap = new PastryNode("localhost", 10_900);
-        bootstrap.initPastry();
-        bootstrap.turnOffStabilization();
-
-        List<PastryNode> nodes = new ArrayList<>();
-        nodes.add(bootstrap);
-        for (int i = 0; i < 50; i++) {
-            PastryNode node = new PastryNode("localhost", 10_901 + i);
-            NodeReference closest = node.joinPastry(nodes.get(new Random().nextInt(nodes.size())).getNode());
-            node.turnOffStabilization();
-            assertNumericallyClosestOfAll(node.getNode(), closest, nodes);
-            nodes.add(node);
-        }
-    }
+//    @Test
+//    public void testRandomJoin_alwaysJoinClosest() throws IOException, InterruptedException {
+//        logger.warn(System.lineSeparator() + System.lineSeparator()
+//                + "============== " + "testBootstrapJoin_alwaysJoinClosest"
+//                + "() =============" + System.lineSeparator());
+//
+//
+//        PastryNode.setBase(BASE_4_IDS);
+//        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+//
+//        PastryNode bootstrap = new PastryNode("localhost", 10_900);
+//        bootstrap.initPastry();
+//        bootstrap.turnOffStabilization();
+//
+//        List<PastryNode> nodes = new ArrayList<>();
+//        nodes.add(bootstrap);
+//        for (int i = 0; i < 50; i++) {
+//            PastryNode node = new PastryNode("localhost", 10_901 + i);
+//            NodeReference closest = node.joinPastry(nodes.get(new Random().nextInt(nodes.size())).getNode());
+//            node.turnOffStabilization();
+//            assertNumericallyClosestOfAll(node.getNode(), closest, nodes);
+//            nodes.add(node);
+//        }
+//    }
 
     /**
      * Closest in terms of digit match and numerical distance

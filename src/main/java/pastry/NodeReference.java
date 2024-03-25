@@ -1,5 +1,7 @@
 package pastry;
 
+import proto.Pastry;
+
 import java.math.BigInteger;
 
 public class NodeReference {
@@ -13,6 +15,12 @@ public class NodeReference {
         this.port = port;
         this.id = Util.getId(this.getAddress());
         this.distance = Long.MAX_VALUE;
+    }
+
+    public NodeReference(Pastry.NodeReference nodeReference) {
+        this.ip = nodeReference.getIp();
+        this.port = nodeReference.getPort();
+        this.id = Util.getId(this.getAddress());
     }
 
     public NodeReference(String ip, int port, long distance) {
