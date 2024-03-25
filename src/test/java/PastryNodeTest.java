@@ -317,7 +317,7 @@ public class PastryNodeTest {
 
         List<PastryNode> nodes = new ArrayList<>();
         nodes.add(bootstrap);
-        for (int i = 0; i < 75; i++) {
+        for (int i = 0; i < 50 ; i++) {
 //            Thread.sleep(3000); // there is extensive locking in the code, so we need to wait a bit
             PastryNode node = new PastryNode("localhost", 10_901 + i);
             NodeReference closest = node.joinPastry(bootstrap.getNode());

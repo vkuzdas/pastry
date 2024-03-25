@@ -347,11 +347,19 @@ public class PastryNode {
         NodeReference closest = new NodeReference(owner.getIp(), owner.getPort());
 
         updateNodeState(resp);
+        notifyAboutMyself();
         startStabilizationThread();
 
         // this is not in actual Pastry API, it is however used to verify that we have reached the actual CLOSEST node
         return closest;
     }
+
+    /**
+     * NewNode should be inserted in appropriate NodeStates <br>
+     */
+    private void notifyAboutMyself() {
+    }
+
 
     /**
      * Return the closest node to the given id (based on prefix or numerically)
@@ -526,43 +534,44 @@ public class PastryNode {
         // note that number of join hops should be log of the number of nodes in the network
         // therefore it should not be expensive to copy all nodes from all NodeStates
 
-        ArrayList<NodeReference> allNodes = new ArrayList<>();
-        for (Pastry.NodeState node : resp.getNodeStateList()) {
-            if (!allNodes.contains(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort())))
-                allNodes.add(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort()));
-            for (Pastry.NodeReference n : node.getNeighborSetList()) {
-                if (!allNodes.contains(new NodeReference(n.getIp(), n.getPort())))
-                    allNodes.add(new NodeReference(n.getIp(), n.getPort()));
-            }
-            for (Pastry.NodeReference n : node.getLeafSetList()) {
-                if (!allNodes.contains(new NodeReference(n.getIp(), n.getPort())))
-                    allNodes.add(new NodeReference(n.getIp(), n.getPort()));
-            }
-            for (Pastry.RoutingTableRow row : node.getRoutingTableList()) {
-                for (Pastry.NodeReference n : row.getRoutingTableEntryList()) {
-                    if (!allNodes.contains(new NodeReference(n.getIp(), n.getPort())))
-                        allNodes.add(new NodeReference(n.getIp(), n.getPort()));
-                }
-            }
-        }
-        allNodes.forEach(n -> registerNewNode(n));
-
-//        // A usually in proximity to X => A.neighborSet to initialize X.neighborSet (set is updated periodically)
-//        int len = resp.getNodeStateCount();
-//        List<Pastry.NodeReference> A_neighborSet = resp.getNodeState(len-1).getNeighborSetList();
-//        A_neighborSet.forEach(node -> syncInsertIntoNeighborSet(new NodeReference(node.getIp(), node.getPort())));
-//
-//        // Z has the closest existing nodeId to X, thus its leaf set is the basis for X’s leaf set.
-//        List<Pastry.NodeReference> Z_leafs = resp.getNodeState(0).getLeafSetList();
-//        Z_leafs.forEach(node -> syncInsertIntoLeafSet(new NodeReference(node.getIp(), node.getPort())));
-//
-//        // Routing table
-//        initRoutingTable(resp);
-//
-//        // register each forwarding node
+//        ArrayList<NodeReference> allNodes = new ArrayList<>();
 //        for (Pastry.NodeState node : resp.getNodeStateList()) {
-//            registerNewNode(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort()));
+//            if (!allNodes.contains(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort())))
+//                allNodes.add(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort()));
+//            for (Pastry.NodeReference n : node.getNeighborSetList()) {
+//                if (!allNodes.contains(new NodeReference(n.getIp(), n.getPort())))
+//                    allNodes.add(new NodeReference(n.getIp(), n.getPort()));
+//            }
+//            for (Pastry.NodeReference n : node.getLeafSetList()) {
+//                if (!allNodes.contains(new NodeReference(n.getIp(), n.getPort())))
+//                    allNodes.add(new NodeReference(n.getIp(), n.getPort()));
+//            }
+//            for (Pastry.RoutingTableRow row : node.getRoutingTableList()) {
+//                for (Pastry.NodeReference n : row.getRoutingTableEntryList()) {
+//                    if (!allNodes.contains(new NodeReference(n.getIp(), n.getPort())))
+//                        allNodes.add(new NodeReference(n.getIp(), n.getPort()));
+//                }
+//            }
 //        }
+//        allNodes.forEach(n -> registerNewNode(n));
+
+        // A usually in proximity to X => A.neighborSet to initialize X.neighborSet (set is updated periodically)
+        int len = resp.getNodeStateCount();
+        List<Pastry.NodeReference> A_neighborSet = resp.getNodeState(len-1).getNeighborSetList();
+        A_neighborSet.forEach(node -> syncInsertIntoNeighborSet(new NodeReference(node.getIp(), node.getPort())));
+
+        // Z has the closest existing nodeId to X, thus its leaf set is the basis for X’s leaf set.
+        List<Pastry.NodeReference> Z_leafs = resp.getNodeState(0).getLeafSetList();
+        Z_leafs.forEach(node -> syncInsertIntoLeafSet(new NodeReference(node.getIp(), node.getPort())));
+
+        // Routing table
+        initRoutingTable(resp);
+
+        // register each forwarding node
+        for (Pastry.NodeState node : resp.getNodeStateList()) {
+            registerNewNode(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort()));
+        }
+        printNodeState();
     }
 
     /**
@@ -704,11 +713,6 @@ public class PastryNode {
 
             // find the closest node to the new node
             NodeReference closest = route(Util.getId(newNode.getAddress()));
-//            if (!foundBetterThanSelf(closest, newNode)) {
-//                logger.trace("[{}]  My id is actually better then the one found", self);
-//                closest = self;
-//            }
-//            closest = foundBetterThanSelf(closest, newNode) ? closest : self;
 
             // either node is alone or it is the Z node itself
             if (closest.equals(self)) {
@@ -765,66 +769,9 @@ public class PastryNode {
         }
     }
 
-    private boolean foundBetterThanSelf(NodeReference found, NodeReference newNode) {
-        int foundPrefix = getSharedPrefixLength(found.getId(), newNode.getId());
-        int selfPrefix = getSharedPrefixLength(self.getId(), newNode.getId());
-        if (foundPrefix > selfPrefix) {
-            return true;
-        }
-        if (foundPrefix == selfPrefix) {
-            BigInteger foundDifference = found.getDecimalId().subtract(newNode.getDecimalId()).abs();
-            BigInteger selfDifference = self.getDecimalId().subtract(newNode.getDecimalId()).abs();
-            // found better if diff smaller
-            return foundDifference.compareTo(selfDifference) < 0;
-        }
-        // closest prefix is larger -> found is better
-        return false;
-    }
-
-    /**
-     * Return whether the <b>found</b> node is better than <b>previous</b> node w.r.t to: <br>
-     * <li> 1) prefix match to reference node <br>
-     * <li> 2) numerical distance <br>
-     * @param found new best node candidate
-     * @param id_base id of node to which the prefix and difference is related to, id is in a given base
-     * @param previous current best node
-     */
-    private boolean foundBetterThanPrevious(NodeReference found, String id_base, NodeReference previous) {
-        int foundPrefix = getSharedPrefixLength(found.getId(), id_base);
-        int previousPrefix = getSharedPrefixLength(previous.getId(), id_base);
-        if (foundPrefix > previousPrefix) {
-            return true;
-        }
-        if (foundPrefix == previousPrefix) {
-            BigInteger foundDifference = found.getDecimalId().subtract(Util.convertToDecimal(id_base)).abs();
-            BigInteger previousDifference = previous.getDecimalId().subtract(Util.convertToDecimal(id_base)).abs();
-            // found better if diff smaller
-            return foundDifference.compareTo(previousDifference) < 0;
-        }
-        // closest prefix is larger -> found is better
-        return false;
-    }
 
 
     public static void main(String[] args) throws IOException, InterruptedException {
-//        ArrayList<PastryNode> toShutdown = new ArrayList<>();
-//        for (int i = 0; i < 80; i++) {
-//            PastryNode node = new PastryNode("localhost", 10000 + i);
-//            node.initPastry();
-//            toShutdown.add(node);
-//        }
-
-//        PastryNode.setLocalTesting(true);
-//        PastryNode.setBase(BASE_4_IDS);
-//        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
-//
-//        PastryNode bootstrap = new PastryNode("localhost", 10_000);
-//        bootstrap.initPastry();
-//
-//        for (int i = 1; i <= 2*LEAF_SET_SIZE_8; i++) {
-//            PastryNode node = new PastryNode("localhost", 10_000 + i);
-//            node.joinPastry(bootstrap.getNode());
-//        }
 
 
         PastryNode.setBase(BASE_4_IDS);
