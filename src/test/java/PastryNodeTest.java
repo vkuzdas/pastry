@@ -32,7 +32,7 @@ public class PastryNodeTest {
     }
 
     @Test
-    public void testRandomJoin_RandomPut() throws IOException {
+    public void testRandomJoin_RandomPutGet() throws IOException {
 
         PastryNode.setBase(BASE_4_IDS);
         PastryNode.setLeafSize(LEAF_SET_SIZE_8);
@@ -50,12 +50,24 @@ public class PastryNodeTest {
 
         // randomly put 50 random keys, assert closest node is owner
         for (int i = 0; i < 50; i++) {
-            String key = "key" + j++;
+            j++;
+            String key = "key" + j;
             PastryNode randomNode = nodes.get(new Random().nextInt(nodes.size()));
 
-            NodeReference owner = randomNode.put(key, "value");
+            NodeReference owner = randomNode.put(key, "value" + j);
 
             assertNumericallyClosestOfAll(Util.getId(key), owner, nodes);
+        }
+
+        // get 50 keys
+        for (int i = 0; i < 50; i++) {
+            String key = "key" + j;
+
+            PastryNode randomNode = nodes.get(new Random().nextInt(nodes.size()));
+
+            assertEquals("value" + j, randomNode.get(key));
+
+            j--;
         }
     }
 

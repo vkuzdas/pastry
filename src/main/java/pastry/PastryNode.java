@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static pastry.Constants.*;
+import static proto.Pastry.ForwardRequest.RequestType.GET;
 import static proto.Pastry.ForwardRequest.RequestType.PUT;
 import static proto.Pastry.ForwardResponse.StatusCode.*;
 
@@ -777,24 +778,26 @@ public class PastryNode {
         blockingStub = PastryServiceGrpc.newBlockingStub(channel);
         Pastry.NodeReference owner = blockingStub.forward(putReq.build()).getOwner();
         channel.shutdown();
+
         return new NodeReference(owner);
     }
-//
-//    public String get(String key) {
-//        String keyHash = Util.getId(key);
-//
-//        NodeReference storage = getStoringNode(keyHash);
-//        logger.trace("[{}]  Storing key {}:{} on {}", self, keyHash, Util.convertToDecimal(keyHash), storage.getAddress());
-//
-//        Pastry.GetRequest.Builder getReq = Pastry.GetRequest.newBuilder().setKey(keyHash);
-//        ManagedChannel channel = ManagedChannelBuilder.forTarget(storage.getAddress()).usePlaintext().build();
-//        blockingStub = PastryServiceGrpc.newBlockingStub(channel);
-//        Pastry.GetResponse getResponse = blockingStub.get(getReq.build());
-//        channel.shutdown();
-//        logger.info("Value for key {} is {}", key, getResponse.getValue());
-//        return getResponse.getValue();
-//    }
-//
+
+    public String get(String key) {
+        String keyHash = Util.getId(key);
+
+        NodeReference closest = route(keyHash);
+
+        Pastry.ForwardRequest.Builder putReq = Pastry.ForwardRequest.newBuilder()
+                .setKey(keyHash)
+                .setRequestType(GET);
+        ManagedChannel channel = ManagedChannelBuilder.forTarget(closest.getAddress()).usePlaintext().build();
+        blockingStub = PastryServiceGrpc.newBlockingStub(channel);
+        String value = blockingStub.forward(putReq.build()).getValue();
+        channel.shutdown();
+
+        return value;
+    }
+
 //    public void delete(String key) {
 //        String keyHash = Util.getId(key);
 //
