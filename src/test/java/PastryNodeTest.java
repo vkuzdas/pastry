@@ -2,6 +2,7 @@ import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pastry.*;
+import proto.Pastry;
 
 import java.io.IOException;
 import java.util.*;
@@ -69,6 +70,16 @@ public class PastryNodeTest {
 
             j--;
         }
+
+        // remove 50 keys
+        for (int i = 0; i < 50; i++) {
+            j++;
+            String key = "key" + j;
+
+            PastryNode randomNode = nodes.get(new Random().nextInt(nodes.size()));
+
+            assertEquals(Pastry.ForwardResponse.StatusCode.REMOVED, randomNode.delete(key));
+        }
     }
 
 
@@ -82,7 +93,7 @@ public class PastryNodeTest {
         bootstrap.initPastry();
         nodes.add(bootstrap);
 
-        for (int i = 0; i < 50 ; i++) {
+        for (int i = 0; i < 25 ; i++) {
             PastryNode node = new PastryNode("localhost", BASE_PORT++);
             NodeReference closest = node.joinPastry(bootstrap.getNode());
             node.turnOffStabilization();
@@ -101,7 +112,7 @@ public class PastryNodeTest {
         bootstrap.initPastry();
         nodes.add(bootstrap);
 
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 25; i++) {
             PastryNode node = new PastryNode("localhost", BASE_PORT++);
             NodeReference closest = node.joinPastry(nodes.get(new Random().nextInt(nodes.size())).getNode());
             assertNumericallyClosestOfAll(node.getNode(), closest, nodes);

@@ -16,8 +16,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static pastry.Constants.*;
-import static proto.Pastry.ForwardRequest.RequestType.GET;
-import static proto.Pastry.ForwardRequest.RequestType.PUT;
+import static proto.Pastry.ForwardRequest.RequestType.*;
 import static proto.Pastry.ForwardResponse.StatusCode.*;
 
 public class PastryNode {
@@ -473,7 +472,7 @@ public class PastryNode {
      * @param id_base 4/8/16-based id (given by {@link PastryNode#B_PARAMETER})
      */
     public NodeReference route(String id_base) {
-        printNodeState();
+//        printNodeState();
 //        if (syncSizeGet(neighborSet) == 0) {
 //            // network is empty, self is closest by definition
 //            return self;
@@ -641,7 +640,7 @@ public class PastryNode {
 //        for (Pastry.NodeState node : resp.getNodeStateList()) {
 //            registerNewNode(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort()));
 //        }
-        printNodeState();
+//        printNodeState();
     }
 
     /**
@@ -787,29 +786,32 @@ public class PastryNode {
 
         NodeReference closest = route(keyHash);
 
-        Pastry.ForwardRequest.Builder putReq = Pastry.ForwardRequest.newBuilder()
+        Pastry.ForwardRequest.Builder getRequest = Pastry.ForwardRequest.newBuilder()
                 .setKey(keyHash)
                 .setRequestType(GET);
         ManagedChannel channel = ManagedChannelBuilder.forTarget(closest.getAddress()).usePlaintext().build();
         blockingStub = PastryServiceGrpc.newBlockingStub(channel);
-        String value = blockingStub.forward(putReq.build()).getValue();
+        String value = blockingStub.forward(getRequest.build()).getValue();
         channel.shutdown();
 
         return value;
     }
 
-//    public void delete(String key) {
-//        String keyHash = Util.getId(key);
-//
-//        NodeReference storage = getStoringNode(keyHash);
-//        logger.trace("[{}]  Storing key {}:{} on {}", self, keyHash, Util.convertToDecimal(keyHash), storage.getAddress());
-//
-//        Pastry.DeleteRequest.Builder deleteReq = Pastry.DeleteRequest.newBuilder().setKey(keyHash);
-//        ManagedChannel channel = ManagedChannelBuilder.forTarget(storage.getAddress()).usePlaintext().build();
-//        blockingStub = PastryServiceGrpc.newBlockingStub(channel);
-//        blockingStub.delete(deleteReq.build());
-//        channel.shutdown();
-//    }
+    public Pastry.ForwardResponse.StatusCode delete(String key) {
+        String keyHash = Util.getId(key);
+
+        NodeReference closest = route(keyHash);
+
+        Pastry.ForwardRequest.Builder deleteRequest = Pastry.ForwardRequest.newBuilder()
+                .setKey(keyHash)
+                .setRequestType(DELETE);
+        ManagedChannel channel = ManagedChannelBuilder.forTarget(closest.getAddress()).usePlaintext().build();
+        blockingStub = PastryServiceGrpc.newBlockingStub(channel);
+        Pastry.ForwardResponse.StatusCode status = blockingStub.forward(deleteRequest.build()).getStatusCode();
+        channel.shutdown();
+
+        return status;
+    }
 
 //    /**
 //     * Principally same as the {@link PastryNode#joinPastry(NodeReference)} but node can be chosen at random <br>
