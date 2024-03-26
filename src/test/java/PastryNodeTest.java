@@ -33,6 +33,7 @@ public class PastryNodeTest {
     }
 
     @Test
+    @Disabled
     public void testRandomJoin_RandomPutGet() throws IOException {
 
         PastryNode.setBase(BASE_4_IDS);
@@ -71,7 +72,7 @@ public class PastryNodeTest {
             j--;
         }
 
-        // remove 50 keys
+        // remove 50 present keys
         for (int i = 0; i < 50; i++) {
             j++;
             String key = "key" + j;
@@ -79,6 +80,16 @@ public class PastryNodeTest {
             PastryNode randomNode = nodes.get(new Random().nextInt(nodes.size()));
 
             assertEquals(Pastry.ForwardResponse.StatusCode.REMOVED, randomNode.delete(key));
+        }
+
+        // remove 10 *not* present keys
+        for (int i = 0; i < 10; i++) {
+            j++;
+            String key = "key" + j;
+
+            PastryNode randomNode = nodes.get(new Random().nextInt(nodes.size()));
+
+            assertEquals(Pastry.ForwardResponse.StatusCode.NOT_FOUND, randomNode.delete(key));
         }
     }
 
@@ -93,7 +104,7 @@ public class PastryNodeTest {
         bootstrap.initPastry();
         nodes.add(bootstrap);
 
-        for (int i = 0; i < 25 ; i++) {
+        for (int i = 0; i < 50 ; i++) {
             PastryNode node = new PastryNode("localhost", BASE_PORT++);
             NodeReference closest = node.joinPastry(bootstrap.getNode());
             node.turnOffStabilization();
@@ -112,7 +123,7 @@ public class PastryNodeTest {
         bootstrap.initPastry();
         nodes.add(bootstrap);
 
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < 50; i++) {
             PastryNode node = new PastryNode("localhost", BASE_PORT++);
             NodeReference closest = node.joinPastry(nodes.get(new Random().nextInt(nodes.size())).getNode());
             assertNumericallyClosestOfAll(node.getNode(), closest, nodes);

@@ -813,26 +813,6 @@ public class PastryNode {
         return status;
     }
 
-//    /**
-//     * Principally same as the {@link PastryNode#joinPastry(NodeReference)} but node can be chosen at random <br>
-//     * From network, get node that should store the value (its the node with closest id to hashKey)
-//     */
-//    private NodeReference getStoringNode(String keyHash) {
-//        Pastry.ForwardRequest.Builder forwardReq = Pastry.ForwardRequest.newBuilder().setKey(keyHash);
-//        NodeReference someNode;
-//        lock.lock();
-//        try {
-//            someNode = neighborSet.get(0);
-//        } finally {
-//            lock.unlock();
-//        }
-//        ManagedChannel channel = ManagedChannelBuilder.forTarget(someNode.getAddress()).usePlaintext().build();
-//        blockingStub = PastryServiceGrpc.newBlockingStub(channel);
-//        Pastry.ForwardResponse response = blockingStub.forward(forwardReq.build());
-//        channel.shutdown();
-//
-//        return new NodeReference(response.getIp(), response.getPort());
-//    }
 
 
     /**
