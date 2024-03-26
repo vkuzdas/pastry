@@ -59,13 +59,30 @@ message DeleteRequest {
   string key = 1;
 }
 
+// forwarded to node that is closest to key
+// depending on Type it puts, gets or deletes the key
 message ForwardRequest {
   string key = 1;
+  string value = 2;
+  RequestType requestType = 3;
+
+  enum RequestType {
+    PUT = 0;
+    GET = 1;
+    DELETE = 2;
+  }
 }
 message ForwardResponse {
-  string ip = 1;
-  int32 port = 2;
-  string id = 3;
+  string value = 1;
+  StatusCode statusCode = 2;
+  NodeReference owner = 3;
+
+  enum StatusCode {
+    SAVED = 0; // successful PUT
+    REMOVED = 1; // successful DELETE
+    RETRIEVED = 2; // successful DELETE
+    NOT_FOUND = 3; // key for DELETE not found
+  }
 }
 
 service PastryService {

@@ -61,6 +61,13 @@ public class NodeReference {
         return ip + ":" + port;
     }
 
+    public Pastry.NodeReference toProto() {
+        return Pastry.NodeReference.newBuilder()
+                .setIp(ip)
+                .setPort(port)
+                .build();
+    }
+
     @Override
     public String toString() {
         return

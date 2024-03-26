@@ -9255,8 +9255,32 @@ public final class Pastry {
      */
     com.google.protobuf.ByteString
         getKeyBytes();
+
+    /**
+     * <code>string value = 2;</code>
+     */
+    java.lang.String getValue();
+    /**
+     * <code>string value = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getValueBytes();
+
+    /**
+     * <code>.ForwardRequest.RequestType requestType = 3;</code>
+     */
+    int getRequestTypeValue();
+    /**
+     * <code>.ForwardRequest.RequestType requestType = 3;</code>
+     */
+    proto.Pastry.ForwardRequest.RequestType getRequestType();
   }
   /**
+   * <pre>
+   * forwarded to node that is closest to key
+   * depending on Type it puts, gets or deletes the key
+   * </pre>
+   *
    * Protobuf type {@code ForwardRequest}
    */
   public  static final class ForwardRequest extends
@@ -9270,6 +9294,8 @@ public final class Pastry {
     }
     private ForwardRequest() {
       key_ = "";
+      value_ = "";
+      requestType_ = 0;
     }
 
     @java.lang.Override
@@ -9302,6 +9328,18 @@ public final class Pastry {
               key_ = s;
               break;
             }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              value_ = s;
+              break;
+            }
+            case 24: {
+              int rawValue = input.readEnum();
+
+              requestType_ = rawValue;
+              break;
+            }
             default: {
               if (!parseUnknownFieldProto3(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -9332,6 +9370,113 @@ public final class Pastry {
       return proto.Pastry.internal_static_ForwardRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               proto.Pastry.ForwardRequest.class, proto.Pastry.ForwardRequest.Builder.class);
+    }
+
+    /**
+     * Protobuf enum {@code ForwardRequest.RequestType}
+     */
+    public enum RequestType
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>PUT = 0;</code>
+       */
+      PUT(0),
+      /**
+       * <code>GET = 1;</code>
+       */
+      GET(1),
+      /**
+       * <code>DELETE = 2;</code>
+       */
+      DELETE(2),
+      UNRECOGNIZED(-1),
+      ;
+
+      /**
+       * <code>PUT = 0;</code>
+       */
+      public static final int PUT_VALUE = 0;
+      /**
+       * <code>GET = 1;</code>
+       */
+      public static final int GET_VALUE = 1;
+      /**
+       * <code>DELETE = 2;</code>
+       */
+      public static final int DELETE_VALUE = 2;
+
+
+      public final int getNumber() {
+        if (this == UNRECOGNIZED) {
+          throw new java.lang.IllegalArgumentException(
+              "Can't get the number of an unknown enum value.");
+        }
+        return value;
+      }
+
+      /**
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static RequestType valueOf(int value) {
+        return forNumber(value);
+      }
+
+      public static RequestType forNumber(int value) {
+        switch (value) {
+          case 0: return PUT;
+          case 1: return GET;
+          case 2: return DELETE;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<RequestType>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static final com.google.protobuf.Internal.EnumLiteMap<
+          RequestType> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<RequestType>() {
+              public RequestType findValueByNumber(int number) {
+                return RequestType.forNumber(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(ordinal());
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return proto.Pastry.ForwardRequest.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final RequestType[] VALUES = values();
+
+      public static RequestType valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        if (desc.getIndex() == -1) {
+          return UNRECOGNIZED;
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int value;
+
+      private RequestType(int value) {
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:ForwardRequest.RequestType)
     }
 
     public static final int KEY_FIELD_NUMBER = 1;
@@ -9368,6 +9513,57 @@ public final class Pastry {
       }
     }
 
+    public static final int VALUE_FIELD_NUMBER = 2;
+    private volatile java.lang.Object value_;
+    /**
+     * <code>string value = 2;</code>
+     */
+    public java.lang.String getValue() {
+      java.lang.Object ref = value_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        value_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string value = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getValueBytes() {
+      java.lang.Object ref = value_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        value_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int REQUESTTYPE_FIELD_NUMBER = 3;
+    private int requestType_;
+    /**
+     * <code>.ForwardRequest.RequestType requestType = 3;</code>
+     */
+    public int getRequestTypeValue() {
+      return requestType_;
+    }
+    /**
+     * <code>.ForwardRequest.RequestType requestType = 3;</code>
+     */
+    public proto.Pastry.ForwardRequest.RequestType getRequestType() {
+      @SuppressWarnings("deprecation")
+      proto.Pastry.ForwardRequest.RequestType result = proto.Pastry.ForwardRequest.RequestType.valueOf(requestType_);
+      return result == null ? proto.Pastry.ForwardRequest.RequestType.UNRECOGNIZED : result;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -9385,6 +9581,12 @@ public final class Pastry {
       if (!getKeyBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, key_);
       }
+      if (!getValueBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, value_);
+      }
+      if (requestType_ != proto.Pastry.ForwardRequest.RequestType.PUT.getNumber()) {
+        output.writeEnum(3, requestType_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -9396,6 +9598,13 @@ public final class Pastry {
       size = 0;
       if (!getKeyBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, key_);
+      }
+      if (!getValueBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, value_);
+      }
+      if (requestType_ != proto.Pastry.ForwardRequest.RequestType.PUT.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(3, requestType_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -9415,6 +9624,9 @@ public final class Pastry {
       boolean result = true;
       result = result && getKey()
           .equals(other.getKey());
+      result = result && getValue()
+          .equals(other.getValue());
+      result = result && requestType_ == other.requestType_;
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -9428,6 +9640,10 @@ public final class Pastry {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + KEY_FIELD_NUMBER;
       hash = (53 * hash) + getKey().hashCode();
+      hash = (37 * hash) + VALUE_FIELD_NUMBER;
+      hash = (53 * hash) + getValue().hashCode();
+      hash = (37 * hash) + REQUESTTYPE_FIELD_NUMBER;
+      hash = (53 * hash) + requestType_;
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -9524,6 +9740,11 @@ public final class Pastry {
       return builder;
     }
     /**
+     * <pre>
+     * forwarded to node that is closest to key
+     * depending on Type it puts, gets or deletes the key
+     * </pre>
+     *
      * Protobuf type {@code ForwardRequest}
      */
     public static final class Builder extends
@@ -9563,6 +9784,10 @@ public final class Pastry {
         super.clear();
         key_ = "";
 
+        value_ = "";
+
+        requestType_ = 0;
+
         return this;
       }
 
@@ -9590,6 +9815,8 @@ public final class Pastry {
       public proto.Pastry.ForwardRequest buildPartial() {
         proto.Pastry.ForwardRequest result = new proto.Pastry.ForwardRequest(this);
         result.key_ = key_;
+        result.value_ = value_;
+        result.requestType_ = requestType_;
         onBuilt();
         return result;
       }
@@ -9641,6 +9868,13 @@ public final class Pastry {
         if (!other.getKey().isEmpty()) {
           key_ = other.key_;
           onChanged();
+        }
+        if (!other.getValue().isEmpty()) {
+          value_ = other.value_;
+          onChanged();
+        }
+        if (other.requestType_ != 0) {
+          setRequestTypeValue(other.getRequestTypeValue());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -9739,6 +9973,120 @@ public final class Pastry {
         onChanged();
         return this;
       }
+
+      private java.lang.Object value_ = "";
+      /**
+       * <code>string value = 2;</code>
+       */
+      public java.lang.String getValue() {
+        java.lang.Object ref = value_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          value_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string value = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getValueBytes() {
+        java.lang.Object ref = value_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          value_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string value = 2;</code>
+       */
+      public Builder setValue(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        value_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string value = 2;</code>
+       */
+      public Builder clearValue() {
+        
+        value_ = getDefaultInstance().getValue();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string value = 2;</code>
+       */
+      public Builder setValueBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        value_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int requestType_ = 0;
+      /**
+       * <code>.ForwardRequest.RequestType requestType = 3;</code>
+       */
+      public int getRequestTypeValue() {
+        return requestType_;
+      }
+      /**
+       * <code>.ForwardRequest.RequestType requestType = 3;</code>
+       */
+      public Builder setRequestTypeValue(int value) {
+        requestType_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.ForwardRequest.RequestType requestType = 3;</code>
+       */
+      public proto.Pastry.ForwardRequest.RequestType getRequestType() {
+        @SuppressWarnings("deprecation")
+        proto.Pastry.ForwardRequest.RequestType result = proto.Pastry.ForwardRequest.RequestType.valueOf(requestType_);
+        return result == null ? proto.Pastry.ForwardRequest.RequestType.UNRECOGNIZED : result;
+      }
+      /**
+       * <code>.ForwardRequest.RequestType requestType = 3;</code>
+       */
+      public Builder setRequestType(proto.Pastry.ForwardRequest.RequestType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        requestType_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.ForwardRequest.RequestType requestType = 3;</code>
+       */
+      public Builder clearRequestType() {
+        
+        requestType_ = 0;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -9797,29 +10145,36 @@ public final class Pastry {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string ip = 1;</code>
+     * <code>string value = 1;</code>
      */
-    java.lang.String getIp();
+    java.lang.String getValue();
     /**
-     * <code>string ip = 1;</code>
+     * <code>string value = 1;</code>
      */
     com.google.protobuf.ByteString
-        getIpBytes();
+        getValueBytes();
 
     /**
-     * <code>int32 port = 2;</code>
+     * <code>.ForwardResponse.StatusCode statusCode = 2;</code>
      */
-    int getPort();
+    int getStatusCodeValue();
+    /**
+     * <code>.ForwardResponse.StatusCode statusCode = 2;</code>
+     */
+    proto.Pastry.ForwardResponse.StatusCode getStatusCode();
 
     /**
-     * <code>string id = 3;</code>
+     * <code>.NodeReference owner = 3;</code>
      */
-    java.lang.String getId();
+    boolean hasOwner();
     /**
-     * <code>string id = 3;</code>
+     * <code>.NodeReference owner = 3;</code>
      */
-    com.google.protobuf.ByteString
-        getIdBytes();
+    proto.Pastry.NodeReference getOwner();
+    /**
+     * <code>.NodeReference owner = 3;</code>
+     */
+    proto.Pastry.NodeReferenceOrBuilder getOwnerOrBuilder();
   }
   /**
    * Protobuf type {@code ForwardResponse}
@@ -9834,9 +10189,8 @@ public final class Pastry {
       super(builder);
     }
     private ForwardResponse() {
-      ip_ = "";
-      port_ = 0;
-      id_ = "";
+      value_ = "";
+      statusCode_ = 0;
     }
 
     @java.lang.Override
@@ -9866,18 +10220,26 @@ public final class Pastry {
             case 10: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              ip_ = s;
+              value_ = s;
               break;
             }
             case 16: {
+              int rawValue = input.readEnum();
 
-              port_ = input.readInt32();
+              statusCode_ = rawValue;
               break;
             }
             case 26: {
-              java.lang.String s = input.readStringRequireUtf8();
+              proto.Pastry.NodeReference.Builder subBuilder = null;
+              if (owner_ != null) {
+                subBuilder = owner_.toBuilder();
+              }
+              owner_ = input.readMessage(proto.Pastry.NodeReference.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(owner_);
+                owner_ = subBuilder.buildPartial();
+              }
 
-              id_ = s;
               break;
             }
             default: {
@@ -9912,81 +10274,224 @@ public final class Pastry {
               proto.Pastry.ForwardResponse.class, proto.Pastry.ForwardResponse.Builder.class);
     }
 
-    public static final int IP_FIELD_NUMBER = 1;
-    private volatile java.lang.Object ip_;
     /**
-     * <code>string ip = 1;</code>
+     * Protobuf enum {@code ForwardResponse.StatusCode}
      */
-    public java.lang.String getIp() {
-      java.lang.Object ref = ip_;
+    public enum StatusCode
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <pre>
+       * successful PUT
+       * </pre>
+       *
+       * <code>SAVED = 0;</code>
+       */
+      SAVED(0),
+      /**
+       * <pre>
+       * successful DELETE
+       * </pre>
+       *
+       * <code>REMOVED = 1;</code>
+       */
+      REMOVED(1),
+      /**
+       * <pre>
+       * successful DELETE
+       * </pre>
+       *
+       * <code>RETRIEVED = 2;</code>
+       */
+      RETRIEVED(2),
+      /**
+       * <pre>
+       * key for DELETE not found
+       * </pre>
+       *
+       * <code>NOT_FOUND = 3;</code>
+       */
+      NOT_FOUND(3),
+      UNRECOGNIZED(-1),
+      ;
+
+      /**
+       * <pre>
+       * successful PUT
+       * </pre>
+       *
+       * <code>SAVED = 0;</code>
+       */
+      public static final int SAVED_VALUE = 0;
+      /**
+       * <pre>
+       * successful DELETE
+       * </pre>
+       *
+       * <code>REMOVED = 1;</code>
+       */
+      public static final int REMOVED_VALUE = 1;
+      /**
+       * <pre>
+       * successful DELETE
+       * </pre>
+       *
+       * <code>RETRIEVED = 2;</code>
+       */
+      public static final int RETRIEVED_VALUE = 2;
+      /**
+       * <pre>
+       * key for DELETE not found
+       * </pre>
+       *
+       * <code>NOT_FOUND = 3;</code>
+       */
+      public static final int NOT_FOUND_VALUE = 3;
+
+
+      public final int getNumber() {
+        if (this == UNRECOGNIZED) {
+          throw new java.lang.IllegalArgumentException(
+              "Can't get the number of an unknown enum value.");
+        }
+        return value;
+      }
+
+      /**
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static StatusCode valueOf(int value) {
+        return forNumber(value);
+      }
+
+      public static StatusCode forNumber(int value) {
+        switch (value) {
+          case 0: return SAVED;
+          case 1: return REMOVED;
+          case 2: return RETRIEVED;
+          case 3: return NOT_FOUND;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<StatusCode>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static final com.google.protobuf.Internal.EnumLiteMap<
+          StatusCode> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<StatusCode>() {
+              public StatusCode findValueByNumber(int number) {
+                return StatusCode.forNumber(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(ordinal());
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return proto.Pastry.ForwardResponse.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final StatusCode[] VALUES = values();
+
+      public static StatusCode valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        if (desc.getIndex() == -1) {
+          return UNRECOGNIZED;
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int value;
+
+      private StatusCode(int value) {
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:ForwardResponse.StatusCode)
+    }
+
+    public static final int VALUE_FIELD_NUMBER = 1;
+    private volatile java.lang.Object value_;
+    /**
+     * <code>string value = 1;</code>
+     */
+    public java.lang.String getValue() {
+      java.lang.Object ref = value_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        ip_ = s;
+        value_ = s;
         return s;
       }
     }
     /**
-     * <code>string ip = 1;</code>
+     * <code>string value = 1;</code>
      */
     public com.google.protobuf.ByteString
-        getIpBytes() {
-      java.lang.Object ref = ip_;
+        getValueBytes() {
+      java.lang.Object ref = value_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        ip_ = b;
+        value_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    public static final int PORT_FIELD_NUMBER = 2;
-    private int port_;
+    public static final int STATUSCODE_FIELD_NUMBER = 2;
+    private int statusCode_;
     /**
-     * <code>int32 port = 2;</code>
+     * <code>.ForwardResponse.StatusCode statusCode = 2;</code>
      */
-    public int getPort() {
-      return port_;
+    public int getStatusCodeValue() {
+      return statusCode_;
+    }
+    /**
+     * <code>.ForwardResponse.StatusCode statusCode = 2;</code>
+     */
+    public proto.Pastry.ForwardResponse.StatusCode getStatusCode() {
+      @SuppressWarnings("deprecation")
+      proto.Pastry.ForwardResponse.StatusCode result = proto.Pastry.ForwardResponse.StatusCode.valueOf(statusCode_);
+      return result == null ? proto.Pastry.ForwardResponse.StatusCode.UNRECOGNIZED : result;
     }
 
-    public static final int ID_FIELD_NUMBER = 3;
-    private volatile java.lang.Object id_;
+    public static final int OWNER_FIELD_NUMBER = 3;
+    private proto.Pastry.NodeReference owner_;
     /**
-     * <code>string id = 3;</code>
+     * <code>.NodeReference owner = 3;</code>
      */
-    public java.lang.String getId() {
-      java.lang.Object ref = id_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        id_ = s;
-        return s;
-      }
+    public boolean hasOwner() {
+      return owner_ != null;
     }
     /**
-     * <code>string id = 3;</code>
+     * <code>.NodeReference owner = 3;</code>
      */
-    public com.google.protobuf.ByteString
-        getIdBytes() {
-      java.lang.Object ref = id_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        id_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public proto.Pastry.NodeReference getOwner() {
+      return owner_ == null ? proto.Pastry.NodeReference.getDefaultInstance() : owner_;
+    }
+    /**
+     * <code>.NodeReference owner = 3;</code>
+     */
+    public proto.Pastry.NodeReferenceOrBuilder getOwnerOrBuilder() {
+      return getOwner();
     }
 
     private byte memoizedIsInitialized = -1;
@@ -10003,14 +10508,14 @@ public final class Pastry {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!getIpBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, ip_);
+      if (!getValueBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, value_);
       }
-      if (port_ != 0) {
-        output.writeInt32(2, port_);
+      if (statusCode_ != proto.Pastry.ForwardResponse.StatusCode.SAVED.getNumber()) {
+        output.writeEnum(2, statusCode_);
       }
-      if (!getIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, id_);
+      if (owner_ != null) {
+        output.writeMessage(3, getOwner());
       }
       unknownFields.writeTo(output);
     }
@@ -10021,15 +10526,16 @@ public final class Pastry {
       if (size != -1) return size;
 
       size = 0;
-      if (!getIpBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, ip_);
+      if (!getValueBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, value_);
       }
-      if (port_ != 0) {
+      if (statusCode_ != proto.Pastry.ForwardResponse.StatusCode.SAVED.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, port_);
+          .computeEnumSize(2, statusCode_);
       }
-      if (!getIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, id_);
+      if (owner_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, getOwner());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -10047,12 +10553,14 @@ public final class Pastry {
       proto.Pastry.ForwardResponse other = (proto.Pastry.ForwardResponse) obj;
 
       boolean result = true;
-      result = result && getIp()
-          .equals(other.getIp());
-      result = result && (getPort()
-          == other.getPort());
-      result = result && getId()
-          .equals(other.getId());
+      result = result && getValue()
+          .equals(other.getValue());
+      result = result && statusCode_ == other.statusCode_;
+      result = result && (hasOwner() == other.hasOwner());
+      if (hasOwner()) {
+        result = result && getOwner()
+            .equals(other.getOwner());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -10064,12 +10572,14 @@ public final class Pastry {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + IP_FIELD_NUMBER;
-      hash = (53 * hash) + getIp().hashCode();
-      hash = (37 * hash) + PORT_FIELD_NUMBER;
-      hash = (53 * hash) + getPort();
-      hash = (37 * hash) + ID_FIELD_NUMBER;
-      hash = (53 * hash) + getId().hashCode();
+      hash = (37 * hash) + VALUE_FIELD_NUMBER;
+      hash = (53 * hash) + getValue().hashCode();
+      hash = (37 * hash) + STATUSCODE_FIELD_NUMBER;
+      hash = (53 * hash) + statusCode_;
+      if (hasOwner()) {
+        hash = (37 * hash) + OWNER_FIELD_NUMBER;
+        hash = (53 * hash) + getOwner().hashCode();
+      }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -10203,12 +10713,16 @@ public final class Pastry {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        ip_ = "";
+        value_ = "";
 
-        port_ = 0;
+        statusCode_ = 0;
 
-        id_ = "";
-
+        if (ownerBuilder_ == null) {
+          owner_ = null;
+        } else {
+          owner_ = null;
+          ownerBuilder_ = null;
+        }
         return this;
       }
 
@@ -10235,9 +10749,13 @@ public final class Pastry {
       @java.lang.Override
       public proto.Pastry.ForwardResponse buildPartial() {
         proto.Pastry.ForwardResponse result = new proto.Pastry.ForwardResponse(this);
-        result.ip_ = ip_;
-        result.port_ = port_;
-        result.id_ = id_;
+        result.value_ = value_;
+        result.statusCode_ = statusCode_;
+        if (ownerBuilder_ == null) {
+          result.owner_ = owner_;
+        } else {
+          result.owner_ = ownerBuilder_.build();
+        }
         onBuilt();
         return result;
       }
@@ -10286,16 +10804,15 @@ public final class Pastry {
 
       public Builder mergeFrom(proto.Pastry.ForwardResponse other) {
         if (other == proto.Pastry.ForwardResponse.getDefaultInstance()) return this;
-        if (!other.getIp().isEmpty()) {
-          ip_ = other.ip_;
+        if (!other.getValue().isEmpty()) {
+          value_ = other.value_;
           onChanged();
         }
-        if (other.getPort() != 0) {
-          setPort(other.getPort());
+        if (other.statusCode_ != 0) {
+          setStatusCodeValue(other.getStatusCodeValue());
         }
-        if (!other.getId().isEmpty()) {
-          id_ = other.id_;
-          onChanged();
+        if (other.hasOwner()) {
+          mergeOwner(other.getOwner());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -10326,168 +10843,235 @@ public final class Pastry {
         return this;
       }
 
-      private java.lang.Object ip_ = "";
+      private java.lang.Object value_ = "";
       /**
-       * <code>string ip = 1;</code>
+       * <code>string value = 1;</code>
        */
-      public java.lang.String getIp() {
-        java.lang.Object ref = ip_;
+      public java.lang.String getValue() {
+        java.lang.Object ref = value_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          ip_ = s;
+          value_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>string ip = 1;</code>
+       * <code>string value = 1;</code>
        */
       public com.google.protobuf.ByteString
-          getIpBytes() {
-        java.lang.Object ref = ip_;
+          getValueBytes() {
+        java.lang.Object ref = value_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          ip_ = b;
+          value_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string ip = 1;</code>
+       * <code>string value = 1;</code>
        */
-      public Builder setIp(
+      public Builder setValue(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        ip_ = value;
+        value_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string ip = 1;</code>
+       * <code>string value = 1;</code>
        */
-      public Builder clearIp() {
+      public Builder clearValue() {
         
-        ip_ = getDefaultInstance().getIp();
+        value_ = getDefaultInstance().getValue();
         onChanged();
         return this;
       }
       /**
-       * <code>string ip = 1;</code>
+       * <code>string value = 1;</code>
        */
-      public Builder setIpBytes(
+      public Builder setValueBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        ip_ = value;
+        value_ = value;
         onChanged();
         return this;
       }
 
-      private int port_ ;
+      private int statusCode_ = 0;
       /**
-       * <code>int32 port = 2;</code>
+       * <code>.ForwardResponse.StatusCode statusCode = 2;</code>
        */
-      public int getPort() {
-        return port_;
+      public int getStatusCodeValue() {
+        return statusCode_;
       }
       /**
-       * <code>int32 port = 2;</code>
+       * <code>.ForwardResponse.StatusCode statusCode = 2;</code>
        */
-      public Builder setPort(int value) {
-        
-        port_ = value;
+      public Builder setStatusCodeValue(int value) {
+        statusCode_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int32 port = 2;</code>
+       * <code>.ForwardResponse.StatusCode statusCode = 2;</code>
        */
-      public Builder clearPort() {
+      public proto.Pastry.ForwardResponse.StatusCode getStatusCode() {
+        @SuppressWarnings("deprecation")
+        proto.Pastry.ForwardResponse.StatusCode result = proto.Pastry.ForwardResponse.StatusCode.valueOf(statusCode_);
+        return result == null ? proto.Pastry.ForwardResponse.StatusCode.UNRECOGNIZED : result;
+      }
+      /**
+       * <code>.ForwardResponse.StatusCode statusCode = 2;</code>
+       */
+      public Builder setStatusCode(proto.Pastry.ForwardResponse.StatusCode value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
         
-        port_ = 0;
+        statusCode_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.ForwardResponse.StatusCode statusCode = 2;</code>
+       */
+      public Builder clearStatusCode() {
+        
+        statusCode_ = 0;
         onChanged();
         return this;
       }
 
-      private java.lang.Object id_ = "";
+      private proto.Pastry.NodeReference owner_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> ownerBuilder_;
       /**
-       * <code>string id = 3;</code>
+       * <code>.NodeReference owner = 3;</code>
        */
-      public java.lang.String getId() {
-        java.lang.Object ref = id_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          id_ = s;
-          return s;
+      public boolean hasOwner() {
+        return ownerBuilder_ != null || owner_ != null;
+      }
+      /**
+       * <code>.NodeReference owner = 3;</code>
+       */
+      public proto.Pastry.NodeReference getOwner() {
+        if (ownerBuilder_ == null) {
+          return owner_ == null ? proto.Pastry.NodeReference.getDefaultInstance() : owner_;
         } else {
-          return (java.lang.String) ref;
+          return ownerBuilder_.getMessage();
         }
       }
       /**
-       * <code>string id = 3;</code>
+       * <code>.NodeReference owner = 3;</code>
        */
-      public com.google.protobuf.ByteString
-          getIdBytes() {
-        java.lang.Object ref = id_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          id_ = b;
-          return b;
+      public Builder setOwner(proto.Pastry.NodeReference value) {
+        if (ownerBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          owner_ = value;
+          onChanged();
         } else {
-          return (com.google.protobuf.ByteString) ref;
+          ownerBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.NodeReference owner = 3;</code>
+       */
+      public Builder setOwner(
+          proto.Pastry.NodeReference.Builder builderForValue) {
+        if (ownerBuilder_ == null) {
+          owner_ = builderForValue.build();
+          onChanged();
+        } else {
+          ownerBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.NodeReference owner = 3;</code>
+       */
+      public Builder mergeOwner(proto.Pastry.NodeReference value) {
+        if (ownerBuilder_ == null) {
+          if (owner_ != null) {
+            owner_ =
+              proto.Pastry.NodeReference.newBuilder(owner_).mergeFrom(value).buildPartial();
+          } else {
+            owner_ = value;
+          }
+          onChanged();
+        } else {
+          ownerBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.NodeReference owner = 3;</code>
+       */
+      public Builder clearOwner() {
+        if (ownerBuilder_ == null) {
+          owner_ = null;
+          onChanged();
+        } else {
+          owner_ = null;
+          ownerBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.NodeReference owner = 3;</code>
+       */
+      public proto.Pastry.NodeReference.Builder getOwnerBuilder() {
+        
+        onChanged();
+        return getOwnerFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.NodeReference owner = 3;</code>
+       */
+      public proto.Pastry.NodeReferenceOrBuilder getOwnerOrBuilder() {
+        if (ownerBuilder_ != null) {
+          return ownerBuilder_.getMessageOrBuilder();
+        } else {
+          return owner_ == null ?
+              proto.Pastry.NodeReference.getDefaultInstance() : owner_;
         }
       }
       /**
-       * <code>string id = 3;</code>
+       * <code>.NodeReference owner = 3;</code>
        */
-      public Builder setId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        id_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string id = 3;</code>
-       */
-      public Builder clearId() {
-        
-        id_ = getDefaultInstance().getId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string id = 3;</code>
-       */
-      public Builder setIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        id_ = value;
-        onChanged();
-        return this;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder> 
+          getOwnerFieldBuilder() {
+        if (ownerBuilder_ == null) {
+          ownerBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              proto.Pastry.NodeReference, proto.Pastry.NodeReference.Builder, proto.Pastry.NodeReferenceOrBuilder>(
+                  getOwner(),
+                  getParentForChildren(),
+                  isClean());
+          owner_ = null;
+        }
+        return ownerBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -10641,18 +11225,24 @@ public final class Pastry {
       "2\016.NodeReference\"(\n\nPutRequest\022\013\n\003key\030\001 " +
       "\001(\t\022\r\n\005value\030\002 \001(\t\"\031\n\nGetRequest\022\013\n\003key\030" +
       "\001 \001(\t\"\034\n\013GetResponse\022\r\n\005value\030\001 \001(\t\"\034\n\rD" +
-      "eleteRequest\022\013\n\003key\030\001 \001(\t\"\035\n\016ForwardRequ" +
-      "est\022\013\n\003key\030\001 \001(\t\"7\n\017ForwardResponse\022\n\n\002i" +
-      "p\030\001 \001(\t\022\014\n\004port\030\002 \001(\005\022\n\n\002id\030\003 \001(\t2\321\002\n\rPa" +
-      "stryService\022\034\n\003Put\022\013.PutRequest\032\006.Empty\"" +
-      "\000\022\"\n\003Get\022\013.GetRequest\032\014.GetResponse\"\000\022\"\n" +
-      "\006Delete\022\016.DeleteRequest\032\006.Empty\"\000\022*\n\017Not" +
-      "ifyExistence\022\n.NodeState\032\t.NewNodes\"\000\022.\n" +
-      "\007Forward\022\017.ForwardRequest\032\020.ForwardRespo" +
-      "nse\"\000\022%\n\004Join\022\014.JoinRequest\032\r.JoinRespon" +
-      "se\"\000\022=\n\016GetNeighborSet\022\023.NeighborSetRequ" +
-      "est\032\024.NeighborSetResponse\"\000\022\030\n\004Ping\022\006.Em" +
-      "pty\032\006.Empty\"\000B\007\n\005protob\006proto3"
+      "eleteRequest\022\013\n\003key\030\001 \001(\t\"\213\001\n\016ForwardReq" +
+      "uest\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\0220\n\013requ" +
+      "estType\030\003 \001(\0162\033.ForwardRequest.RequestTy" +
+      "pe\"+\n\013RequestType\022\007\n\003PUT\020\000\022\007\n\003GET\020\001\022\n\n\006D" +
+      "ELETE\020\002\"\264\001\n\017ForwardResponse\022\r\n\005value\030\001 \001" +
+      "(\t\022/\n\nstatusCode\030\002 \001(\0162\033.ForwardResponse" +
+      ".StatusCode\022\035\n\005owner\030\003 \001(\0132\016.NodeReferen" +
+      "ce\"B\n\nStatusCode\022\t\n\005SAVED\020\000\022\013\n\007REMOVED\020\001" +
+      "\022\r\n\tRETRIEVED\020\002\022\r\n\tNOT_FOUND\020\0032\321\002\n\rPastr" +
+      "yService\022\034\n\003Put\022\013.PutRequest\032\006.Empty\"\000\022\"" +
+      "\n\003Get\022\013.GetRequest\032\014.GetResponse\"\000\022\"\n\006De" +
+      "lete\022\016.DeleteRequest\032\006.Empty\"\000\022*\n\017Notify" +
+      "Existence\022\n.NodeState\032\t.NewNodes\"\000\022.\n\007Fo" +
+      "rward\022\017.ForwardRequest\032\020.ForwardResponse" +
+      "\"\000\022%\n\004Join\022\014.JoinRequest\032\r.JoinResponse\"" +
+      "\000\022=\n\016GetNeighborSet\022\023.NeighborSetRequest" +
+      "\032\024.NeighborSetResponse\"\000\022\030\n\004Ping\022\006.Empty" +
+      "\032\006.Empty\"\000B\007\n\005protob\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -10749,13 +11339,13 @@ public final class Pastry {
     internal_static_ForwardRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ForwardRequest_descriptor,
-        new java.lang.String[] { "Key", });
+        new java.lang.String[] { "Key", "Value", "RequestType", });
     internal_static_ForwardResponse_descriptor =
       getDescriptor().getMessageTypes().get(14);
     internal_static_ForwardResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ForwardResponse_descriptor,
-        new java.lang.String[] { "Ip", "Port", "Id", });
+        new java.lang.String[] { "Value", "StatusCode", "Owner", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -15,22 +15,61 @@ public class PastryNodeTest {
 
     private final Logger logger = LoggerFactory.getLogger(PastryNodeTest.class);
 
-    private int BASE_PORT = 10_000;
+    private static int BASE_PORT = 10_000;
+    private final ArrayList<PastryNode> nodes = new ArrayList<>();
+
+    @BeforeEach
+    public void printInfo(TestInfo testInfo) {
+        logger.warn(System.lineSeparator() + System.lineSeparator()+ "============== {} =============" + System.lineSeparator(), testInfo.getDisplayName());
+    }
+
+    @AfterEach
+    public void tearDown() {
+        for (PastryNode node : nodes) {
+            node.shutdownPastryNode();
+        }
+        nodes.clear();
+    }
+
+    @Test
+    public void testRandomJoin_RandomPut() throws IOException {
+
+        PastryNode.setBase(BASE_4_IDS);
+        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+        int j = 0;
+
+        PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++);
+        bootstrap.initPastry();
+        nodes.add(bootstrap);
+
+        for (int i = 0; i < 10 ; i++) {
+            PastryNode node = new PastryNode("localhost", BASE_PORT++);
+            node.joinPastry(nodes.get(new Random().nextInt(nodes.size())).getNode());
+            nodes.add(node);
+        }
+
+        // randomly put 50 random keys, assert closest node is owner
+        for (int i = 0; i < 50; i++) {
+            String key = "key" + j++;
+            PastryNode randomNode = nodes.get(new Random().nextInt(nodes.size()));
+
+            NodeReference owner = randomNode.put(key, "value");
+
+            assertNumericallyClosestOfAll(Util.getId(key), owner, nodes);
+        }
+    }
 
 
     @Test
-    public void testBootstrapJoin_alwaysJoinClosest(TestInfo testInfo) throws IOException {
-        logger.warn(System.lineSeparator() + System.lineSeparator()+ "============== {} =============" + System.lineSeparator(), testInfo.getDisplayName());
+    public void testBootstrapJoin_alwaysJoinClosest() throws IOException {
 
         PastryNode.setBase(BASE_4_IDS);
         PastryNode.setLeafSize(LEAF_SET_SIZE_8);
 
         PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++);
         bootstrap.initPastry();
-        bootstrap.turnOffStabilization();
-
-        List<PastryNode> nodes = new ArrayList<>();
         nodes.add(bootstrap);
+
         for (int i = 0; i < 50 ; i++) {
             PastryNode node = new PastryNode("localhost", BASE_PORT++);
             NodeReference closest = node.joinPastry(bootstrap.getNode());
@@ -41,22 +80,18 @@ public class PastryNodeTest {
     }
 
     @Test
-    public void testRandomJoin_alwaysJoinClosest(TestInfo testInfo) throws IOException {
-        logger.warn(System.lineSeparator() + System.lineSeparator()+ "============== {} =============" + System.lineSeparator(), testInfo.getDisplayName());
+    public void testRandomJoin_alwaysJoinClosest() throws IOException {
 
         PastryNode.setBase(BASE_4_IDS);
         PastryNode.setLeafSize(LEAF_SET_SIZE_8);
 
         PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++);
         bootstrap.initPastry();
-        bootstrap.turnOffStabilization();
-
-        List<PastryNode> nodes = new ArrayList<>();
         nodes.add(bootstrap);
+
         for (int i = 0; i < 50; i++) {
             PastryNode node = new PastryNode("localhost", BASE_PORT++);
             NodeReference closest = node.joinPastry(nodes.get(new Random().nextInt(nodes.size())).getNode());
-            node.turnOffStabilization();
             assertNumericallyClosestOfAll(node.getNode(), closest, nodes);
             nodes.add(node);
         }
@@ -65,5 +100,9 @@ public class PastryNodeTest {
     private void assertNumericallyClosestOfAll(NodeReference node, NodeReference closest, List<PastryNode> nodes) {
         nodes.sort(Comparator.comparing(o -> o.getNode().getDecimalId().subtract(node.getDecimalId()).abs()));
         assertEquals(nodes.get(0).getNode(), closest, "Actual closest to " + node + " is " + nodes.get(0).getNode() + ", not " + closest);
+    }
+    private void assertNumericallyClosestOfAll(String keyHash, NodeReference closest, List<PastryNode> nodes) {
+        nodes.sort(Comparator.comparing(o -> o.getNode().getDecimalId().subtract(Util.convertToDecimal(keyHash)).abs()));
+        assertEquals(nodes.get(0).getNode(), closest, "Actual closest to " + keyHash + " is " + nodes.get(0).getNode() + ", not " + closest);
     }
 }

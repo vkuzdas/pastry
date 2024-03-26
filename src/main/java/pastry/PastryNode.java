@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.util.*;
 
 import static pastry.Constants.*;
+import static proto.Pastry.ForwardRequest.RequestType.PUT;
+import static proto.Pastry.ForwardResponse.StatusCode.*;
 
 public class PastryNode {
 
@@ -32,6 +34,7 @@ public class PastryNode {
      * It is only recommended to use 16 and 32
      */
     public static int L_PARAMETER = LEAF_SET_SIZE_8;
+    private final NavigableMap<String, String> localData = new TreeMap<>();
 
     /**
      * log(base,N) rows, base columns
@@ -761,12 +764,100 @@ public class PastryNode {
         syncInsertIntoRoutingTable(newNode);
     }
 
+    public NodeReference put(String key, String value) {
+        String keyHash = Util.getId(key);
+
+        NodeReference closest = route(keyHash);
+
+        Pastry.ForwardRequest.Builder putReq = Pastry.ForwardRequest.newBuilder()
+                .setKey(keyHash)
+                .setValue(value)
+                .setRequestType(PUT);
+        ManagedChannel channel = ManagedChannelBuilder.forTarget(closest.getAddress()).usePlaintext().build();
+        blockingStub = PastryServiceGrpc.newBlockingStub(channel);
+        Pastry.NodeReference owner = blockingStub.forward(putReq.build()).getOwner();
+        channel.shutdown();
+        return new NodeReference(owner);
+    }
+//
+//    public String get(String key) {
+//        String keyHash = Util.getId(key);
+//
+//        NodeReference storage = getStoringNode(keyHash);
+//        logger.trace("[{}]  Storing key {}:{} on {}", self, keyHash, Util.convertToDecimal(keyHash), storage.getAddress());
+//
+//        Pastry.GetRequest.Builder getReq = Pastry.GetRequest.newBuilder().setKey(keyHash);
+//        ManagedChannel channel = ManagedChannelBuilder.forTarget(storage.getAddress()).usePlaintext().build();
+//        blockingStub = PastryServiceGrpc.newBlockingStub(channel);
+//        Pastry.GetResponse getResponse = blockingStub.get(getReq.build());
+//        channel.shutdown();
+//        logger.info("Value for key {} is {}", key, getResponse.getValue());
+//        return getResponse.getValue();
+//    }
+//
+//    public void delete(String key) {
+//        String keyHash = Util.getId(key);
+//
+//        NodeReference storage = getStoringNode(keyHash);
+//        logger.trace("[{}]  Storing key {}:{} on {}", self, keyHash, Util.convertToDecimal(keyHash), storage.getAddress());
+//
+//        Pastry.DeleteRequest.Builder deleteReq = Pastry.DeleteRequest.newBuilder().setKey(keyHash);
+//        ManagedChannel channel = ManagedChannelBuilder.forTarget(storage.getAddress()).usePlaintext().build();
+//        blockingStub = PastryServiceGrpc.newBlockingStub(channel);
+//        blockingStub.delete(deleteReq.build());
+//        channel.shutdown();
+//    }
+
+//    /**
+//     * Principally same as the {@link PastryNode#joinPastry(NodeReference)} but node can be chosen at random <br>
+//     * From network, get node that should store the value (its the node with closest id to hashKey)
+//     */
+//    private NodeReference getStoringNode(String keyHash) {
+//        Pastry.ForwardRequest.Builder forwardReq = Pastry.ForwardRequest.newBuilder().setKey(keyHash);
+//        NodeReference someNode;
+//        lock.lock();
+//        try {
+//            someNode = neighborSet.get(0);
+//        } finally {
+//            lock.unlock();
+//        }
+//        ManagedChannel channel = ManagedChannelBuilder.forTarget(someNode.getAddress()).usePlaintext().build();
+//        blockingStub = PastryServiceGrpc.newBlockingStub(channel);
+//        Pastry.ForwardResponse response = blockingStub.forward(forwardReq.build());
+//        channel.shutdown();
+//
+//        return new NodeReference(response.getIp(), response.getPort());
+//    }
 
 
     /**
      * Server-side of Pastry node
      */
     private class PastryNodeServer extends PastryServiceGrpc.PastryServiceImplBase {
+
+        @Override
+        public void put(Pastry.PutRequest request, StreamObserver<Pastry.Empty> responseObserver) {
+            localData.put(request.getKey(), request.getValue());
+            logger.trace("[{}]  saved key {}:{}", self, request.getKey(), Util.convertToDecimal(request.getKey()));
+            responseObserver.onNext(Pastry.Empty.newBuilder().build());
+            responseObserver.onCompleted();
+        }
+
+        @Override
+        public void get(Pastry.GetRequest request, StreamObserver<Pastry.GetResponse> responseObserver) {
+            String value = localData.get(request.getKey());
+            logger.trace("[{}]  retrieved key {}", self, request.getKey());
+            responseObserver.onNext(Pastry.GetResponse.newBuilder().setValue(value).build());
+            responseObserver.onCompleted();
+        }
+
+        @Override
+        public void delete(Pastry.DeleteRequest request, StreamObserver<Pastry.Empty> responseObserver) {
+            localData.remove(request.getKey());
+            logger.trace("[{}]  deleted key {}", self, request.getKey());
+            responseObserver.onNext(Pastry.Empty.newBuilder().build());
+            responseObserver.onCompleted();
+        }
 
         /**
          * NodeState in Pastry.JoinResponse.NodeState is stack-like: Z node is inserted first, A last
@@ -811,9 +902,60 @@ public class PastryNode {
         }
 
         /**
-         * This node got notified by requestor about its existence <br>
-         * Will reflect requestors existence in its NodeState, as well as send back nodes that did not come from requestor <br>
+         * Forward to node with closest id to the given id
          */
+        @Override
+        public void forward(Pastry.ForwardRequest request, StreamObserver<Pastry.ForwardResponse> responseObserver) {
+            String keyHash = request.getKey();
+            logger.trace("[{}]  {} request, key = {}", self, request.getRequestType(), keyHash);
+
+            NodeReference closest = route(keyHash);
+
+
+            if (closest.equals(self)) {
+                // respond
+                Pastry.ForwardResponse.Builder response = Pastry.ForwardResponse.newBuilder().setOwner(self.toProto());
+
+                switch (request.getRequestType()) {
+                    case PUT:
+                        logger.trace("[{}]  saved key {}", self, keyHash);
+                        localData.put(keyHash, request.getValue());
+                        response.setStatusCode(SAVED);
+                        break;
+                    case GET:
+                        String value = localData.get(keyHash);
+                        logger.trace("[{}]  retrieved key {}", self, keyHash);
+                        response.setValue(value).setStatusCode(RETRIEVED);
+                        break;
+                    case DELETE:
+                        String rem = localData.remove(keyHash);
+                        Pastry.ForwardResponse.StatusCode status = rem != null ? REMOVED : NOT_FOUND;
+                        logger.trace("[{}]  key {} {}", self, keyHash, status);
+                        response.setStatusCode(status);
+                        break;
+                }
+
+                logger.trace("[{}]  My id is the closest to {}, responding back", self, keyHash);
+                responseObserver.onNext(response.build());
+                responseObserver.onCompleted();
+                return;
+            }
+
+            // forward request
+            logger.trace("[{}]  Forwarding {} request to {}", self, request.getRequestType(), closest.getAddress());
+            ManagedChannel channel = ManagedChannelBuilder.forTarget(closest.getAddress()).usePlaintext().build();
+            blockingStub = PastryServiceGrpc.newBlockingStub(channel);
+            Pastry.ForwardResponse response = blockingStub.forward(request);
+            channel.shutdown();
+
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+        }
+
+            /**
+             * This node got notified by requestor about its existence <br>
+             * Will reflect requestors existence in its NodeState, as well as send back nodes that did not come from requestor <br>
+             */
         @Override
         public void notifyExistence(Pastry.NodeState request, StreamObserver<Pastry.NewNodes> responseObserver) {
             NodeReference newNode = new NodeReference(request.getOwner());
