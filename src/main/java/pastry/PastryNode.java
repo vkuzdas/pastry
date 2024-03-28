@@ -1,6 +1,5 @@
 package pastry;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -44,7 +43,7 @@ public class PastryNode {
 
     private final Server server;
     private PastryServiceGrpc.PastryServiceBlockingStub blockingStub;
-    private DistanceCalculator distanceCalculator = new PingResponseTimeDistanceCalculator();
+    private DistanceCalculator distanceCalculator;
 
 
     public PastryNode(String ip, int port) {
@@ -54,10 +53,15 @@ public class PastryNode {
                 .build();
 
         state = new NodeState(B_PARAMETER, 8, L_PARAMETER, ip, port);
-        self = state.getSelf(); // TODO: transfer to state!
+        self = state.getSelf();
+
+        distanceCalculator = new NumericalDifferenceDistanceCalculator();
     }
 
     public void setDistanceCalculator(DistanceCalculator distanceCalculator) {
+        if (distanceCalculator instanceof PingResponseTimeDistanceCalculator) {
+            ((PingResponseTimeDistanceCalculator) distanceCalculator).setBlockingStub(blockingStub);
+        }
         this.distanceCalculator = distanceCalculator;
     }
 
@@ -352,35 +356,22 @@ public class PastryNode {
         }
         // routing table
         else {
-            int l = getSharedPrefixLength(id_base, self.getId());
+            int l = Util.getSharedPrefixLength(id_base, self.getId());
             int matchDigit = Integer.parseInt(id_base.charAt(l)+"");
+
             NodeReference r;
             r = state.routingTableGet(l, matchDigit);
+
             if (r == null) {
-                logger.trace("[{}]  Routing {} same len match [{}]", self, id_base, r);
-                return state.findSameLengthMatch(id_base, l);
+                r = state.findSameLengthMatch(id_base, l);
+                logger.trace("[{}]  Routing {} to same len match (l={}) [{}]", self, id_base, l, r);
+                return r;
             }
-            logger.trace("[{}]  Routing {} longer prefix match [{}]", self, id_base, r);
+
+            logger.trace("[{}]  Routing {} to longer prefix match (l={}) [{}]", self, id_base, l, r);
             return r;
         }
     }
-
-
-
-
-
-    private int getSharedPrefixLength(String idBase, String selfId) {
-        int l = 0;
-        for (int i = 0; i < idBase.length(); i++) {
-            if (idBase.charAt(i) == selfId.charAt(i)) {
-                l++;
-            } else {
-                break;
-            }
-        }
-        return l;
-    }
-
 
     public NodeReference put(String key, String value) {
         String keyHash = Util.getId(key);
@@ -437,30 +428,6 @@ public class PastryNode {
      * Server-side of Pastry node
      */
     private class PastryNodeServer extends PastryServiceGrpc.PastryServiceImplBase {
-
-        @Override
-        public void put(Pastry.PutRequest request, StreamObserver<Pastry.Empty> responseObserver) {
-            localData.put(request.getKey(), request.getValue());
-            logger.trace("[{}]  saved key {}:{}", self, request.getKey(), Util.convertToDecimal(request.getKey()));
-            responseObserver.onNext(Pastry.Empty.newBuilder().build());
-            responseObserver.onCompleted();
-        }
-
-        @Override
-        public void get(Pastry.GetRequest request, StreamObserver<Pastry.GetResponse> responseObserver) {
-            String value = localData.get(request.getKey());
-            logger.trace("[{}]  retrieved key {}", self, request.getKey());
-            responseObserver.onNext(Pastry.GetResponse.newBuilder().setValue(value).build());
-            responseObserver.onCompleted();
-        }
-
-        @Override
-        public void delete(Pastry.DeleteRequest request, StreamObserver<Pastry.Empty> responseObserver) {
-            localData.remove(request.getKey());
-            logger.trace("[{}]  deleted key {}", self, request.getKey());
-            responseObserver.onNext(Pastry.Empty.newBuilder().build());
-            responseObserver.onCompleted();
-        }
 
         /**
          * NodeState in Pastry.JoinResponse.NodeState is stack-like: Z node is inserted first, A last
@@ -555,10 +522,10 @@ public class PastryNode {
             responseObserver.onCompleted();
         }
 
-            /**
-             * This node got notified by requestor about its existence <br>
-             * Will reflect requestors existence in its NodeState, as well as send back nodes that did not come from requestor <br>
-             */
+        /**
+         * This node got notified by requestor about its existence <br>
+         * Will reflect requestors existence in its NodeState, as well as send back nodes that did not come from requestor <br>
+         */
         @Override
         public void notifyExistence(Pastry.NodeState request, StreamObserver<Pastry.NewNodes> responseObserver) {
             NodeReference newNode = new NodeReference(request.getOwner());
@@ -613,21 +580,6 @@ public class PastryNode {
         }
     }
 
-    public class PingResponseTimeDistanceCalculator implements DistanceCalculator {
-        // TODO: adapter pattern is not congruent: this is the only Calculator that cannot be separated from class
-        @Override
-        public long calculateDistance(NodeReference self, NodeReference other) {
-            ManagedChannel channel = ManagedChannelBuilder.forTarget(other.getAddress()).usePlaintext().build();
-            blockingStub = PastryServiceGrpc.newBlockingStub(channel);
-
-            long startTime = System.nanoTime();
-            blockingStub.ping(PING);
-            long endTime = System.nanoTime();
-
-            channel.shutdown();
-            return endTime - startTime;
-        }
-    }
 
 
 

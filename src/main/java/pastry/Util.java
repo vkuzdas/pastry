@@ -17,6 +17,17 @@ public class Util {
 
     private static final Logger logger = LoggerFactory.getLogger(Util.class);
 
+    public static int getSharedPrefixLength(String idBase, String selfId) {
+        int l = 0;
+        for (int i = 0; i < idBase.length(); i++) {
+            if (idBase.charAt(i) == selfId.charAt(i)) {
+                l++;
+            } else {
+                break;
+            }
+        }
+        return l;
+    }
 
     /**
      * Given node.address, hash it and return the hash as 4/8/16-base string number

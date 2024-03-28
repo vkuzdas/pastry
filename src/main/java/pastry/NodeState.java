@@ -25,7 +25,7 @@ public class NodeState {
     /**
      * Closest nodes per metric
      */
-//    private final List<NodeReference> neighborSet = new ArrayList<>();
+    private final List<NodeReference> neighborSet = new ArrayList<>();
     /**
      * Numerically closest larger nodeIds
      */
@@ -103,9 +103,6 @@ public class NodeState {
     }
 
 
-
-
-
     /////////////////
     ///  ROUTING  ///
     /////////////////
@@ -141,7 +138,6 @@ public class NodeState {
         return closest;
     }
 
-
     /**
      * <i> forward to T ∈ (L ∪ R ∪ M), s.th. shl(T, D) >= l && |T - D| < |A - D|</i>
      * Find to a node that shares prefix with the key at least as long as the local node and is numerically closer to the key than the present node’s id.
@@ -169,7 +165,6 @@ public class NodeState {
         logger.trace("[{}]  No same length match found for {}, routing to self", self, id_base);
         return self;
     }
-
 
 
     //////////////
@@ -246,7 +241,7 @@ public class NodeState {
                 for (Pastry.NodeReference n : response.getNodeStateList().get(i).getRoutingTableList().get(j).getRoutingTableEntryList()) {
                     NodeReference newNode = new NodeReference(n.getIp(), n.getPort());
                     int newNodeIndex = Integer.parseInt(newNode.getId().substring(j, j+1));
-                    int l = getSharedPrefixLength(newNode.getId(), self.getId());
+                    int l = Util.getSharedPrefixLength(newNode.getId(), self.getId());
                     if (selfIndex != newNodeIndex && l == j) { // prefix must match since join could be routed through non-longer matching prefix
                         jthRow.set(newNodeIndex, newNode);
                     }
@@ -259,28 +254,9 @@ public class NodeState {
     }
 
 
-    private int getSharedPrefixLength(String idBase, String selfId) {
-        int l = 0;
-        for (int i = 0; i < idBase.length(); i++) {
-            if (idBase.charAt(i) == selfId.charAt(i)) {
-                l++;
-            } else {
-                break;
-            }
-        }
-        return l;
-    }
-
-
-
-
-
-
-
-
-
-
-
+    //////////////
+    ///  MISC  ///
+    //////////////
 
     public ArrayList<NodeReference> getAllNodes() {
         ArrayList<NodeReference> allMyNodes = new ArrayList<>();
@@ -358,12 +334,9 @@ public class NodeState {
     }
 
 
-
-
-
-    ////////////////////
-    ///  PRIMITIVES  ///
-    ////////////////////
+    ////////////////
+    ///  INSERT  ///
+    ////////////////
 
 //    /**
 //     * Insert node into neighborSet <br>
@@ -438,7 +411,7 @@ public class NodeState {
     }
 
     public void syncInsertIntoRoutingTable(NodeReference newNode) {
-        int i = getSharedPrefixLength(newNode.getId(), self.getId());
+        int i = Util.getSharedPrefixLength(newNode.getId(), self.getId());
         int j = Integer.parseInt(newNode.getId().substring(i, i+1));
         lock.lock();
         try {
@@ -456,6 +429,10 @@ public class NodeState {
         }
     }
 
+
+    /////////////
+    ///  GET  ///
+    /////////////
 
     private int syncSizeGet(List<NodeReference> list) {
         int s;
