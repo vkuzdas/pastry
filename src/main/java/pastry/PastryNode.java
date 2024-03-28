@@ -88,34 +88,6 @@ public class PastryNode {
     }
 
     @VisibleForTesting
-    public List<NodeReference> getNeighborSet() {
-        return null;
-    }
-
-    @VisibleForTesting
-    public List<NodeReference> getUpLeafs() {
-        return state.getUpLeafs();
-    }
-
-    @VisibleForTesting
-    public List<NodeReference> getDownLeafs() {
-        return state.getDownLeafs();
-    }
-
-    @VisibleForTesting
-    public List<NodeReference> getLeafs() {
-        List<NodeReference> leafs = new ArrayList<>();
-        leafs.addAll(state.getDownLeafs());
-        leafs.addAll(state.getUpLeafs());
-        return leafs;
-    }
-
-    @VisibleForTesting
-    public List<List<NodeReference>> getRoutingTable() {
-        return state.getRoutingTable();
-    }
-
-    @VisibleForTesting
     public void turnOffStabilization() {
         stabilizationTimer.cancel();
     }

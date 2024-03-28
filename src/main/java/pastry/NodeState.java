@@ -58,18 +58,6 @@ public class NodeState {
         return self;
     }
 
-    public List<List<NodeReference>> getRoutingTable() {
-        return routingTable;
-    }
-
-    public List<NodeReference> getUpLeafs() {
-        return upLeafs;
-    }
-
-    public List<NodeReference> getDownLeafs() {
-        return downLeafs;
-    }
-
     public int getUpLeafSize() {
         return syncSizeGet(upLeafs);
     }
