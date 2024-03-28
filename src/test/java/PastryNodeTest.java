@@ -38,16 +38,19 @@ public class PastryNodeTest {
     @Disabled
     public void testRandomJoin_RandomPutGet() throws IOException {
 
+        long x = 0;
+        long y = 0;
+
         PastryNode.setBase(BASE_4_IDS);
         PastryNode.setLeafSize(LEAF_SET_SIZE_8);
         int j = 0;
 
-        PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++);
+        PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++, x++, y++);
         bootstrap.initPastry();
         nodes.add(bootstrap);
 
         for (int i = 0; i < 10 ; i++) {
-            PastryNode node = new PastryNode("localhost", BASE_PORT++);
+            PastryNode node = new PastryNode("localhost", BASE_PORT++, x++, y++);
             node.joinPastry(nodes.get(new Random().nextInt(nodes.size())).getNode());
             nodes.add(node);
         }
@@ -99,15 +102,18 @@ public class PastryNodeTest {
     @Test
     public void testBootstrapJoin_alwaysJoinClosest() throws IOException {
 
+        long x = 0;
+        long y = 0;
+
         PastryNode.setBase(BASE_4_IDS);
         PastryNode.setLeafSize(LEAF_SET_SIZE_8);
 
-        PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++);
+        PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++, x++, y++);
         bootstrap.initPastry();
         nodes.add(bootstrap);
 
         for (int i = 0; i < 50 ; i++) {
-            PastryNode node = new PastryNode("localhost", BASE_PORT++);
+            PastryNode node = new PastryNode("localhost", BASE_PORT++, x++, y++);
             NodeReference closest = node.joinPastry(bootstrap.getNode());
             node.turnOffStabilization();
             assertNumericallyClosestOfAll(node.getNode(), closest, nodes);
@@ -118,15 +124,18 @@ public class PastryNodeTest {
     @Test
     public void testRandomJoin_alwaysJoinClosest() throws IOException {
 
+        long x = 0;
+        long y = 0;
+
         PastryNode.setBase(BASE_4_IDS);
         PastryNode.setLeafSize(LEAF_SET_SIZE_8);
 
-        PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++);
+        PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++, x++, y++);
         bootstrap.initPastry();
         nodes.add(bootstrap);
 
         for (int i = 0; i < 50; i++) {
-            PastryNode node = new PastryNode("localhost", BASE_PORT++);
+            PastryNode node = new PastryNode("localhost", BASE_PORT++, x++, y++);
             NodeReference closest = node.joinPastry(nodes.get(new Random().nextInt(nodes.size())).getNode());
             assertNumericallyClosestOfAll(node.getNode(), closest, nodes);
             nodes.add(node);

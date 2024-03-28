@@ -27,102 +27,6 @@ public final class PastryServiceGrpc {
   public static final String SERVICE_NAME = "PastryService";
 
   // Static method descriptors that strictly reflect the proto.
-  private static volatile io.grpc.MethodDescriptor<proto.Pastry.PutRequest,
-      proto.Pastry.Empty> getPutMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "Put",
-      requestType = proto.Pastry.PutRequest.class,
-      responseType = proto.Pastry.Empty.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<proto.Pastry.PutRequest,
-      proto.Pastry.Empty> getPutMethod() {
-    io.grpc.MethodDescriptor<proto.Pastry.PutRequest, proto.Pastry.Empty> getPutMethod;
-    if ((getPutMethod = PastryServiceGrpc.getPutMethod) == null) {
-      synchronized (PastryServiceGrpc.class) {
-        if ((getPutMethod = PastryServiceGrpc.getPutMethod) == null) {
-          PastryServiceGrpc.getPutMethod = getPutMethod = 
-              io.grpc.MethodDescriptor.<proto.Pastry.PutRequest, proto.Pastry.Empty>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "PastryService", "Put"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  proto.Pastry.PutRequest.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  proto.Pastry.Empty.getDefaultInstance()))
-                  .setSchemaDescriptor(new PastryServiceMethodDescriptorSupplier("Put"))
-                  .build();
-          }
-        }
-     }
-     return getPutMethod;
-  }
-
-  private static volatile io.grpc.MethodDescriptor<proto.Pastry.GetRequest,
-      proto.Pastry.GetResponse> getGetMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "Get",
-      requestType = proto.Pastry.GetRequest.class,
-      responseType = proto.Pastry.GetResponse.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<proto.Pastry.GetRequest,
-      proto.Pastry.GetResponse> getGetMethod() {
-    io.grpc.MethodDescriptor<proto.Pastry.GetRequest, proto.Pastry.GetResponse> getGetMethod;
-    if ((getGetMethod = PastryServiceGrpc.getGetMethod) == null) {
-      synchronized (PastryServiceGrpc.class) {
-        if ((getGetMethod = PastryServiceGrpc.getGetMethod) == null) {
-          PastryServiceGrpc.getGetMethod = getGetMethod = 
-              io.grpc.MethodDescriptor.<proto.Pastry.GetRequest, proto.Pastry.GetResponse>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "PastryService", "Get"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  proto.Pastry.GetRequest.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  proto.Pastry.GetResponse.getDefaultInstance()))
-                  .setSchemaDescriptor(new PastryServiceMethodDescriptorSupplier("Get"))
-                  .build();
-          }
-        }
-     }
-     return getGetMethod;
-  }
-
-  private static volatile io.grpc.MethodDescriptor<proto.Pastry.DeleteRequest,
-      proto.Pastry.Empty> getDeleteMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "Delete",
-      requestType = proto.Pastry.DeleteRequest.class,
-      responseType = proto.Pastry.Empty.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<proto.Pastry.DeleteRequest,
-      proto.Pastry.Empty> getDeleteMethod() {
-    io.grpc.MethodDescriptor<proto.Pastry.DeleteRequest, proto.Pastry.Empty> getDeleteMethod;
-    if ((getDeleteMethod = PastryServiceGrpc.getDeleteMethod) == null) {
-      synchronized (PastryServiceGrpc.class) {
-        if ((getDeleteMethod = PastryServiceGrpc.getDeleteMethod) == null) {
-          PastryServiceGrpc.getDeleteMethod = getDeleteMethod = 
-              io.grpc.MethodDescriptor.<proto.Pastry.DeleteRequest, proto.Pastry.Empty>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "PastryService", "Delete"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  proto.Pastry.DeleteRequest.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  proto.Pastry.Empty.getDefaultInstance()))
-                  .setSchemaDescriptor(new PastryServiceMethodDescriptorSupplier("Delete"))
-                  .build();
-          }
-        }
-     }
-     return getDeleteMethod;
-  }
-
   private static volatile io.grpc.MethodDescriptor<proto.Pastry.NodeState,
       proto.Pastry.NewNodes> getNotifyExistenceMethod;
 
@@ -312,27 +216,6 @@ public final class PastryServiceGrpc {
 
     /**
      */
-    public void put(proto.Pastry.PutRequest request,
-        io.grpc.stub.StreamObserver<proto.Pastry.Empty> responseObserver) {
-      asyncUnimplementedUnaryCall(getPutMethod(), responseObserver);
-    }
-
-    /**
-     */
-    public void get(proto.Pastry.GetRequest request,
-        io.grpc.stub.StreamObserver<proto.Pastry.GetResponse> responseObserver) {
-      asyncUnimplementedUnaryCall(getGetMethod(), responseObserver);
-    }
-
-    /**
-     */
-    public void delete(proto.Pastry.DeleteRequest request,
-        io.grpc.stub.StreamObserver<proto.Pastry.Empty> responseObserver) {
-      asyncUnimplementedUnaryCall(getDeleteMethod(), responseObserver);
-    }
-
-    /**
-     */
     public void notifyExistence(proto.Pastry.NodeState request,
         io.grpc.stub.StreamObserver<proto.Pastry.NewNodes> responseObserver) {
       asyncUnimplementedUnaryCall(getNotifyExistenceMethod(), responseObserver);
@@ -371,27 +254,6 @@ public final class PastryServiceGrpc {
 
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
-          .addMethod(
-            getPutMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                proto.Pastry.PutRequest,
-                proto.Pastry.Empty>(
-                  this, METHODID_PUT)))
-          .addMethod(
-            getGetMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                proto.Pastry.GetRequest,
-                proto.Pastry.GetResponse>(
-                  this, METHODID_GET)))
-          .addMethod(
-            getDeleteMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                proto.Pastry.DeleteRequest,
-                proto.Pastry.Empty>(
-                  this, METHODID_DELETE)))
           .addMethod(
             getNotifyExistenceMethod(),
             asyncUnaryCall(
@@ -447,30 +309,6 @@ public final class PastryServiceGrpc {
     protected PastryServiceStub build(io.grpc.Channel channel,
         io.grpc.CallOptions callOptions) {
       return new PastryServiceStub(channel, callOptions);
-    }
-
-    /**
-     */
-    public void put(proto.Pastry.PutRequest request,
-        io.grpc.stub.StreamObserver<proto.Pastry.Empty> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(getPutMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
-    public void get(proto.Pastry.GetRequest request,
-        io.grpc.stub.StreamObserver<proto.Pastry.GetResponse> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(getGetMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
-    public void delete(proto.Pastry.DeleteRequest request,
-        io.grpc.stub.StreamObserver<proto.Pastry.Empty> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(getDeleteMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
@@ -537,27 +375,6 @@ public final class PastryServiceGrpc {
 
     /**
      */
-    public proto.Pastry.Empty put(proto.Pastry.PutRequest request) {
-      return blockingUnaryCall(
-          getChannel(), getPutMethod(), getCallOptions(), request);
-    }
-
-    /**
-     */
-    public proto.Pastry.GetResponse get(proto.Pastry.GetRequest request) {
-      return blockingUnaryCall(
-          getChannel(), getGetMethod(), getCallOptions(), request);
-    }
-
-    /**
-     */
-    public proto.Pastry.Empty delete(proto.Pastry.DeleteRequest request) {
-      return blockingUnaryCall(
-          getChannel(), getDeleteMethod(), getCallOptions(), request);
-    }
-
-    /**
-     */
     public proto.Pastry.NewNodes notifyExistence(proto.Pastry.NodeState request) {
       return blockingUnaryCall(
           getChannel(), getNotifyExistenceMethod(), getCallOptions(), request);
@@ -615,30 +432,6 @@ public final class PastryServiceGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<proto.Pastry.Empty> put(
-        proto.Pastry.PutRequest request) {
-      return futureUnaryCall(
-          getChannel().newCall(getPutMethod(), getCallOptions()), request);
-    }
-
-    /**
-     */
-    public com.google.common.util.concurrent.ListenableFuture<proto.Pastry.GetResponse> get(
-        proto.Pastry.GetRequest request) {
-      return futureUnaryCall(
-          getChannel().newCall(getGetMethod(), getCallOptions()), request);
-    }
-
-    /**
-     */
-    public com.google.common.util.concurrent.ListenableFuture<proto.Pastry.Empty> delete(
-        proto.Pastry.DeleteRequest request) {
-      return futureUnaryCall(
-          getChannel().newCall(getDeleteMethod(), getCallOptions()), request);
-    }
-
-    /**
-     */
     public com.google.common.util.concurrent.ListenableFuture<proto.Pastry.NewNodes> notifyExistence(
         proto.Pastry.NodeState request) {
       return futureUnaryCall(
@@ -681,14 +474,11 @@ public final class PastryServiceGrpc {
     }
   }
 
-  private static final int METHODID_PUT = 0;
-  private static final int METHODID_GET = 1;
-  private static final int METHODID_DELETE = 2;
-  private static final int METHODID_NOTIFY_EXISTENCE = 3;
-  private static final int METHODID_FORWARD = 4;
-  private static final int METHODID_JOIN = 5;
-  private static final int METHODID_GET_NEIGHBOR_SET = 6;
-  private static final int METHODID_PING = 7;
+  private static final int METHODID_NOTIFY_EXISTENCE = 0;
+  private static final int METHODID_FORWARD = 1;
+  private static final int METHODID_JOIN = 2;
+  private static final int METHODID_GET_NEIGHBOR_SET = 3;
+  private static final int METHODID_PING = 4;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -707,18 +497,6 @@ public final class PastryServiceGrpc {
     @java.lang.SuppressWarnings("unchecked")
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
-        case METHODID_PUT:
-          serviceImpl.put((proto.Pastry.PutRequest) request,
-              (io.grpc.stub.StreamObserver<proto.Pastry.Empty>) responseObserver);
-          break;
-        case METHODID_GET:
-          serviceImpl.get((proto.Pastry.GetRequest) request,
-              (io.grpc.stub.StreamObserver<proto.Pastry.GetResponse>) responseObserver);
-          break;
-        case METHODID_DELETE:
-          serviceImpl.delete((proto.Pastry.DeleteRequest) request,
-              (io.grpc.stub.StreamObserver<proto.Pastry.Empty>) responseObserver);
-          break;
         case METHODID_NOTIFY_EXISTENCE:
           serviceImpl.notifyExistence((proto.Pastry.NodeState) request,
               (io.grpc.stub.StreamObserver<proto.Pastry.NewNodes>) responseObserver);
@@ -800,9 +578,6 @@ public final class PastryServiceGrpc {
         if (result == null) {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new PastryServiceFileDescriptorSupplier())
-              .addMethod(getPutMethod())
-              .addMethod(getGetMethod())
-              .addMethod(getDeleteMethod())
               .addMethod(getNotifyExistenceMethod())
               .addMethod(getForwardMethod())
               .addMethod(getJoinMethod())

@@ -4,16 +4,23 @@ import proto.Pastry;
 
 import java.math.BigInteger;
 
+/**
+ * Reference to a PastryNode from the point of view of current node
+ */
 public class NodeReference {
     public final String ip;
     public final int port;
+    public final long x;
+    public final long y;
     public long distance;
     public final String id;
 
-    public NodeReference(String ip, int port) {
+    public NodeReference(String ip, int port, long x, long y) {
         this.ip = ip;
         this.port = port;
         this.id = Util.getId(this.getAddress());
+        this.x = x;
+        this.y = y;
         this.distance = Long.MAX_VALUE;
     }
 
@@ -21,13 +28,8 @@ public class NodeReference {
         this.ip = nodeReference.getIp();
         this.port = nodeReference.getPort();
         this.id = Util.getId(this.getAddress());
-    }
-
-    public NodeReference(String ip, int port, long distance) {
-        this.ip = ip;
-        this.port = port;
-        this.id = Util.getId(this.getAddress());
-        this.distance = distance;
+        this.x = nodeReference.getX();
+        this.y = nodeReference.getY();
     }
 
     public void setDistance(long distance) {
@@ -62,10 +64,7 @@ public class NodeReference {
     }
 
     public Pastry.NodeReference toProto() {
-        return Pastry.NodeReference.newBuilder()
-                .setIp(ip)
-                .setPort(port)
-                .build();
+        return Pastry.NodeReference.newBuilder().setIp(ip).setPort(port).setX(x).setY(y).build();
     }
 
     @Override

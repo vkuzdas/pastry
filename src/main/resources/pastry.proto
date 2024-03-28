@@ -4,8 +4,7 @@ syntax = "proto3";
 option java_package = "proto";
 
 message JoinRequest {
-  string ip = 1;
-  int32 port = 2;
+  NodeReference sender = 1;
 }
 
 message Empty {}
@@ -35,6 +34,8 @@ message RoutingTableRow {
 message NodeReference {
   string ip = 1;
   int32 port = 2;
+  int64 x = 3;
+  int64 y = 4;
 }
 
 message NeighborSetRequest {}

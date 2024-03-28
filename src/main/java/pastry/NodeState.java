@@ -40,8 +40,8 @@ public class NodeState {
     private final NodeReference self;
     private final DistanceCalculator distanceCalculator = new PingSimulateDistanceCalculator();
 
-    public NodeState(int bParameter, int routingTableSize, int leafSize, String ip, int port) {
-        this.self = new NodeReference(ip, port);
+    public NodeState(int bParameter, int routingTableSize, int leafSize, String ip, int port, long x, long y) {
+        this.self = new NodeReference(ip, port, x, y);
 
         this.leafSize = leafSize;
 
@@ -172,25 +172,33 @@ public class NodeState {
         // therefore it should not be expensive to copy all nodes from all NodeStates
 
         ArrayList<NodeReference> allNodes = new ArrayList<>();
-        for (Pastry.NodeState node : resp.getNodeStateList()) {
-            if (!allNodes.contains(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort())))
-                allNodes.add(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort()));
-            for (Pastry.NodeReference n : node.getNeighborSetList()) {
-                if (!allNodes.contains(new NodeReference(n.getIp(), n.getPort())))
-                    allNodes.add(new NodeReference(n.getIp(), n.getPort()));
+
+        // Register all nodes from the response
+        for (Pastry.NodeState state : resp.getNodeStateList()) {
+
+            Pastry.NodeReference owner = state.getOwner();
+            if (!allNodes.contains(new NodeReference(owner)))
+                allNodes.add(new NodeReference(owner));
+
+            for (Pastry.NodeReference neigh : state.getNeighborSetList()) {
+                if (!allNodes.contains(new NodeReference(neigh)))
+                    allNodes.add(new NodeReference(neigh));
             }
-            for (Pastry.NodeReference n : node.getLeafSetList()) {
-                if (!allNodes.contains(new NodeReference(n.getIp(), n.getPort())))
-                    allNodes.add(new NodeReference(n.getIp(), n.getPort()));
+
+            for (Pastry.NodeReference leaf : state.getLeafSetList()) {
+                if (!allNodes.contains(new NodeReference(leaf)))
+                    allNodes.add(new NodeReference(leaf));
             }
-            for (Pastry.RoutingTableRow row : node.getRoutingTableList()) {
-                for (Pastry.NodeReference n : row.getRoutingTableEntryList()) {
-                    if (!allNodes.contains(new NodeReference(n.getIp(), n.getPort())))
-                        allNodes.add(new NodeReference(n.getIp(), n.getPort()));
+
+            for (Pastry.RoutingTableRow row : state.getRoutingTableList()) {
+                for (Pastry.NodeReference node : row.getRoutingTableEntryList()) {
+                    if (!allNodes.contains(new NodeReference(node)))
+                        allNodes.add(new NodeReference(node));
                 }
             }
+
         }
-        allNodes.forEach(n -> registerNewNode(n));
+        allNodes.forEach(this::registerNewNode);
 
         // A usually in proximity to X => A.neighborSet to initialize X.neighborSet (set is updated periodically)
 //        int len = resp.getNodeStateCount();
@@ -226,8 +234,8 @@ public class NodeState {
                 List<NodeReference> jthRow = routingTable.get(j);
                 int selfIndex = Integer.parseInt(self.getId().charAt(j)+"");
 
-                for (Pastry.NodeReference n : response.getNodeStateList().get(i).getRoutingTableList().get(j).getRoutingTableEntryList()) {
-                    NodeReference newNode = new NodeReference(n.getIp(), n.getPort());
+                for (Pastry.NodeReference node : response.getNodeStateList().get(i).getRoutingTableList().get(j).getRoutingTableEntryList()) {
+                    NodeReference newNode = new NodeReference(node);
                     int newNodeIndex = Integer.parseInt(newNode.getId().substring(j, j+1));
                     int l = Util.getSharedPrefixLength(newNode.getId(), self.getId());
                     if (selfIndex != newNodeIndex && l == j) { // prefix must match since join could be routed through non-longer matching prefix
@@ -351,6 +359,9 @@ public class NodeState {
 //        }
 //    }
 
+    /**
+     * Does not insert duplicate
+     */
     public void registerNewNode(NodeReference newNode) {
         if (newNode.equals(self)) {
             return;
