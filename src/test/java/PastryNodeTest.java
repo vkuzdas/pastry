@@ -11,7 +11,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static pastry.Constants.BASE_4_IDS;
 import static pastry.Constants.LEAF_SET_SIZE_8;
 
-
+/**
+ * Bind exceptions and other instabilities occur when the whole class is run, but not when a test is run individually.
+ */
 public class PastryNodeTest {
 
     private final Logger logger = LoggerFactory.getLogger(PastryNodeTest.class);
