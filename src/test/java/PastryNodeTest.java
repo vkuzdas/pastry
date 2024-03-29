@@ -107,7 +107,6 @@ public class PastryNodeTest {
     }
 
     @Test
-    @Disabled
     public void testRandomJoin_RandomPutGet() throws IOException {
 
         long x = 0;

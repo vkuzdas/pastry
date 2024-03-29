@@ -62,6 +62,10 @@ public class PastryNode {
         self = state.getSelf();
     }
 
+    public DistanceCalculator getDistanceCalculator() {
+        return state.getDistanceCalculator();
+    }
+
     public static void setDefaultCalculator(DistanceCalculator calculator) {
         defaultCalculator = calculator;
     }
