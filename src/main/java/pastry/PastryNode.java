@@ -44,6 +44,7 @@ public class PastryNode {
     private PastryServiceGrpc.PastryServiceBlockingStub blockingStub;
 
     private static DistanceCalculator defaultCalculator = null;
+    private static boolean stabilization = true;
 
 
     public PastryNode(String ip, int port, long x, long y) {
@@ -64,6 +65,10 @@ public class PastryNode {
 
     public DistanceCalculator getDistanceCalculator() {
         return state.getDistanceCalculator();
+    }
+
+    public static void setStabiliation(boolean stabilize) {
+        stabilization = stabilize;
     }
 
     public static void setDefaultCalculator(DistanceCalculator calculator) {
@@ -99,11 +104,6 @@ public class PastryNode {
         return self;
     }
 
-    @VisibleForTesting
-    public void turnOffStabilization() {
-        stabilizationTimer.cancel();
-    }
-
     // for correct metric validation
     @VisibleForTesting
     public ArrayList<NodeReference> getNeighborSet() {
@@ -126,7 +126,10 @@ public class PastryNode {
     public void initPastry() throws IOException {
         startServer();
         logger.trace("[{}]  started FIX", self);
-//        startStabilizationThread();
+
+        if(stabilization) {
+            startStabilizationThread();
+        }
     }
 
     /**
@@ -134,10 +137,6 @@ public class PastryNode {
      * of the neighborhood set periodically to see if it is still alive. If a member is not responding,
      * the node asks other members for their neighborhood tables, checks the distance of
      * each of the newly discovered nodes, and updates it own neighborhood set accordingly.</i>
-     * <p>
-     *     There is probably no other way around it then to always send back whole neighbor set. <br>
-     *     This is probably pretty costly and therefore the timer should tick less frequently. <br>
-     * </p>
      */
     private void startStabilizationThread() {
         TimerTask stabilizationTimerTask = new TimerTask() {
@@ -147,90 +146,48 @@ public class PastryNode {
                 // make copy of current neighbor set
                 // iterate over it and request their neighbors
                 // fill neighborCandidates
-//                List<NodeReference> currentNeigborSet;
-//                List<NodeReference> neighborCandidates = new ArrayList<>();
-//                List<NodeReference> toRemove = new ArrayList<>();
-//
-//                lock.lock();
-//                try {
-//                    currentNeigborSet = new ArrayList<>(neighborSet);
-//                } finally {
-//                    lock.unlock();
-//                }
-//
-//                // iterate over neighbors, check liveness of each
-//                for (NodeReference neighbor : currentNeigborSet) {
-//                    ManagedChannel channel = ManagedChannelBuilder.forTarget(neighbor.getAddress()).usePlaintext().build();
-//                    blockingStub = PastryServiceGrpc.newBlockingStub(channel);
-//                    Pastry.NeighborSetResponse response;
-//                    try {
-//                        response = blockingStub.getNeighborSet(Pastry.NeighborSetRequest.newBuilder().build());
-//                        for (Pastry.NodeReference n : response.getNeighborSetList()) {
-//                            neighborCandidates.add(new NodeReference(n.getIp(), n.getPort()));
-//                        }
-//                    }
-//                    catch (StatusRuntimeException e) {
-//                        // neighbor is down, remove and find new
-//                        channel.shutdown();
-//                        logger.error("[{}]  status of [{}] is {}, removing from NodeState", self, neighbor, e.getStatus().getCode());
-//                        toRemove.add(neighbor);
-//                    }
-//                    channel.shutdown();
-//                }
-//                for(NodeReference n : toRemove) {
-//                    syncRemoveFromNodeState(n);
-//                }
-//                for (NodeReference candidate : neighborCandidates) {
-//                    if (!toRemove.contains(candidate)) {
-//                        // register has "already-contains" check
-//                        registerNewNode(candidate);
-//                    }
-//                }
+                List<NodeReference> neighborCandidates = new ArrayList<>();
+                List<NodeReference> toRemove = new ArrayList<>();
+
+                // iterate over neighbors, check liveness of each
+                for (NodeReference neighbor : state.getNeighborsCopy()) {
+                    ManagedChannel channel = ManagedChannelBuilder.forTarget(neighbor.getAddress()).usePlaintext().build();
+                    blockingStub = PastryServiceGrpc.newBlockingStub(channel);
+
+                    Pastry.NeighborSetResponse response;
+
+                    try {
+                        response = blockingStub.getNeighborSet(Pastry.NeighborSetRequest.newBuilder().build());
+                        for (Pastry.NodeReference n : response.getNeighborSetList()) {
+                            if(!neighborCandidates.contains(new NodeReference(n))){
+                                neighborCandidates.add(new NodeReference(n));
+                            }
+                        }
+                    }
+                    catch (StatusRuntimeException e) {
+                        // neighbor is down, remove and find new
+                        channel.shutdown();
+                        logger.error("[{}]  status of [{}] is {}, removing from NodeState", self, neighbor, e.getStatus().getCode());
+                        toRemove.add(neighbor);
+                    }
+                    channel.shutdown();
+                }
+
+                for(NodeReference n : toRemove) {
+                    state.unregisterFailedNode(n);
+                }
+
+                for (NodeReference candidate : neighborCandidates) {
+                    if (!toRemove.contains(candidate)) {
+                        state.registerNewNode(candidate);
+                    }
+                }
             }
         };
-//        stabilizationTimer.schedule(stabilizationTimerTask,1000, STABILIZATION_INTERVAL);
+        stabilizationTimer.schedule(stabilizationTimerTask,1000, STABILIZATION_INTERVAL);
     }
 
-//    /**
-//     * Return the <b>first</b> neighbor's neighbor that is not in the current neighbor set
-//     */
-//    private NodeReference getNewNeighbor() {
-//        lock.lock();
-//        NodeReference newNode = null;
-//        try {
-//            for (NodeReference neighbor : neighborSet) {
-//                ManagedChannel channel = ManagedChannelBuilder.forTarget(neighbor.getAddress()).usePlaintext().build();
-//                blockingStub = PastryServiceGrpc.newBlockingStub(channel);
-//                Pastry.NeighborSetResponse response = blockingStub.getNeighborSet(Pastry.NeighborSetRequest.newBuilder().build());
-//                for (Pastry.NodeReference n : response.getNeighborSetList()) {
-//                    newNode = new NodeReference(n.getIp(), n.getPort());
-//                    if (!neighborSet.contains(newNode) && !newNode.equals(self)) {
-//                        return newNode;
-//                    }
-//                }
-//                channel.shutdown();
-//            }
-//        } finally {
-//            lock.unlock();
-//        }
-//        return newNode;
-//    }
 
-//    public void syncRemoveFromNodeState(NodeReference neighbor) {
-//        lock.lock();
-//        try {
-//            neighborSet.remove(neighbor);
-//
-//            List<NodeReference> leafSet = neighbor.getDecimalId().compareTo(self.getDecimalId()) < 0 ? downLeafs : upLeafs;
-//            leafSet.remove(neighbor);
-//
-//            int l = getSharedPrefixLength(neighbor.getId(), self.getId());
-//            List<NodeReference> row = routingTable.get(l);
-//            row.remove(neighbor);
-//        } finally {
-//            lock.unlock();
-//        }
-//    }
 
     public void shutdownPastryNode() {
         stopServer();
@@ -276,7 +233,10 @@ public class PastryNode {
 
         state.updateNodeState(resp);
         notifyAboutMyself(bootstrap);
-//        startStabilizationThread();
+
+        if(stabilization) {
+            startStabilizationThread();
+        }
 
         // this is not in actual Pastry API, it is however used to verify that we have reached the actual CLOSEST node
         return closest;
@@ -554,22 +514,12 @@ public class PastryNode {
             responseObserver.onCompleted();
         }
 
-//        @Override
-//        public void getNeighborSet(Pastry.NeighborSetRequest request, StreamObserver<Pastry.NeighborSetResponse> responseObserver) {
-//            Pastry.NeighborSetResponse.Builder response = Pastry.NeighborSetResponse.newBuilder();
-//            lock.lock();
-//            try {
-//                neighborSet.forEach(n -> response.addNeighborSet(Pastry.NodeReference.newBuilder()
-//                        .setIp(n.getIp())
-//                        .setPort(n.getPort())
-//                        .build()));
-//            } finally {
-//                lock.unlock();
-//            }
-//            logger.trace("[{}]  Sending neighbor set", self);
-//            responseObserver.onNext(response.build());
-//            responseObserver.onCompleted();
-//        }
+        @Override
+        public void getNeighborSet(Pastry.NeighborSetRequest request, StreamObserver<Pastry.NeighborSetResponse> responseObserver) {
+            logger.trace("[{}]  Sending neighbor set", self);
+            responseObserver.onNext(state.neighborsToProto());
+            responseObserver.onCompleted();
+        }
 
         @Override
         public void ping(Pastry.Empty request, StreamObserver<Pastry.Empty> responseObserver) {

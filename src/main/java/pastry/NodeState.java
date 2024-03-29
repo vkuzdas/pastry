@@ -1,14 +1,15 @@
 package pastry;
 
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pastry.metric.DistanceCalculator;
-import pastry.metric.PingSimulateDistanceCalculator;
 import proto.Pastry;
+import proto.PastryServiceGrpc;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -118,6 +119,67 @@ public class NodeState {
             lock.unlock();
         }
         return r;
+    }
+
+    ///////////////////
+    ///  STABILIZE  ///
+    ///////////////////
+
+    /**
+     * Return the <b>first</b> neighbor's neighbor that is not in the current neighbor set
+     */
+    public NodeReference getNewNeighbor(PastryServiceGrpc.PastryServiceBlockingStub blockingStub) {
+        lock.lock();
+        NodeReference newNode = null;
+        try {
+            for (NodeReference neighbor : neighborSet) {
+                ManagedChannel channel = ManagedChannelBuilder.forTarget(neighbor.getAddress()).usePlaintext().build();
+                blockingStub = PastryServiceGrpc.newBlockingStub(channel);
+                Pastry.NeighborSetResponse response = blockingStub.getNeighborSet(Pastry.NeighborSetRequest.newBuilder().build());
+                for (Pastry.NodeReference n : response.getNeighborSetList()) {
+                    newNode = new NodeReference(n);
+                    if (!neighborSet.contains(newNode) && !newNode.equals(self)) {
+                        return newNode;
+                    }
+                }
+                channel.shutdown();
+            }
+        } finally {
+            lock.unlock();
+        }
+        return newNode;
+    }
+
+    public Pastry.NeighborSetResponse neighborsToProto() {
+        Pastry.NeighborSetResponse.Builder response = Pastry.NeighborSetResponse.newBuilder();
+        lock.lock();
+        try {
+            neighborSet.forEach(n -> response.addNeighborSet(Pastry.NodeReference.newBuilder()
+                    .setIp(n.getIp())
+                    .setPort(n.getPort())
+                    .build()));
+        } finally {
+            lock.unlock();
+        }
+        return response.build();
+    }
+
+    public void unregisterFailedNode(NodeReference failed) {
+        lock.lock();
+        try {
+            neighborSet.remove(failed);
+
+            List<NodeReference> leafSet = failed.getDecimalId().compareTo(self.getDecimalId()) < 0 ? downLeafs : upLeafs;
+            leafSet.remove(failed);
+
+            int l = Util.getSharedPrefixLength(failed.getId(), self.getId());
+            List<NodeReference> row = routingTable.get(l);
+            if(row.contains(failed)) {
+                row.set(row.indexOf(failed), null);
+            }
+        } finally {
+            lock.unlock();
+        }
     }
 
 
@@ -514,4 +576,6 @@ public class NodeState {
     public DistanceCalculator getDistanceCalculator() {
         return distanceCalculator;
     }
+
+
 }
