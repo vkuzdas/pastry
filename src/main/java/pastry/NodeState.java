@@ -2,10 +2,13 @@ package pastry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pastry.metric.DistanceCalculator;
+import pastry.metric.PingSimulateDistanceCalculator;
 import proto.Pastry;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -38,10 +41,10 @@ public class NodeState {
     private final int leafSize;
 
     private final NodeReference self;
-    private final DistanceCalculator distanceCalculator = new PingSimulateDistanceCalculator();
+    private final DistanceCalculator distanceCalculator;
 
-    public NodeState(int bParameter, int routingTableSize, int leafSize, String ip, int port, long x, long y) {
-        this.self = new NodeReference(ip, port, x, y);
+    public NodeState(int bParameter, int routingTableSize, int leafSize, String ip, int port, long x, long y, DistanceCalculator distanceCalculator) {
+        this.self = new NodeReference(ip, port, x, y, 0);
 
         this.leafSize = leafSize;
 
@@ -52,6 +55,33 @@ public class NodeState {
             }
             routingTable.add(emptyRow);
         }
+
+        this.distanceCalculator = distanceCalculator;
+    }
+
+    public ArrayList<NodeReference> getNeighborsCopy() {
+        ArrayList<NodeReference> copy = new ArrayList<>();
+        lock.lock();
+        try {
+            copy.addAll(neighborSet);
+        } finally {
+            lock.unlock();
+        }
+        return copy;
+    }
+
+    public ArrayList<ArrayList<NodeReference>> getRoutingTableCopy() {
+        ArrayList<ArrayList<NodeReference>> copy = new ArrayList<>();
+        lock.lock();
+        try {
+            for (List<NodeReference> row : routingTable) {
+                ArrayList<NodeReference> newRow = new ArrayList<>(row);
+                copy.add(newRow);
+            }
+        } finally {
+            lock.unlock();
+        }
+        return copy;
     }
 
     public NodeReference getSelf() {
@@ -137,7 +167,7 @@ public class NodeState {
             for (int i = l; i < routingTable.size(); i++) {
                 List<NodeReference> row = routingTable.get(i);
                 for(NodeReference n : row) {
-                    if (/*neighborSet.contains(n) || */(upLeafs.contains(n) || downLeafs.contains(n)) ){
+                    if (neighborSet.contains(n) || (upLeafs.contains(n) || downLeafs.contains(n)) ){
                         BigInteger t = n.getDecimalId();
                         BigInteger k = Util.convertToDecimal(id_base);
                         BigInteger s = self.getDecimalId();
@@ -216,7 +246,7 @@ public class NodeState {
 //        for (Pastry.NodeState node : resp.getNodeStateList()) {
 //            registerNewNode(new NodeReference(node.getOwner().getIp(), node.getOwner().getPort()));
 //        }
-//        printNodeState();
+        printNodeState();
     }
 
     /**
@@ -258,10 +288,10 @@ public class NodeState {
         ArrayList<NodeReference> allMyNodes = new ArrayList<>();
         lock.lock();
         try {
-//            neighborSet.forEach(n -> {
-//                if (!allMyNodes.contains(n))
-//                    allMyNodes.add(n);
-//            });
+            neighborSet.forEach(n -> {
+                if (!allMyNodes.contains(n))
+                    allMyNodes.add(n);
+            });
             downLeafs.forEach(n -> {
                 if (!allMyNodes.contains(n))
                     allMyNodes.add(n);
@@ -287,19 +317,19 @@ public class NodeState {
 
         lock.lock();
         try {
-//            neighborSet.forEach(n ->
-//                    stateBuilder.addNeighborSet(nodeBuilder.setIp(n.getIp()).setPort(n.getPort()).build())
-//            );
+            neighborSet.forEach(n ->
+                    stateBuilder.addNeighborSet(nodeBuilder.setIp(n.getIp()).setPort(n.getPort()).setX(n.getX()).setY(n.getY()).build())
+            );
             downLeafs.forEach(n ->
-                    stateBuilder.addLeafSet(nodeBuilder.setIp(n.getIp()).setPort(n.getPort()).build())
+                    stateBuilder.addLeafSet(nodeBuilder.setIp(n.getIp()).setPort(n.getPort()).setX(n.getX()).setY(n.getY()).build())
             );
             upLeafs.forEach(n ->
-                    stateBuilder.addLeafSet(nodeBuilder.setIp(n.getIp()).setPort(n.getPort()).build())
+                    stateBuilder.addLeafSet(nodeBuilder.setIp(n.getIp()).setPort(n.getPort()).setX(n.getX()).setY(n.getY()).build())
             );
             routingTable.forEach(row -> {
                 row.forEach(n -> {
                             if(n != null)
-                                rowBuilder.addRoutingTableEntry(nodeBuilder.setIp(n.getIp()).setPort(n.getPort()).build());
+                                rowBuilder.addRoutingTableEntry(nodeBuilder.setIp(n.getIp()).setPort(n.getPort()).setX(n.getX()).setY(n.getY()).build());
                         }
                 );
                 stateBuilder.addRoutingTable(rowBuilder.build());
@@ -308,15 +338,20 @@ public class NodeState {
             lock.unlock();
         }
 
-        stateBuilder.setOwner(nodeBuilder.setIp(self.getIp()).setPort(self.getPort()).build());
+        stateBuilder.setOwner(nodeBuilder
+                .setIp(self.getIp())
+                .setPort(self.getPort())
+                .setX(self.getX())
+                .setY(self.getY())
+                .build());
         return stateBuilder.build();
     }
 
-    private void printNodeState() {
+    public void printNodeState() {
         lock.lock();
         try {
             logger.trace("[{}]  Node state: ", self);
-//            logger.trace("  Neighbor set: {}", neighborSet);
+            logger.trace("  Neighbor set: {}", neighborSet);
             logger.trace("  Down leafs: {}", downLeafs);
             logger.trace("  Up leafs: {}", upLeafs);
 
@@ -334,78 +369,88 @@ public class NodeState {
     ///  INSERT  ///
     ////////////////
 
-//    /**
-//     * Insert node into neighborSet <br>
-//     * If the neighborSet is full and newNode is <b>numerically<b/> closer, remove the farthest node and insert newNode
-//     */
-//    private void syncInsertIntoNeighborSet(NodeReference newNode) {
-//        lock.lock();
-//        if (newNode.getDistance() == Long.MAX_VALUE) {
-//            newNode.setDistance(distanceCalculator.calculateDistance(self, newNode));
-//        }
-//        try {// if full, insert only if newNode is better
-//            if (syncSizeGet(neighborSet) == L_PARAMETER) {
-//                if (newNode.getDistance() < syncLastGet(neighborSet).getDistance() && !neighborSet.contains(newNode)){
-//                    neighborSet.remove(syncLastGet(neighborSet));
-//                    neighborSet.add(newNode);
-//                }
-//            } else {
-//                if (!neighborSet.contains(newNode))
-//                    neighborSet.add(newNode);
-//            }
-//            neighborSet.sort(Comparator.comparing(NodeReference::getDistance));
-//        } finally {
-//            lock.unlock();
-//        }
-//    }
-
     /**
-     * Does not insert duplicate
+     * Does not insert duplicates
      */
     public void registerNewNode(NodeReference newNode) {
         if (newNode.equals(self)) {
             return;
         }
-        if (newNode.getDistance() == Long.MAX_VALUE) {
-            newNode.setDistance(distanceCalculator.calculateDistance(self, newNode));
-        }
-//        syncInsertIntoNeighborSet(newNode);
+        newNode.setDistance(distanceCalculator.calculateDistance(self, newNode));
+
+        syncInsertIntoNeighborSet(newNode);
         syncInsertIntoLeafSet(newNode);
         syncInsertIntoRoutingTable(newNode);
+    }
+
+    /**
+     * Insert node into neighborSet sorted by distance <br>
+     */
+    private void syncInsertIntoNeighborSet(NodeReference newNode) {
+        lock.lock();
+        try {
+            if (!neighborSet.contains(newNode)) {
+                int i = 0;
+                for (NodeReference curr : neighborSet) {
+                    if (curr.getDistance() < newNode.getDistance()) {
+                        break;
+                    }
+                    i++;
+                }
+
+                neighborSet.add(i, newNode);
+
+                if (neighborSet.size() > leafSize) {
+                    neighborSet.remove(neighborSet.size() - 1);
+                }
+            }
+        } finally {
+            lock.unlock();
+        }
     }
 
     /**
      * Insert node into <b>appropriate (up/down)</b> leafSet <br>
      */
     public void syncInsertIntoLeafSet(NodeReference newNode) {
-        if (newNode.getId().compareTo(self.getId()) > 0) {
-            if (!upLeafs.contains(newNode)) {
-                int i = 0;
-                for (NodeReference curr : upLeafs) {
-                    if (curr.getId().compareTo(newNode.getId()) > 0) {
-                        break;
+        lock.lock();
+        try {
+            if (newNode.getId().compareTo(self.getId()) > 0) {
+                if (!upLeafs.contains(newNode)) {
+                    int i = 0;
+                    for (NodeReference curr : upLeafs) {
+                        if (curr.getId().compareTo(newNode.getId()) > 0) {
+                            break;
+                        }
+                        i++;
                     }
-                    i++;
-                }
-                upLeafs.add(i, newNode);
-                if (upLeafs.size() > leafSize / 2) {
-                    upLeafs.remove(upLeafs.size() - 1);
+
+                    upLeafs.add(i, newNode);
+
+                    if (upLeafs.size() > leafSize / 2) {
+                        upLeafs.remove(upLeafs.size() - 1);
+                    }
                 }
             }
-        } else {
-            if (!downLeafs.contains(newNode)) {
-                int i = 0;
-                for (NodeReference curr : downLeafs) {
-                    if (curr.getId().compareTo(newNode.getId()) < 0) {
-                        break;
+            else {
+                if (!downLeafs.contains(newNode)) {
+                    int i = 0;
+                    for (NodeReference curr : downLeafs) {
+                        if (curr.getId().compareTo(newNode.getId()) < 0) {
+                            break;
+                        }
+                        i++;
                     }
-                    i++;
-                }
-                downLeafs.add(i, newNode);
-                if (downLeafs.size() > leafSize / 2) {
-                    downLeafs.remove(downLeafs.size() - 1);
+
+                    downLeafs.add(i, newNode);
+
+                    if (downLeafs.size() > leafSize / 2) {
+                        downLeafs.remove(downLeafs.size() - 1);
+                    }
                 }
             }
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -419,10 +464,10 @@ public class NodeState {
             if (row.get(j) == null) {
                 row.set(j, newNode);
             }
-//            // nodes with better distance are prefered
-//            else if (row.get(j).getDistance() > newNode.getDistance()) {
-//                row.set(j, newNode);
-//            }
+            // nodes with better distance are prefered
+            else if (row.get(j).getDistance() > newNode.getDistance()) {
+                row.set(j, newNode);
+            }
         } finally {
             lock.unlock();
         }
@@ -466,4 +511,7 @@ public class NodeState {
         return r;
     }
 
+    public DistanceCalculator getDistanceCalculator() {
+        return distanceCalculator;
+    }
 }

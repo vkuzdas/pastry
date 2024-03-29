@@ -1,12 +1,12 @@
 package pastry;
 
-import java.util.List;
-
 import com.google.common.annotations.VisibleForTesting;
 import io.grpc.*;
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pastry.metric.DistanceCalculator;
+import pastry.metric.NumericalDifferenceDistanceCalculator;
 import proto.Pastry;
 import proto.PastryServiceGrpc;
 
@@ -42,7 +42,8 @@ public class PastryNode {
 
     private final Server server;
     private PastryServiceGrpc.PastryServiceBlockingStub blockingStub;
-    private DistanceCalculator distanceCalculator;
+
+    private static DistanceCalculator defaultCalculator = null;
 
 
     public PastryNode(String ip, int port, long x, long y) {
@@ -51,22 +52,30 @@ public class PastryNode {
                 .addService(new PastryNodeServer())
                 .build();
 
-        state = new NodeState(B_PARAMETER, 8, L_PARAMETER, ip, port, x, y);
-        self = state.getSelf();
-
-        distanceCalculator = new NumericalDifferenceDistanceCalculator();
-    }
-
-    public void setDistanceCalculator(DistanceCalculator distanceCalculator) {
-        if (distanceCalculator instanceof PingResponseTimeDistanceCalculator) {
-            ((PingResponseTimeDistanceCalculator) distanceCalculator).setBlockingStub(blockingStub);
+        if(defaultCalculator == null) {
+            // fallback to Numerical
+            state = new NodeState(B_PARAMETER, 8, L_PARAMETER, ip, port, x, y, new NumericalDifferenceDistanceCalculator());
+        } else {
+            state = new NodeState(B_PARAMETER, 8, L_PARAMETER, ip, port, x, y, defaultCalculator);
         }
-        this.distanceCalculator = distanceCalculator;
+
+        self = state.getSelf();
     }
 
-    public DistanceCalculator getDistanceCalculator() {
-        return distanceCalculator;
+    public static void setDefaultCalculator(DistanceCalculator calculator) {
+        defaultCalculator = calculator;
     }
+
+//    public void setDistanceCalculator(DistanceCalculator distanceCalculator) {
+//        if (distanceCalculator instanceof PingResponseTimeDistanceCalculator) {
+//            ((PingResponseTimeDistanceCalculator) distanceCalculator).setBlockingStub(blockingStub);
+//        }
+//        this.distanceCalculator = distanceCalculator;
+//    }
+
+//    public DistanceCalculator getDistanceCalculator() {
+//        return distanceCalculator;
+//    }
 
     public static void setBase(int b) {
         if (b != BASE_4_IDS && b != Constants.BASE_8_IDS && b != Constants.BASE_16_IDS) {
@@ -91,6 +100,22 @@ public class PastryNode {
         stabilizationTimer.cancel();
     }
 
+    // for correct metric validation
+    @VisibleForTesting
+    public ArrayList<NodeReference> getNeighborSet() {
+        return state.getNeighborsCopy();
+    }
+
+    // for correct metric validation
+    @VisibleForTesting
+    public ArrayList<ArrayList<NodeReference>> getRoutingTable() {
+        return state.getRoutingTableCopy();
+    }
+
+    @VisibleForTesting
+    public ArrayList<NodeReference> getAllNodes() {
+        return state.getAllNodes();
+    }
 
 
 
@@ -312,7 +337,7 @@ public class PastryNode {
      * @param id_base 4/8/16-based id (given by {@link PastryNode#B_PARAMETER})
      */
     public NodeReference route(String id_base) {
-//        printNodeState();
+        state.printNodeState();
 //        if (syncSizeGet(neighborSet) == 0) {
 //            // network is empty, self is closest by definition
 //            return self;

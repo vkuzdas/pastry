@@ -2,6 +2,8 @@ import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pastry.*;
+import pastry.metric.CoordinateDistanceCalculator;
+import pastry.metric.DistanceCalculator;
 import proto.Pastry;
 
 import java.io.IOException;
@@ -26,12 +28,74 @@ public class PastryNodeTest {
         logger.warn(System.lineSeparator() + System.lineSeparator()+ "============== {} =============" + System.lineSeparator(), testInfo.getDisplayName());
     }
 
+    @BeforeEach
+    public void init() {
+        PastryNode.setBase(BASE_4_IDS);
+        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
+    }
+
     @AfterEach
     public void tearDown() {
         for (PastryNode node : nodes) {
             node.shutdownPastryNode();
         }
         nodes.clear();
+    }
+
+    public void registerAll(PastryNode ... nodes) {
+        this.nodes.addAll(Arrays.asList(nodes));
+    }
+
+    @Test
+    public void testMetric_routingTableRewritten() throws IOException {
+        PastryNode.setDefaultCalculator(new CoordinateDistanceCalculator());
+
+        // 10000:13202231
+        PastryNode bootstrap = new PastryNode("localhost", BASE_PORT, 0, 0);
+        bootstrap.initPastry();
+
+
+        //10002:02032101
+        PastryNode node1 = new PastryNode("localhost", 10_002, 1654, 1321);
+        node1.joinPastry(bootstrap.getNode());
+        assertEquals(bootstrap.getRoutingTable().get(0).get(0), node1.getNode(), "Expected node1");
+
+        //10007:00012102 (should overwrite node1)
+        PastryNode node2 = new PastryNode("localhost", 10_007, 964, 912);
+        node2.joinPastry(bootstrap.getNode());
+        assertEquals(bootstrap.getRoutingTable().get(0).get(0), node2.getNode(), "Expected node2 to rewrite node1");
+
+
+
+        //10001:33130012
+        PastryNode node3 = new PastryNode("localhost", 10_001, 445, 401);
+        node3.joinPastry(bootstrap.getNode());
+        assertEquals(bootstrap.getRoutingTable().get(0).get(3), node3.getNode(), "Expected node3");
+
+
+        //10009:33331223 (should overwrite node3)
+        PastryNode node4 = new PastryNode("localhost", 10_009, 390, 303);
+        node4.joinPastry(bootstrap.getNode());
+        assertEquals(bootstrap.getRoutingTable().get(0).get(3), node4.getNode(), "Expected node4 to rewrite node3");
+
+
+        registerAll(bootstrap, node1, node2, node3, node4);
+
+        DistanceCalculator calculator = new CoordinateDistanceCalculator();
+
+        // verify that distance in nodeState is calculated correctly
+        bootstrap.getAllNodes().forEach(computed -> {
+            PastryNode constructed = nodes.stream().filter(n -> n.getNode().equals(computed)).findFirst().get();
+            assertEquals(calculator.calculateDistance(bootstrap.getNode(), constructed.getNode()), computed.getDistance());
+        });
+        node1.getAllNodes().forEach(computed -> {
+            PastryNode constructed = nodes.stream().filter(n -> n.getNode().equals(computed)).findFirst().get();
+            assertEquals(calculator.calculateDistance(node1.getNode(), constructed.getNode()), computed.getDistance());
+        });
+        node4.getAllNodes().forEach(computed -> {
+            PastryNode constructed = nodes.stream().filter(n -> n.getNode().equals(computed)).findFirst().get();
+            assertEquals(calculator.calculateDistance(node4.getNode(), constructed.getNode()), computed.getDistance());
+        });
     }
 
     @Test
@@ -41,8 +105,6 @@ public class PastryNodeTest {
         long x = 0;
         long y = 0;
 
-        PastryNode.setBase(BASE_4_IDS);
-        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
         int j = 0;
 
         PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++, x++, y++);
@@ -101,19 +163,12 @@ public class PastryNodeTest {
 
     @Test
     public void testBootstrapJoin_alwaysJoinClosest() throws IOException {
-
-        long x = 0;
-        long y = 0;
-
-        PastryNode.setBase(BASE_4_IDS);
-        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
-
-        PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++, x++, y++);
+        PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++, 0, 0);
         bootstrap.initPastry();
         nodes.add(bootstrap);
 
         for (int i = 0; i < 50 ; i++) {
-            PastryNode node = new PastryNode("localhost", BASE_PORT++, x++, y++);
+            PastryNode node = new PastryNode("localhost", BASE_PORT++, 0, 0);
             NodeReference closest = node.joinPastry(bootstrap.getNode());
             node.turnOffStabilization();
             assertNumericallyClosestOfAll(node.getNode(), closest, nodes);
@@ -123,19 +178,12 @@ public class PastryNodeTest {
 
     @Test
     public void testRandomJoin_alwaysJoinClosest() throws IOException {
-
-        long x = 0;
-        long y = 0;
-
-        PastryNode.setBase(BASE_4_IDS);
-        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
-
-        PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++, x++, y++);
+        PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++, 0, 0);
         bootstrap.initPastry();
         nodes.add(bootstrap);
 
         for (int i = 0; i < 50; i++) {
-            PastryNode node = new PastryNode("localhost", BASE_PORT++, x++, y++);
+            PastryNode node = new PastryNode("localhost", BASE_PORT++, 0, 0);
             NodeReference closest = node.joinPastry(nodes.get(new Random().nextInt(nodes.size())).getNode());
             assertNumericallyClosestOfAll(node.getNode(), closest, nodes);
             nodes.add(node);

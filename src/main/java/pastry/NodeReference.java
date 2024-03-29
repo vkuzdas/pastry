@@ -24,6 +24,15 @@ public class NodeReference {
         this.distance = Long.MAX_VALUE;
     }
 
+    public NodeReference(String ip, int port, long x, long y, long distance) {
+        this.ip = ip;
+        this.port = port;
+        this.id = Util.getId(this.getAddress());
+        this.x = x;
+        this.y = y;
+        this.distance = distance;
+    }
+
     public NodeReference(Pastry.NodeReference nodeReference) {
         this.ip = nodeReference.getIp();
         this.port = nodeReference.getPort();
@@ -36,6 +45,14 @@ public class NodeReference {
         this.distance = distance;
     }
 
+    public long getX() {
+        return x;
+    }
+
+    public long getY() {
+        return y;
+    }
+
     public String getIp() {
         return ip;
     }
@@ -45,9 +62,6 @@ public class NodeReference {
     }
 
     public long getDistance() {
-        // TODO: should be "getMetric" instead and should support at least one other metric
-        // WARNING: frequent sort according to distance will be slow
-        // TODO: think about saving the distance instead recomputing
         return distance;
     }
 
@@ -71,7 +85,7 @@ public class NodeReference {
     public String toString() {
         return
 //                ip + ":" +
-                        port + ":" + id + ":" + getDecimalId();
+                        port + ":" + id + ":" + getDecimalId() + ":" + distance;
     }
 
     @Override
