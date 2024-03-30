@@ -253,8 +253,6 @@ public class PastryNode {
 
         localData.clear();
 
-
-
         shutdownPastryNode();
     }
 
