@@ -11,7 +11,9 @@ import proto.Pastry;
 import proto.PastryServiceGrpc;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static pastry.Constants.*;
 import static proto.Pastry.ForwardRequest.RequestType.*;
@@ -31,7 +33,15 @@ public class PastryNode {
      * It is only recommended to use 16 and 32
      */
     public static int L_PARAMETER = LEAF_SET_SIZE_8;
-    private final NavigableMap<String, String> localData = new TreeMap<>();
+    /**
+     * Map lock
+     */
+    private final ReentrantLock lock = new ReentrantLock();
+    /**
+     * Each PastryNode stores keys in range [closestDownLeaf, closestUpleaf) since keys are routed to the closest ID,
+     */
+    // TODO: move to NodeState
+    private final NavigableMap<BigInteger, String> localData = new TreeMap<>();
 
     private final NodeState state;
 
@@ -119,6 +129,16 @@ public class PastryNode {
     @VisibleForTesting
     public ArrayList<NodeReference> getAllNodes() {
         return state.getAllNodes();
+    }
+
+    @VisibleForTesting
+    public NavigableMap<BigInteger, String> getLocalData() {
+        lock.lock();
+        try {
+            return new TreeMap<>(localData);
+        } finally {
+            lock.unlock();
+        }
     }
 
 
@@ -213,6 +233,7 @@ public class PastryNode {
      */
     public NodeReference joinPastry(NodeReference bootstrap) throws IOException {
         startServer();
+
         ManagedChannel channel = ManagedChannelBuilder.forTarget(bootstrap.getAddress()).usePlaintext().build();
         blockingStub = PastryServiceGrpc.newBlockingStub(channel);
         Pastry.JoinRequest.Builder request = Pastry.JoinRequest.newBuilder().setSender(self.toProto());
@@ -228,11 +249,23 @@ public class PastryNode {
             return self;
         }
 
+        // add all transferred keys
+        lock.lock();
+        try {
+            resp.getNodeStateList().forEach(nodeState -> {
+                nodeState.getDhtEntriesList().forEach(entry -> {
+                    localData.put(new BigInteger(entry.getKey()), entry.getValue());
+                });
+            });
+        } finally {
+            lock.unlock();
+        }
+
         Pastry.NodeReference owner = resp.getNodeState(0).getOwner();
         NodeReference closest = new NodeReference(owner);
 
         state.updateNodeState(resp);
-        notifyAboutMyself(bootstrap);
+        notifyAboutMyself();
 
         if(stabilization) {
             startStabilizationThread();
@@ -243,7 +276,7 @@ public class PastryNode {
     }
 
     /**
-     * Notify all nodes about new node and reflect all nodes in new node's NodeState <br> <br>
+     * Notify all nodes about new node and reflect all nodes in new node's NodeState. Notified nodes may return moved keys. <br> <br>
      *
      * The joining node will gather all known nodes and notify them about itself and its NodeState <br>
      * The addressed nodes will reflect joining node in its NodeState, <br>
@@ -252,9 +285,8 @@ public class PastryNode {
      * Finally, joining node will reflect all newly discovered nodes into its NodeState
      * @see PastryNodeServer#notifyExistence(Pastry.NodeState, StreamObserver)
      */
-    private void notifyAboutMyself(NodeReference bootstrap) {
+    private void notifyAboutMyself() {
         ArrayList<NodeReference> myNodes = state.getAllNodes();
-        myNodes.remove(bootstrap);
         ArrayList<NodeReference> toNotify = new ArrayList<>(myNodes);
         ArrayList<NodeReference> newlyDiscovered = new ArrayList<>();
         ArrayList<NodeReference> notified = new ArrayList<>();
@@ -266,6 +298,16 @@ public class PastryNode {
             blockingStub = PastryServiceGrpc.newBlockingStub(channel);
             Pastry.NewNodes newNodes = blockingStub.notifyExistence(state.toProto());
             channel.shutdown();
+
+            // DHT entries may come in notify response
+            newNodes.getDhtEntriesList().forEach(entry -> {
+                lock.lock();
+                try {
+                    localData.put(new BigInteger(entry.getKey()), entry.getValue());
+                } finally {
+                    lock.unlock();
+                }
+            });
 
             newNodes.getNodesList().forEach(newNode -> {
                 NodeReference newRef = new NodeReference(newNode);
@@ -390,43 +432,93 @@ public class PastryNode {
         /**
          * NodeState in Pastry.JoinResponse.NodeState is stack-like: Z node is inserted first, A last
          */
+        @SuppressWarnings("Duplicates")
         @Override
         public void join(Pastry.JoinRequest request, StreamObserver<Pastry.JoinResponse> responseObserver) {
             Pastry.NodeReference sender = request.getSender();
             logger.trace("[{}]  Join request from {}:{}", self, sender.getIp(), sender.getPort());
             NodeReference newNode = new NodeReference(sender);
 
+
             // find the closest node to the new node
             NodeReference closest = route(Util.getId(newNode.getAddress()));
 
             // either node is alone or it is the Z node itself
             if (closest.equals(self)) {
-                Pastry.JoinResponse response = Pastry.JoinResponse.newBuilder().build();
-                response = Pastry.JoinResponse.newBuilder(response).addNodeState(state.toProto()).build();
+
+                // check keys
+                NodeReference currSuccessor = state.getClosestUpleaf();
+                NodeReference currPredecessor = state.getClosestDownleaf();
+
+                state.registerNewNode(newNode);
+
+                SortedMap<BigInteger, String> transferEntries = new TreeMap<>();
+
+                if(state.getClosestDownleaf() != currPredecessor) {
+                    transferEntries = moveKeys(state.getClosestDownleaf().getDecimalId());
+                }
+                else if (state.getClosestUpleaf() != currSuccessor) {
+                    transferEntries = moveKeys(state.getClosestUpleaf().getDecimalId());
+                }
+
+                Pastry.NodeState.Builder myState = Pastry.NodeState.newBuilder(state.toProto());
+                for (Map.Entry<BigInteger, String> entry : transferEntries.entrySet()) {
+                    myState.addDhtEntries(Pastry.DHTEntry.newBuilder()
+                            .setKey(entry.getKey().toString())
+                            .setValue(entry.getValue())
+                            .build());
+                }
+
+                // create JoinResponse, add current node state
+                Pastry.JoinResponse response = Pastry.JoinResponse.newBuilder().addNodeState(myState).build();
                 logger.trace("[{}]  My id is the closest to {}, responding back", self, newNode.getId());
+
                 responseObserver.onNext(response);
                 responseObserver.onCompleted();
-                state.registerNewNode(newNode);
-                return;
             }
+            else {
 
-            // reroute newNode's join request to the closest node
-            logger.trace("[{}]  Forwarding to {}", self, closest.getAddress());
-            ManagedChannel channel = ManagedChannelBuilder.forTarget(closest.getAddress()).usePlaintext().build();
-            blockingStub = PastryServiceGrpc.newBlockingStub(channel);
-            Pastry.JoinResponse response = blockingStub.join(Pastry.JoinRequest.newBuilder()
-                    .setSender(sender)
-                    .build());
-            channel.shutdown();
+                // check keys
+                NodeReference currSuccessor = state.getClosestUpleaf();
+                NodeReference currPredecessor = state.getClosestDownleaf();
 
-            // enrich the response with the state of the current node
-            response = Pastry.JoinResponse.newBuilder(response).addNodeState(state.toProto()).build();
+                state.registerNewNode(newNode);
 
-            responseObserver.onNext(response);
-            responseObserver.onCompleted();
+                SortedMap<BigInteger, String> transferEntries = new TreeMap<>();
 
-            // finally register the node into your nodestate
-            state.registerNewNode(newNode);
+                if(state.getClosestDownleaf() != currPredecessor) {
+                    transferEntries = moveKeys(state.getClosestDownleaf().getDecimalId());
+                }
+                else if (state.getClosestUpleaf() != currSuccessor) {
+                    transferEntries = moveKeys(state.getClosestUpleaf().getDecimalId());
+                }
+
+                Pastry.NodeState.Builder myState = Pastry.NodeState.newBuilder(state.toProto());
+                for (Map.Entry<BigInteger, String> entry : transferEntries.entrySet()) {
+                    myState.addDhtEntries(Pastry.DHTEntry.newBuilder()
+                            .setKey(entry.getKey().toString())
+                            .setValue(entry.getValue())
+                            .build());
+                }
+
+
+                // reroute newNode's join request to the closest node
+                logger.trace("[{}]  Forwarding to {}", self, closest.getAddress());
+                ManagedChannel channel = ManagedChannelBuilder.forTarget(closest.getAddress()).usePlaintext().build();
+                blockingStub = PastryServiceGrpc.newBlockingStub(channel);
+
+                // once the response has arrived, enrich it with the state of the current node
+                Pastry.JoinResponse response = blockingStub.join(Pastry.JoinRequest.newBuilder()
+                        .setSender(sender)
+                        .build());
+                channel.shutdown();
+
+                // and response to the prior request
+                response = Pastry.JoinResponse.newBuilder(response).addNodeState(myState).build();
+
+                responseObserver.onNext(response);
+                responseObserver.onCompleted();
+            }
         }
 
         /**
@@ -444,10 +536,11 @@ public class PastryNode {
                 // respond
                 Pastry.ForwardResponse.Builder response = Pastry.ForwardResponse.newBuilder().setOwner(self.toProto());
 
+                // TODO: lock
                 switch (request.getRequestType()) {
                     case PUT:
                         logger.trace("[{}]  saved key {}", self, keyHash);
-                        localData.put(keyHash, request.getValue());
+                        localData.put(Util.convertToDecimal(keyHash), request.getValue());
                         response.setStatusCode(SAVED);
                         break;
                     case GET:
@@ -487,22 +580,47 @@ public class PastryNode {
         @Override
         public void notifyExistence(Pastry.NodeState request, StreamObserver<Pastry.NewNodes> responseObserver) {
             NodeReference newNode = new NodeReference(request.getOwner());
+
+            // check data, split if necessary
+            NodeReference currSuccessor = state.getClosestUpleaf();
+            NodeReference currPredecessor = state.getClosestDownleaf();
+
             state.registerNewNode(newNode);
 
-            ArrayList<NodeReference> newNodes = new ArrayList<>();
+            SortedMap<BigInteger, String> transferEntries = new TreeMap<>();
+
+            if(state.getClosestDownleaf() != currPredecessor) {
+                transferEntries = moveKeys(state.getClosestDownleaf().getDecimalId());
+            }
+            else if (state.getClosestUpleaf() != currSuccessor) {
+                transferEntries = moveKeys(state.getClosestUpleaf().getDecimalId());
+            }
+
+            Pastry.NewNodes.Builder response = Pastry.NewNodes.newBuilder();
+            for (Map.Entry<BigInteger, String> entry : transferEntries.entrySet()) {
+                response.addDhtEntries(Pastry.DHTEntry.newBuilder()
+                        .setKey(entry.getKey().toString())
+                        .setValue(entry.getValue())
+                        .build());
+            }
+
+            ArrayList<NodeReference> notifiersNodes = new ArrayList<>();
             request.getRoutingTableList().forEach(row -> row.getRoutingTableEntryList().forEach(n -> {
-                if(!newNodes.contains(new NodeReference(n)))
-                    newNodes.add(new NodeReference(n));
+                if(!notifiersNodes.contains(new NodeReference(n)))
+                    notifiersNodes.add(new NodeReference(n));
             }));
             request.getLeafSetList().forEach(n -> {
-                if(!newNodes.contains(new NodeReference(n)))
-                    newNodes.add(new NodeReference(n));
+                if(!notifiersNodes.contains(new NodeReference(n)))
+                    notifiersNodes.add(new NodeReference(n));
+            });
+            request.getNeighborSetList().forEach(n -> {
+                if(!notifiersNodes.contains(new NodeReference(n)))
+                    notifiersNodes.add(new NodeReference(n));
             });
 
             // send back a Set of nodes corresponding to difference between two NodeStates
-            Pastry.NewNodes.Builder response = Pastry.NewNodes.newBuilder();
             state.getAllNodes().forEach(n -> {
-                if (!newNodes.contains(n)) {
+                if (!notifiersNodes.contains(n)) {
                     response.addNodes(Pastry.NodeReference.newBuilder()
                             .setIp(n.getIp())
                             .setPort(n.getPort())
@@ -528,7 +646,27 @@ public class PastryNode {
         }
     }
 
-
+    /**
+     * Keys that are numerically closer to the closest leaf are transferred
+     */
+    // TODO: move to NodeState
+    private SortedMap<BigInteger, String> moveKeys(BigInteger closestLeaf) {
+        SortedMap<BigInteger, String> keysToTransfer = new TreeMap<>();
+        lock.lock();
+        try {
+            localData.forEach((key, value) -> {
+                BigInteger distToCurrent = self.getDecimalId().subtract(key).abs();
+                BigInteger distToClosestLeaf = closestLeaf.subtract(key).abs();
+                if (distToClosestLeaf.compareTo(distToCurrent) < 0) {
+                    keysToTransfer.put(key, value);
+                }
+            });
+            keysToTransfer.forEach((key, value) -> localData.remove(key));
+        } finally {
+            lock.unlock();
+        }
+        return keysToTransfer;
+    }
 
 
     public static void main(String[] args) throws IOException, InterruptedException {

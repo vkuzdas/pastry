@@ -21,10 +21,17 @@ message NodeState {
   repeated RoutingTableRow routingTable = 3;
 
   repeated NodeReference neighborSet = 4;
+
+  repeated DHTEntry dhtEntries = 5;
 }
 
 message NewNodes {
   repeated NodeReference nodes = 1;
+  repeated DHTEntry dhtEntries = 2;
+}
+message DHTEntry {
+  string key = 1;
+  string value = 2;
 }
 
 message RoutingTableRow {

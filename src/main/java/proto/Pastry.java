@@ -1903,6 +1903,30 @@ public final class Pastry {
      */
     proto.Pastry.NodeReferenceOrBuilder getNeighborSetOrBuilder(
         int index);
+
+    /**
+     * <code>repeated .DHTEntry dhtEntries = 5;</code>
+     */
+    java.util.List<proto.Pastry.DHTEntry> 
+        getDhtEntriesList();
+    /**
+     * <code>repeated .DHTEntry dhtEntries = 5;</code>
+     */
+    proto.Pastry.DHTEntry getDhtEntries(int index);
+    /**
+     * <code>repeated .DHTEntry dhtEntries = 5;</code>
+     */
+    int getDhtEntriesCount();
+    /**
+     * <code>repeated .DHTEntry dhtEntries = 5;</code>
+     */
+    java.util.List<? extends proto.Pastry.DHTEntryOrBuilder> 
+        getDhtEntriesOrBuilderList();
+    /**
+     * <code>repeated .DHTEntry dhtEntries = 5;</code>
+     */
+    proto.Pastry.DHTEntryOrBuilder getDhtEntriesOrBuilder(
+        int index);
   }
   /**
    * Protobuf type {@code NodeState}
@@ -1920,6 +1944,7 @@ public final class Pastry {
       leafSet_ = java.util.Collections.emptyList();
       routingTable_ = java.util.Collections.emptyList();
       neighborSet_ = java.util.Collections.emptyList();
+      dhtEntries_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -1986,6 +2011,15 @@ public final class Pastry {
                   input.readMessage(proto.Pastry.NodeReference.parser(), extensionRegistry));
               break;
             }
+            case 42: {
+              if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+                dhtEntries_ = new java.util.ArrayList<proto.Pastry.DHTEntry>();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              dhtEntries_.add(
+                  input.readMessage(proto.Pastry.DHTEntry.parser(), extensionRegistry));
+              break;
+            }
             default: {
               if (!parseUnknownFieldProto3(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -2009,6 +2043,9 @@ public final class Pastry {
         }
         if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
           neighborSet_ = java.util.Collections.unmodifiableList(neighborSet_);
+        }
+        if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+          dhtEntries_ = java.util.Collections.unmodifiableList(dhtEntries_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -2154,6 +2191,41 @@ public final class Pastry {
       return neighborSet_.get(index);
     }
 
+    public static final int DHTENTRIES_FIELD_NUMBER = 5;
+    private java.util.List<proto.Pastry.DHTEntry> dhtEntries_;
+    /**
+     * <code>repeated .DHTEntry dhtEntries = 5;</code>
+     */
+    public java.util.List<proto.Pastry.DHTEntry> getDhtEntriesList() {
+      return dhtEntries_;
+    }
+    /**
+     * <code>repeated .DHTEntry dhtEntries = 5;</code>
+     */
+    public java.util.List<? extends proto.Pastry.DHTEntryOrBuilder> 
+        getDhtEntriesOrBuilderList() {
+      return dhtEntries_;
+    }
+    /**
+     * <code>repeated .DHTEntry dhtEntries = 5;</code>
+     */
+    public int getDhtEntriesCount() {
+      return dhtEntries_.size();
+    }
+    /**
+     * <code>repeated .DHTEntry dhtEntries = 5;</code>
+     */
+    public proto.Pastry.DHTEntry getDhtEntries(int index) {
+      return dhtEntries_.get(index);
+    }
+    /**
+     * <code>repeated .DHTEntry dhtEntries = 5;</code>
+     */
+    public proto.Pastry.DHTEntryOrBuilder getDhtEntriesOrBuilder(
+        int index) {
+      return dhtEntries_.get(index);
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -2180,6 +2252,9 @@ public final class Pastry {
       for (int i = 0; i < neighborSet_.size(); i++) {
         output.writeMessage(4, neighborSet_.get(i));
       }
+      for (int i = 0; i < dhtEntries_.size(); i++) {
+        output.writeMessage(5, dhtEntries_.get(i));
+      }
       unknownFields.writeTo(output);
     }
 
@@ -2204,6 +2279,10 @@ public final class Pastry {
       for (int i = 0; i < neighborSet_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, neighborSet_.get(i));
+      }
+      for (int i = 0; i < dhtEntries_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, dhtEntries_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -2232,6 +2311,8 @@ public final class Pastry {
           .equals(other.getRoutingTableList());
       result = result && getNeighborSetList()
           .equals(other.getNeighborSetList());
+      result = result && getDhtEntriesList()
+          .equals(other.getDhtEntriesList());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -2258,6 +2339,10 @@ public final class Pastry {
       if (getNeighborSetCount() > 0) {
         hash = (37 * hash) + NEIGHBORSET_FIELD_NUMBER;
         hash = (53 * hash) + getNeighborSetList().hashCode();
+      }
+      if (getDhtEntriesCount() > 0) {
+        hash = (37 * hash) + DHTENTRIES_FIELD_NUMBER;
+        hash = (53 * hash) + getDhtEntriesList().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -2390,6 +2475,7 @@ public final class Pastry {
           getLeafSetFieldBuilder();
           getRoutingTableFieldBuilder();
           getNeighborSetFieldBuilder();
+          getDhtEntriesFieldBuilder();
         }
       }
       @java.lang.Override
@@ -2418,6 +2504,12 @@ public final class Pastry {
           bitField0_ = (bitField0_ & ~0x00000008);
         } else {
           neighborSetBuilder_.clear();
+        }
+        if (dhtEntriesBuilder_ == null) {
+          dhtEntries_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+        } else {
+          dhtEntriesBuilder_.clear();
         }
         return this;
       }
@@ -2478,6 +2570,15 @@ public final class Pastry {
           result.neighborSet_ = neighborSet_;
         } else {
           result.neighborSet_ = neighborSetBuilder_.build();
+        }
+        if (dhtEntriesBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) == 0x00000010)) {
+            dhtEntries_ = java.util.Collections.unmodifiableList(dhtEntries_);
+            bitField0_ = (bitField0_ & ~0x00000010);
+          }
+          result.dhtEntries_ = dhtEntries_;
+        } else {
+          result.dhtEntries_ = dhtEntriesBuilder_.build();
         }
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -2606,6 +2707,32 @@ public final class Pastry {
                    getNeighborSetFieldBuilder() : null;
             } else {
               neighborSetBuilder_.addAllMessages(other.neighborSet_);
+            }
+          }
+        }
+        if (dhtEntriesBuilder_ == null) {
+          if (!other.dhtEntries_.isEmpty()) {
+            if (dhtEntries_.isEmpty()) {
+              dhtEntries_ = other.dhtEntries_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+            } else {
+              ensureDhtEntriesIsMutable();
+              dhtEntries_.addAll(other.dhtEntries_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.dhtEntries_.isEmpty()) {
+            if (dhtEntriesBuilder_.isEmpty()) {
+              dhtEntriesBuilder_.dispose();
+              dhtEntriesBuilder_ = null;
+              dhtEntries_ = other.dhtEntries_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+              dhtEntriesBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getDhtEntriesFieldBuilder() : null;
+            } else {
+              dhtEntriesBuilder_.addAllMessages(other.dhtEntries_);
             }
           }
         }
@@ -3475,6 +3602,246 @@ public final class Pastry {
         }
         return neighborSetBuilder_;
       }
+
+      private java.util.List<proto.Pastry.DHTEntry> dhtEntries_ =
+        java.util.Collections.emptyList();
+      private void ensureDhtEntriesIsMutable() {
+        if (!((bitField0_ & 0x00000010) == 0x00000010)) {
+          dhtEntries_ = new java.util.ArrayList<proto.Pastry.DHTEntry>(dhtEntries_);
+          bitField0_ |= 0x00000010;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          proto.Pastry.DHTEntry, proto.Pastry.DHTEntry.Builder, proto.Pastry.DHTEntryOrBuilder> dhtEntriesBuilder_;
+
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 5;</code>
+       */
+      public java.util.List<proto.Pastry.DHTEntry> getDhtEntriesList() {
+        if (dhtEntriesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(dhtEntries_);
+        } else {
+          return dhtEntriesBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 5;</code>
+       */
+      public int getDhtEntriesCount() {
+        if (dhtEntriesBuilder_ == null) {
+          return dhtEntries_.size();
+        } else {
+          return dhtEntriesBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 5;</code>
+       */
+      public proto.Pastry.DHTEntry getDhtEntries(int index) {
+        if (dhtEntriesBuilder_ == null) {
+          return dhtEntries_.get(index);
+        } else {
+          return dhtEntriesBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 5;</code>
+       */
+      public Builder setDhtEntries(
+          int index, proto.Pastry.DHTEntry value) {
+        if (dhtEntriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDhtEntriesIsMutable();
+          dhtEntries_.set(index, value);
+          onChanged();
+        } else {
+          dhtEntriesBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 5;</code>
+       */
+      public Builder setDhtEntries(
+          int index, proto.Pastry.DHTEntry.Builder builderForValue) {
+        if (dhtEntriesBuilder_ == null) {
+          ensureDhtEntriesIsMutable();
+          dhtEntries_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          dhtEntriesBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 5;</code>
+       */
+      public Builder addDhtEntries(proto.Pastry.DHTEntry value) {
+        if (dhtEntriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDhtEntriesIsMutable();
+          dhtEntries_.add(value);
+          onChanged();
+        } else {
+          dhtEntriesBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 5;</code>
+       */
+      public Builder addDhtEntries(
+          int index, proto.Pastry.DHTEntry value) {
+        if (dhtEntriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDhtEntriesIsMutable();
+          dhtEntries_.add(index, value);
+          onChanged();
+        } else {
+          dhtEntriesBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 5;</code>
+       */
+      public Builder addDhtEntries(
+          proto.Pastry.DHTEntry.Builder builderForValue) {
+        if (dhtEntriesBuilder_ == null) {
+          ensureDhtEntriesIsMutable();
+          dhtEntries_.add(builderForValue.build());
+          onChanged();
+        } else {
+          dhtEntriesBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 5;</code>
+       */
+      public Builder addDhtEntries(
+          int index, proto.Pastry.DHTEntry.Builder builderForValue) {
+        if (dhtEntriesBuilder_ == null) {
+          ensureDhtEntriesIsMutable();
+          dhtEntries_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          dhtEntriesBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 5;</code>
+       */
+      public Builder addAllDhtEntries(
+          java.lang.Iterable<? extends proto.Pastry.DHTEntry> values) {
+        if (dhtEntriesBuilder_ == null) {
+          ensureDhtEntriesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, dhtEntries_);
+          onChanged();
+        } else {
+          dhtEntriesBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 5;</code>
+       */
+      public Builder clearDhtEntries() {
+        if (dhtEntriesBuilder_ == null) {
+          dhtEntries_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+          onChanged();
+        } else {
+          dhtEntriesBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 5;</code>
+       */
+      public Builder removeDhtEntries(int index) {
+        if (dhtEntriesBuilder_ == null) {
+          ensureDhtEntriesIsMutable();
+          dhtEntries_.remove(index);
+          onChanged();
+        } else {
+          dhtEntriesBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 5;</code>
+       */
+      public proto.Pastry.DHTEntry.Builder getDhtEntriesBuilder(
+          int index) {
+        return getDhtEntriesFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 5;</code>
+       */
+      public proto.Pastry.DHTEntryOrBuilder getDhtEntriesOrBuilder(
+          int index) {
+        if (dhtEntriesBuilder_ == null) {
+          return dhtEntries_.get(index);  } else {
+          return dhtEntriesBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 5;</code>
+       */
+      public java.util.List<? extends proto.Pastry.DHTEntryOrBuilder> 
+           getDhtEntriesOrBuilderList() {
+        if (dhtEntriesBuilder_ != null) {
+          return dhtEntriesBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(dhtEntries_);
+        }
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 5;</code>
+       */
+      public proto.Pastry.DHTEntry.Builder addDhtEntriesBuilder() {
+        return getDhtEntriesFieldBuilder().addBuilder(
+            proto.Pastry.DHTEntry.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 5;</code>
+       */
+      public proto.Pastry.DHTEntry.Builder addDhtEntriesBuilder(
+          int index) {
+        return getDhtEntriesFieldBuilder().addBuilder(
+            index, proto.Pastry.DHTEntry.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 5;</code>
+       */
+      public java.util.List<proto.Pastry.DHTEntry.Builder> 
+           getDhtEntriesBuilderList() {
+        return getDhtEntriesFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          proto.Pastry.DHTEntry, proto.Pastry.DHTEntry.Builder, proto.Pastry.DHTEntryOrBuilder> 
+          getDhtEntriesFieldBuilder() {
+        if (dhtEntriesBuilder_ == null) {
+          dhtEntriesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              proto.Pastry.DHTEntry, proto.Pastry.DHTEntry.Builder, proto.Pastry.DHTEntryOrBuilder>(
+                  dhtEntries_,
+                  ((bitField0_ & 0x00000010) == 0x00000010),
+                  getParentForChildren(),
+                  isClean());
+          dhtEntries_ = null;
+        }
+        return dhtEntriesBuilder_;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -3555,6 +3922,30 @@ public final class Pastry {
      */
     proto.Pastry.NodeReferenceOrBuilder getNodesOrBuilder(
         int index);
+
+    /**
+     * <code>repeated .DHTEntry dhtEntries = 2;</code>
+     */
+    java.util.List<proto.Pastry.DHTEntry> 
+        getDhtEntriesList();
+    /**
+     * <code>repeated .DHTEntry dhtEntries = 2;</code>
+     */
+    proto.Pastry.DHTEntry getDhtEntries(int index);
+    /**
+     * <code>repeated .DHTEntry dhtEntries = 2;</code>
+     */
+    int getDhtEntriesCount();
+    /**
+     * <code>repeated .DHTEntry dhtEntries = 2;</code>
+     */
+    java.util.List<? extends proto.Pastry.DHTEntryOrBuilder> 
+        getDhtEntriesOrBuilderList();
+    /**
+     * <code>repeated .DHTEntry dhtEntries = 2;</code>
+     */
+    proto.Pastry.DHTEntryOrBuilder getDhtEntriesOrBuilder(
+        int index);
   }
   /**
    * Protobuf type {@code NewNodes}
@@ -3570,6 +3961,7 @@ public final class Pastry {
     }
     private NewNodes() {
       nodes_ = java.util.Collections.emptyList();
+      dhtEntries_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -3605,6 +3997,15 @@ public final class Pastry {
                   input.readMessage(proto.Pastry.NodeReference.parser(), extensionRegistry));
               break;
             }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                dhtEntries_ = new java.util.ArrayList<proto.Pastry.DHTEntry>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              dhtEntries_.add(
+                  input.readMessage(proto.Pastry.DHTEntry.parser(), extensionRegistry));
+              break;
+            }
             default: {
               if (!parseUnknownFieldProto3(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -3622,6 +4023,9 @@ public final class Pastry {
       } finally {
         if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
           nodes_ = java.util.Collections.unmodifiableList(nodes_);
+        }
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          dhtEntries_ = java.util.Collections.unmodifiableList(dhtEntries_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -3675,6 +4079,41 @@ public final class Pastry {
       return nodes_.get(index);
     }
 
+    public static final int DHTENTRIES_FIELD_NUMBER = 2;
+    private java.util.List<proto.Pastry.DHTEntry> dhtEntries_;
+    /**
+     * <code>repeated .DHTEntry dhtEntries = 2;</code>
+     */
+    public java.util.List<proto.Pastry.DHTEntry> getDhtEntriesList() {
+      return dhtEntries_;
+    }
+    /**
+     * <code>repeated .DHTEntry dhtEntries = 2;</code>
+     */
+    public java.util.List<? extends proto.Pastry.DHTEntryOrBuilder> 
+        getDhtEntriesOrBuilderList() {
+      return dhtEntries_;
+    }
+    /**
+     * <code>repeated .DHTEntry dhtEntries = 2;</code>
+     */
+    public int getDhtEntriesCount() {
+      return dhtEntries_.size();
+    }
+    /**
+     * <code>repeated .DHTEntry dhtEntries = 2;</code>
+     */
+    public proto.Pastry.DHTEntry getDhtEntries(int index) {
+      return dhtEntries_.get(index);
+    }
+    /**
+     * <code>repeated .DHTEntry dhtEntries = 2;</code>
+     */
+    public proto.Pastry.DHTEntryOrBuilder getDhtEntriesOrBuilder(
+        int index) {
+      return dhtEntries_.get(index);
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -3692,6 +4131,9 @@ public final class Pastry {
       for (int i = 0; i < nodes_.size(); i++) {
         output.writeMessage(1, nodes_.get(i));
       }
+      for (int i = 0; i < dhtEntries_.size(); i++) {
+        output.writeMessage(2, dhtEntries_.get(i));
+      }
       unknownFields.writeTo(output);
     }
 
@@ -3704,6 +4146,10 @@ public final class Pastry {
       for (int i = 0; i < nodes_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, nodes_.get(i));
+      }
+      for (int i = 0; i < dhtEntries_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, dhtEntries_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3723,6 +4169,8 @@ public final class Pastry {
       boolean result = true;
       result = result && getNodesList()
           .equals(other.getNodesList());
+      result = result && getDhtEntriesList()
+          .equals(other.getDhtEntriesList());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -3737,6 +4185,10 @@ public final class Pastry {
       if (getNodesCount() > 0) {
         hash = (37 * hash) + NODES_FIELD_NUMBER;
         hash = (53 * hash) + getNodesList().hashCode();
+      }
+      if (getDhtEntriesCount() > 0) {
+        hash = (37 * hash) + DHTENTRIES_FIELD_NUMBER;
+        hash = (53 * hash) + getDhtEntriesList().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -3867,6 +4319,7 @@ public final class Pastry {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
           getNodesFieldBuilder();
+          getDhtEntriesFieldBuilder();
         }
       }
       @java.lang.Override
@@ -3877,6 +4330,12 @@ public final class Pastry {
           bitField0_ = (bitField0_ & ~0x00000001);
         } else {
           nodesBuilder_.clear();
+        }
+        if (dhtEntriesBuilder_ == null) {
+          dhtEntries_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+        } else {
+          dhtEntriesBuilder_.clear();
         }
         return this;
       }
@@ -3913,6 +4372,15 @@ public final class Pastry {
           result.nodes_ = nodes_;
         } else {
           result.nodes_ = nodesBuilder_.build();
+        }
+        if (dhtEntriesBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            dhtEntries_ = java.util.Collections.unmodifiableList(dhtEntries_);
+            bitField0_ = (bitField0_ & ~0x00000002);
+          }
+          result.dhtEntries_ = dhtEntries_;
+        } else {
+          result.dhtEntries_ = dhtEntriesBuilder_.build();
         }
         onBuilt();
         return result;
@@ -3985,6 +4453,32 @@ public final class Pastry {
                    getNodesFieldBuilder() : null;
             } else {
               nodesBuilder_.addAllMessages(other.nodes_);
+            }
+          }
+        }
+        if (dhtEntriesBuilder_ == null) {
+          if (!other.dhtEntries_.isEmpty()) {
+            if (dhtEntries_.isEmpty()) {
+              dhtEntries_ = other.dhtEntries_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+            } else {
+              ensureDhtEntriesIsMutable();
+              dhtEntries_.addAll(other.dhtEntries_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.dhtEntries_.isEmpty()) {
+            if (dhtEntriesBuilder_.isEmpty()) {
+              dhtEntriesBuilder_.dispose();
+              dhtEntriesBuilder_ = null;
+              dhtEntries_ = other.dhtEntries_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+              dhtEntriesBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getDhtEntriesFieldBuilder() : null;
+            } else {
+              dhtEntriesBuilder_.addAllMessages(other.dhtEntries_);
             }
           }
         }
@@ -4257,6 +4751,246 @@ public final class Pastry {
         }
         return nodesBuilder_;
       }
+
+      private java.util.List<proto.Pastry.DHTEntry> dhtEntries_ =
+        java.util.Collections.emptyList();
+      private void ensureDhtEntriesIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          dhtEntries_ = new java.util.ArrayList<proto.Pastry.DHTEntry>(dhtEntries_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          proto.Pastry.DHTEntry, proto.Pastry.DHTEntry.Builder, proto.Pastry.DHTEntryOrBuilder> dhtEntriesBuilder_;
+
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 2;</code>
+       */
+      public java.util.List<proto.Pastry.DHTEntry> getDhtEntriesList() {
+        if (dhtEntriesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(dhtEntries_);
+        } else {
+          return dhtEntriesBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 2;</code>
+       */
+      public int getDhtEntriesCount() {
+        if (dhtEntriesBuilder_ == null) {
+          return dhtEntries_.size();
+        } else {
+          return dhtEntriesBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 2;</code>
+       */
+      public proto.Pastry.DHTEntry getDhtEntries(int index) {
+        if (dhtEntriesBuilder_ == null) {
+          return dhtEntries_.get(index);
+        } else {
+          return dhtEntriesBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 2;</code>
+       */
+      public Builder setDhtEntries(
+          int index, proto.Pastry.DHTEntry value) {
+        if (dhtEntriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDhtEntriesIsMutable();
+          dhtEntries_.set(index, value);
+          onChanged();
+        } else {
+          dhtEntriesBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 2;</code>
+       */
+      public Builder setDhtEntries(
+          int index, proto.Pastry.DHTEntry.Builder builderForValue) {
+        if (dhtEntriesBuilder_ == null) {
+          ensureDhtEntriesIsMutable();
+          dhtEntries_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          dhtEntriesBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 2;</code>
+       */
+      public Builder addDhtEntries(proto.Pastry.DHTEntry value) {
+        if (dhtEntriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDhtEntriesIsMutable();
+          dhtEntries_.add(value);
+          onChanged();
+        } else {
+          dhtEntriesBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 2;</code>
+       */
+      public Builder addDhtEntries(
+          int index, proto.Pastry.DHTEntry value) {
+        if (dhtEntriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDhtEntriesIsMutable();
+          dhtEntries_.add(index, value);
+          onChanged();
+        } else {
+          dhtEntriesBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 2;</code>
+       */
+      public Builder addDhtEntries(
+          proto.Pastry.DHTEntry.Builder builderForValue) {
+        if (dhtEntriesBuilder_ == null) {
+          ensureDhtEntriesIsMutable();
+          dhtEntries_.add(builderForValue.build());
+          onChanged();
+        } else {
+          dhtEntriesBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 2;</code>
+       */
+      public Builder addDhtEntries(
+          int index, proto.Pastry.DHTEntry.Builder builderForValue) {
+        if (dhtEntriesBuilder_ == null) {
+          ensureDhtEntriesIsMutable();
+          dhtEntries_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          dhtEntriesBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 2;</code>
+       */
+      public Builder addAllDhtEntries(
+          java.lang.Iterable<? extends proto.Pastry.DHTEntry> values) {
+        if (dhtEntriesBuilder_ == null) {
+          ensureDhtEntriesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, dhtEntries_);
+          onChanged();
+        } else {
+          dhtEntriesBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 2;</code>
+       */
+      public Builder clearDhtEntries() {
+        if (dhtEntriesBuilder_ == null) {
+          dhtEntries_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          onChanged();
+        } else {
+          dhtEntriesBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 2;</code>
+       */
+      public Builder removeDhtEntries(int index) {
+        if (dhtEntriesBuilder_ == null) {
+          ensureDhtEntriesIsMutable();
+          dhtEntries_.remove(index);
+          onChanged();
+        } else {
+          dhtEntriesBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 2;</code>
+       */
+      public proto.Pastry.DHTEntry.Builder getDhtEntriesBuilder(
+          int index) {
+        return getDhtEntriesFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 2;</code>
+       */
+      public proto.Pastry.DHTEntryOrBuilder getDhtEntriesOrBuilder(
+          int index) {
+        if (dhtEntriesBuilder_ == null) {
+          return dhtEntries_.get(index);  } else {
+          return dhtEntriesBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 2;</code>
+       */
+      public java.util.List<? extends proto.Pastry.DHTEntryOrBuilder> 
+           getDhtEntriesOrBuilderList() {
+        if (dhtEntriesBuilder_ != null) {
+          return dhtEntriesBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(dhtEntries_);
+        }
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 2;</code>
+       */
+      public proto.Pastry.DHTEntry.Builder addDhtEntriesBuilder() {
+        return getDhtEntriesFieldBuilder().addBuilder(
+            proto.Pastry.DHTEntry.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 2;</code>
+       */
+      public proto.Pastry.DHTEntry.Builder addDhtEntriesBuilder(
+          int index) {
+        return getDhtEntriesFieldBuilder().addBuilder(
+            index, proto.Pastry.DHTEntry.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .DHTEntry dhtEntries = 2;</code>
+       */
+      public java.util.List<proto.Pastry.DHTEntry.Builder> 
+           getDhtEntriesBuilderList() {
+        return getDhtEntriesFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          proto.Pastry.DHTEntry, proto.Pastry.DHTEntry.Builder, proto.Pastry.DHTEntryOrBuilder> 
+          getDhtEntriesFieldBuilder() {
+        if (dhtEntriesBuilder_ == null) {
+          dhtEntriesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              proto.Pastry.DHTEntry, proto.Pastry.DHTEntry.Builder, proto.Pastry.DHTEntryOrBuilder>(
+                  dhtEntries_,
+                  ((bitField0_ & 0x00000002) == 0x00000002),
+                  getParentForChildren(),
+                  isClean());
+          dhtEntries_ = null;
+        }
+        return dhtEntriesBuilder_;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -4305,6 +5039,693 @@ public final class Pastry {
 
     @java.lang.Override
     public proto.Pastry.NewNodes getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface DHTEntryOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:DHTEntry)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string key = 1;</code>
+     */
+    java.lang.String getKey();
+    /**
+     * <code>string key = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getKeyBytes();
+
+    /**
+     * <code>string value = 2;</code>
+     */
+    java.lang.String getValue();
+    /**
+     * <code>string value = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getValueBytes();
+  }
+  /**
+   * Protobuf type {@code DHTEntry}
+   */
+  public  static final class DHTEntry extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:DHTEntry)
+      DHTEntryOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use DHTEntry.newBuilder() to construct.
+    private DHTEntry(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private DHTEntry() {
+      key_ = "";
+      value_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private DHTEntry(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              key_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              value_ = s;
+              break;
+            }
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return proto.Pastry.internal_static_DHTEntry_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return proto.Pastry.internal_static_DHTEntry_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              proto.Pastry.DHTEntry.class, proto.Pastry.DHTEntry.Builder.class);
+    }
+
+    public static final int KEY_FIELD_NUMBER = 1;
+    private volatile java.lang.Object key_;
+    /**
+     * <code>string key = 1;</code>
+     */
+    public java.lang.String getKey() {
+      java.lang.Object ref = key_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        key_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string key = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getKeyBytes() {
+      java.lang.Object ref = key_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        key_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int VALUE_FIELD_NUMBER = 2;
+    private volatile java.lang.Object value_;
+    /**
+     * <code>string value = 2;</code>
+     */
+    public java.lang.String getValue() {
+      java.lang.Object ref = value_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        value_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string value = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getValueBytes() {
+      java.lang.Object ref = value_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        value_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getKeyBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, key_);
+      }
+      if (!getValueBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, value_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getKeyBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, key_);
+      }
+      if (!getValueBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, value_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof proto.Pastry.DHTEntry)) {
+        return super.equals(obj);
+      }
+      proto.Pastry.DHTEntry other = (proto.Pastry.DHTEntry) obj;
+
+      boolean result = true;
+      result = result && getKey()
+          .equals(other.getKey());
+      result = result && getValue()
+          .equals(other.getValue());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + KEY_FIELD_NUMBER;
+      hash = (53 * hash) + getKey().hashCode();
+      hash = (37 * hash) + VALUE_FIELD_NUMBER;
+      hash = (53 * hash) + getValue().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static proto.Pastry.DHTEntry parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.DHTEntry parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.DHTEntry parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.DHTEntry parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.DHTEntry parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static proto.Pastry.DHTEntry parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static proto.Pastry.DHTEntry parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.DHTEntry parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static proto.Pastry.DHTEntry parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.DHTEntry parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static proto.Pastry.DHTEntry parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static proto.Pastry.DHTEntry parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(proto.Pastry.DHTEntry prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code DHTEntry}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:DHTEntry)
+        proto.Pastry.DHTEntryOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return proto.Pastry.internal_static_DHTEntry_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return proto.Pastry.internal_static_DHTEntry_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                proto.Pastry.DHTEntry.class, proto.Pastry.DHTEntry.Builder.class);
+      }
+
+      // Construct using proto.Pastry.DHTEntry.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        key_ = "";
+
+        value_ = "";
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return proto.Pastry.internal_static_DHTEntry_descriptor;
+      }
+
+      @java.lang.Override
+      public proto.Pastry.DHTEntry getDefaultInstanceForType() {
+        return proto.Pastry.DHTEntry.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public proto.Pastry.DHTEntry build() {
+        proto.Pastry.DHTEntry result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public proto.Pastry.DHTEntry buildPartial() {
+        proto.Pastry.DHTEntry result = new proto.Pastry.DHTEntry(this);
+        result.key_ = key_;
+        result.value_ = value_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof proto.Pastry.DHTEntry) {
+          return mergeFrom((proto.Pastry.DHTEntry)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(proto.Pastry.DHTEntry other) {
+        if (other == proto.Pastry.DHTEntry.getDefaultInstance()) return this;
+        if (!other.getKey().isEmpty()) {
+          key_ = other.key_;
+          onChanged();
+        }
+        if (!other.getValue().isEmpty()) {
+          value_ = other.value_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        proto.Pastry.DHTEntry parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (proto.Pastry.DHTEntry) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object key_ = "";
+      /**
+       * <code>string key = 1;</code>
+       */
+      public java.lang.String getKey() {
+        java.lang.Object ref = key_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          key_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string key = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getKeyBytes() {
+        java.lang.Object ref = key_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          key_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string key = 1;</code>
+       */
+      public Builder setKey(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        key_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string key = 1;</code>
+       */
+      public Builder clearKey() {
+        
+        key_ = getDefaultInstance().getKey();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string key = 1;</code>
+       */
+      public Builder setKeyBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        key_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object value_ = "";
+      /**
+       * <code>string value = 2;</code>
+       */
+      public java.lang.String getValue() {
+        java.lang.Object ref = value_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          value_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string value = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getValueBytes() {
+        java.lang.Object ref = value_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          value_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string value = 2;</code>
+       */
+      public Builder setValue(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        value_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string value = 2;</code>
+       */
+      public Builder clearValue() {
+        
+        value_ = getDefaultInstance().getValue();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string value = 2;</code>
+       */
+      public Builder setValueBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        value_ = value;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:DHTEntry)
+    }
+
+    // @@protoc_insertion_point(class_scope:DHTEntry)
+    private static final proto.Pastry.DHTEntry DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new proto.Pastry.DHTEntry();
+    }
+
+    public static proto.Pastry.DHTEntry getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<DHTEntry>
+        PARSER = new com.google.protobuf.AbstractParser<DHTEntry>() {
+      @java.lang.Override
+      public DHTEntry parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new DHTEntry(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<DHTEntry> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<DHTEntry> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public proto.Pastry.DHTEntry getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -8937,6 +10358,11 @@ public final class Pastry {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_NewNodes_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_DHTEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_DHTEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_RoutingTableRow_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -8977,32 +10403,35 @@ public final class Pastry {
     java.lang.String[] descriptorData = {
       "\n\014pastry.proto\"-\n\013JoinRequest\022\036\n\006sender\030" +
       "\001 \001(\0132\016.NodeReference\"\007\n\005Empty\"-\n\014JoinRe" +
-      "sponse\022\035\n\tnodeState\030\001 \003(\0132\n.NodeState\"\230\001" +
+      "sponse\022\035\n\tnodeState\030\001 \003(\0132\n.NodeState\"\267\001" +
       "\n\tNodeState\022\035\n\005owner\030\001 \001(\0132\016.NodeReferen" +
       "ce\022\037\n\007leafSet\030\002 \003(\0132\016.NodeReference\022&\n\014r" +
       "outingTable\030\003 \003(\0132\020.RoutingTableRow\022#\n\013n" +
-      "eighborSet\030\004 \003(\0132\016.NodeReference\")\n\010NewN" +
-      "odes\022\035\n\005nodes\030\001 \003(\0132\016.NodeReference\"<\n\017R" +
-      "outingTableRow\022)\n\021routingTableEntry\030\001 \003(" +
-      "\0132\016.NodeReference\"?\n\rNodeReference\022\n\n\002ip" +
-      "\030\001 \001(\t\022\014\n\004port\030\002 \001(\005\022\t\n\001x\030\003 \001(\003\022\t\n\001y\030\004 \001" +
-      "(\003\"\024\n\022NeighborSetRequest\":\n\023NeighborSetR" +
-      "esponse\022#\n\013neighborSet\030\001 \003(\0132\016.NodeRefer" +
-      "ence\"\213\001\n\016ForwardRequest\022\013\n\003key\030\001 \001(\t\022\r\n\005" +
-      "value\030\002 \001(\t\0220\n\013requestType\030\003 \001(\0162\033.Forwa" +
-      "rdRequest.RequestType\"+\n\013RequestType\022\007\n\003" +
-      "PUT\020\000\022\007\n\003GET\020\001\022\n\n\006DELETE\020\002\"\264\001\n\017ForwardRe" +
-      "sponse\022\r\n\005value\030\001 \001(\t\022/\n\nstatusCode\030\002 \001(" +
-      "\0162\033.ForwardResponse.StatusCode\022\035\n\005owner\030" +
-      "\003 \001(\0132\016.NodeReference\"B\n\nStatusCode\022\t\n\005S" +
-      "AVED\020\000\022\013\n\007REMOVED\020\001\022\r\n\tRETRIEVED\020\002\022\r\n\tNO" +
-      "T_FOUND\020\0032\353\001\n\rPastryService\022*\n\017NotifyExi" +
-      "stence\022\n.NodeState\032\t.NewNodes\"\000\022.\n\007Forwa" +
-      "rd\022\017.ForwardRequest\032\020.ForwardResponse\"\000\022" +
-      "%\n\004Join\022\014.JoinRequest\032\r.JoinResponse\"\000\022=" +
-      "\n\016GetNeighborSet\022\023.NeighborSetRequest\032\024." +
-      "NeighborSetResponse\"\000\022\030\n\004Ping\022\006.Empty\032\006." +
-      "Empty\"\000B\007\n\005protob\006proto3"
+      "eighborSet\030\004 \003(\0132\016.NodeReference\022\035\n\ndhtE" +
+      "ntries\030\005 \003(\0132\t.DHTEntry\"H\n\010NewNodes\022\035\n\005n" +
+      "odes\030\001 \003(\0132\016.NodeReference\022\035\n\ndhtEntries" +
+      "\030\002 \003(\0132\t.DHTEntry\"&\n\010DHTEntry\022\013\n\003key\030\001 \001" +
+      "(\t\022\r\n\005value\030\002 \001(\t\"<\n\017RoutingTableRow\022)\n\021" +
+      "routingTableEntry\030\001 \003(\0132\016.NodeReference\"" +
+      "?\n\rNodeReference\022\n\n\002ip\030\001 \001(\t\022\014\n\004port\030\002 \001" +
+      "(\005\022\t\n\001x\030\003 \001(\003\022\t\n\001y\030\004 \001(\003\"\024\n\022NeighborSetR" +
+      "equest\":\n\023NeighborSetResponse\022#\n\013neighbo" +
+      "rSet\030\001 \003(\0132\016.NodeReference\"\213\001\n\016ForwardRe" +
+      "quest\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\0220\n\013req" +
+      "uestType\030\003 \001(\0162\033.ForwardRequest.RequestT" +
+      "ype\"+\n\013RequestType\022\007\n\003PUT\020\000\022\007\n\003GET\020\001\022\n\n\006" +
+      "DELETE\020\002\"\264\001\n\017ForwardResponse\022\r\n\005value\030\001 " +
+      "\001(\t\022/\n\nstatusCode\030\002 \001(\0162\033.ForwardRespons" +
+      "e.StatusCode\022\035\n\005owner\030\003 \001(\0132\016.NodeRefere" +
+      "nce\"B\n\nStatusCode\022\t\n\005SAVED\020\000\022\013\n\007REMOVED\020" +
+      "\001\022\r\n\tRETRIEVED\020\002\022\r\n\tNOT_FOUND\020\0032\353\001\n\rPast" +
+      "ryService\022*\n\017NotifyExistence\022\n.NodeState" +
+      "\032\t.NewNodes\"\000\022.\n\007Forward\022\017.ForwardReques" +
+      "t\032\020.ForwardResponse\"\000\022%\n\004Join\022\014.JoinRequ" +
+      "est\032\r.JoinResponse\"\000\022=\n\016GetNeighborSet\022\023" +
+      ".NeighborSetRequest\032\024.NeighborSetRespons" +
+      "e\"\000\022\030\n\004Ping\022\006.Empty\032\006.Empty\"\000B\007\n\005protob\006" +
+      "proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -9039,45 +10468,51 @@ public final class Pastry {
     internal_static_NodeState_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_NodeState_descriptor,
-        new java.lang.String[] { "Owner", "LeafSet", "RoutingTable", "NeighborSet", });
+        new java.lang.String[] { "Owner", "LeafSet", "RoutingTable", "NeighborSet", "DhtEntries", });
     internal_static_NewNodes_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_NewNodes_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_NewNodes_descriptor,
-        new java.lang.String[] { "Nodes", });
-    internal_static_RoutingTableRow_descriptor =
+        new java.lang.String[] { "Nodes", "DhtEntries", });
+    internal_static_DHTEntry_descriptor =
       getDescriptor().getMessageTypes().get(5);
+    internal_static_DHTEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_DHTEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_RoutingTableRow_descriptor =
+      getDescriptor().getMessageTypes().get(6);
     internal_static_RoutingTableRow_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_RoutingTableRow_descriptor,
         new java.lang.String[] { "RoutingTableEntry", });
     internal_static_NodeReference_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_NodeReference_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_NodeReference_descriptor,
         new java.lang.String[] { "Ip", "Port", "X", "Y", });
     internal_static_NeighborSetRequest_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_NeighborSetRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_NeighborSetRequest_descriptor,
         new java.lang.String[] { });
     internal_static_NeighborSetResponse_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_NeighborSetResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_NeighborSetResponse_descriptor,
         new java.lang.String[] { "NeighborSet", });
     internal_static_ForwardRequest_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_ForwardRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ForwardRequest_descriptor,
         new java.lang.String[] { "Key", "Value", "RequestType", });
     internal_static_ForwardResponse_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_ForwardResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ForwardResponse_descriptor,

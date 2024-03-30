@@ -7,6 +7,9 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+/**
+ * Test class for stabilization
+ */
 public class StabilizationTest extends BaseTest {
 
     private final Logger logger = LoggerFactory.getLogger(DhtApiTest.class);

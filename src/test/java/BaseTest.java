@@ -11,12 +11,17 @@ import java.util.Arrays;
 import static pastry.Constants.BASE_4_IDS;
 import static pastry.Constants.LEAF_SET_SIZE_8;
 
+/**
+ * Base test class to be extended
+ */
 public class BaseTest {
 
     protected final Logger logger = LoggerFactory.getLogger(BaseTest.class);
     protected static int BASE_PORT = 10_000;
     protected int MAX_NODES;
     protected int MAX_KEYS;
+
+    // TODO: refactor to 'runningNodes'
     protected final ArrayList<PastryNode> nodes = new ArrayList<>();
 
     @BeforeEach

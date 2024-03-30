@@ -10,10 +10,9 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Bind exceptions and other instabilities occur when the whole class is run, but not when a test is run individually.
+ * Test class for DHT API (put, get, delete)
  */
 public class DhtApiTest extends BaseTest {
-
     private final Logger logger = LoggerFactory.getLogger(DhtApiTest.class);
 
     @Test

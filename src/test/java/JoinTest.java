@@ -3,17 +3,50 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pastry.NodeReference;
 import pastry.PastryNode;
+import pastry.Util;
 import pastry.metric.CoordinateDistanceCalculator;
 import pastry.metric.DistanceCalculator;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test class for joining nodes
+ */
 public class JoinTest extends BaseTest {
 
     private final Logger logger = LoggerFactory.getLogger(DhtApiTest.class);
+
+    @Test
+    public void testMoveKeys() throws IOException {
+        PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++, 0, 0);
+        bootstrap.initPastry();
+        nodes.add(bootstrap);
+
+        List<BigInteger> keys = new ArrayList<>();
+
+        for (int i = 0; i < MAX_KEYS; i++) {
+            bootstrap.put("key" + i, "value");
+            keys.add(Util.convertToDecimal(Util.getId("key" + i)));
+        }
+
+        assertEquals(MAX_KEYS, bootstrap.getLocalData().size(), "Expected all keys in bootstrap");
+
+
+        for (int i = 0; i < MAX_NODES; i++) {
+            PastryNode node = new PastryNode("localhost", BASE_PORT++, 0, 0);
+            node.joinPastry(bootstrap.getNode());
+            nodes.add(node);
+        }
+
+        for (BigInteger key : keys) {
+            PastryNode closest = nodes.stream().min(Comparator.comparing(n -> n.getNode().getDecimalId().subtract(key).abs())).get();
+            assertNotNull(closest.getLocalData().get(key), "Expected key to be in closest node");
+        }
+    }
 
     @Test
     @Disabled("Maven cannot use Coord calculator for some reason, manual run should work")

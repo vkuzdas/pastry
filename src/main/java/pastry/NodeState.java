@@ -311,6 +311,20 @@ public class NodeState {
         printNodeState();
     }
 
+    public NodeReference getClosestUpleaf() {
+        if(syncSizeGet(upLeafs) == 0) {
+            return null;
+        }
+        return syncGet(0, upLeafs);
+    }
+
+    public NodeReference getClosestDownleaf() {
+        if(syncSizeGet(downLeafs) == 0) {
+            return null;
+        }
+        return syncGet(0, downLeafs);
+    }
+
     /**
      * Let A be the first node encoutered in path of join request <br>
      * Let A<sub>0</sub> be the first row of A's routing table <br>
