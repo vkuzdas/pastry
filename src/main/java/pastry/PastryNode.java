@@ -544,12 +544,12 @@ public class PastryNode {
                         response.setStatusCode(SAVED);
                         break;
                     case GET:
-                        String value = localData.get(keyHash);
+                        String value = localData.get(Util.convertToDecimal(keyHash));
                         logger.trace("[{}]  retrieved key {}", self, keyHash);
                         response.setValue(value).setStatusCode(RETRIEVED);
                         break;
                     case DELETE:
-                        String rem = localData.remove(keyHash);
+                        String rem = localData.remove(Util.convertToDecimal(keyHash));
                         Pastry.ForwardResponse.StatusCode status = rem != null ? REMOVED : NOT_FOUND;
                         logger.trace("[{}]  key {} {}", self, keyHash, status);
                         response.setStatusCode(status);
