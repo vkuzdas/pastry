@@ -26,7 +26,7 @@ public class PastryNode {
      * Config parameter determining base of id: ids are 2^b based <br>
      * It is only recommended to use 4-based, 8-based and 16-based
      */
-    public static int B_PARAMETER = BASE_4_IDS;
+    public static int B_PARAMETER = BASE_16_IDS;
 
     /**
      * Config parameter determining size of leaf set
@@ -97,7 +97,7 @@ public class PastryNode {
 //    }
 
     public static void setBase(int b) {
-        if (b != BASE_4_IDS && b != Constants.BASE_8_IDS && b != Constants.BASE_16_IDS) {
+        if (b != BASE_4_IDS && b != Constants.BASE_16_IDS) {
             throw new IllegalArgumentException("B must be 2, 3 or 4");
         }
         PastryNode.B_PARAMETER = b;
@@ -762,29 +762,6 @@ public class PastryNode {
             lock.unlock();
         }
         return keysToTransfer;
-    }
-
-
-    public static void main(String[] args) throws IOException, InterruptedException {
-
-
-//        PastryNode.setBase(BASE_4_IDS);
-//        PastryNode.setLeafSize(LEAF_SET_SIZE_8);
-//        PastryNode.STABILIZATION_INTERVAL = 2000;
-//
-//        PastryNode bootstrap = new PastryNode("localhost", 10_400);
-//        bootstrap.initPastry();
-//
-//        PastryNode node1 = new PastryNode("localhost", 10_401);
-//        node1.joinPastry(bootstrap.getNode());
-//
-//        PastryNode node2 = new PastryNode("localhost", 10_402);
-//        node2.joinPastry(node1.getNode());
-//
-//        PastryNode node3 = new PastryNode("localhost", 10_403);
-//        node3.joinPastry(node2.getNode());
-//        Thread.sleep(10000);
-//        System.out.println("Shutting down node 3");
     }
 }
 

@@ -5,7 +5,6 @@ public interface Constants {
      * b parameter values
      */
     int BASE_4_IDS = 2;
-    int BASE_8_IDS = 3;
     int BASE_16_IDS = 4;
 
     /**
