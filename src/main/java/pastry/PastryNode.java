@@ -207,7 +207,58 @@ public class PastryNode {
         stabilizationTimer.schedule(stabilizationTimerTask,1000, STABILIZATION_INTERVAL);
     }
 
+    public void leavePastry() {
+        // local data should be moved before leaving
+        NodeReference currSuccessor = state.getClosestUpleaf();
+        NodeReference currPredecessor = state.getClosestDownleaf();
 
+        TreeMap<BigInteger, String> successorKeys = new TreeMap<>();
+        TreeMap<BigInteger, String> predecessorKeys = new TreeMap<>();
+
+        if (currPredecessor != null && currSuccessor != null) {
+            // keys are split according to closeness
+            localData.forEach((key, value) -> {
+                BigInteger distToPredecessor = currPredecessor.getDecimalId().subtract(key).abs();
+                BigInteger distToSuccessor = currSuccessor.getDecimalId().subtract(key).abs();
+
+                if (distToPredecessor.compareTo(distToSuccessor) < 0) {
+                    predecessorKeys.put(key, value);
+                } else {
+                    successorKeys.put(key, value);
+                }
+            });
+        }
+        if (currPredecessor != null && currSuccessor == null) {
+            predecessorKeys.putAll(localData);
+        }
+        if (currPredecessor == null && currSuccessor != null) {
+            successorKeys.putAll(localData);
+        }
+
+        localData.clear();
+
+        if (!successorKeys.isEmpty()) {
+            sendKeysTo(currSuccessor, successorKeys);
+        }
+        if (!predecessorKeys.isEmpty()) {
+            sendKeysTo(currPredecessor, predecessorKeys);
+        }
+
+        shutdownPastryNode();
+    }
+
+    private void sendKeysTo(NodeReference destination, TreeMap<BigInteger, String> successorKeys) {
+        Pastry.MoveKeysRequest.Builder moveKeysToSuccessor = Pastry.MoveKeysRequest.newBuilder();
+        successorKeys.forEach((key, value) -> moveKeysToSuccessor.addDhtEntries(Pastry.DHTEntry.newBuilder()
+                .setKey(key.toString())
+                .setValue(value)
+                .build()));
+
+        ManagedChannel channel = ManagedChannelBuilder.forTarget(destination.getAddress()).usePlaintext().build();
+        blockingStub = PastryServiceGrpc.newBlockingStub(channel);
+        blockingStub.moveKeys(moveKeysToSuccessor.build());
+        channel.shutdown();
+    }
 
     public void shutdownPastryNode() {
         stopServer();
@@ -455,10 +506,10 @@ public class PastryNode {
                 SortedMap<BigInteger, String> transferEntries = new TreeMap<>();
 
                 if(state.getClosestDownleaf() != currPredecessor) {
-                    transferEntries = moveKeys(state.getClosestDownleaf().getDecimalId());
+                    transferEntries = getTransferKeys(state.getClosestDownleaf().getDecimalId());
                 }
                 else if (state.getClosestUpleaf() != currSuccessor) {
-                    transferEntries = moveKeys(state.getClosestUpleaf().getDecimalId());
+                    transferEntries = getTransferKeys(state.getClosestUpleaf().getDecimalId());
                 }
 
                 Pastry.NodeState.Builder myState = Pastry.NodeState.newBuilder(state.toProto());
@@ -487,10 +538,10 @@ public class PastryNode {
                 SortedMap<BigInteger, String> transferEntries = new TreeMap<>();
 
                 if(state.getClosestDownleaf() != currPredecessor) {
-                    transferEntries = moveKeys(state.getClosestDownleaf().getDecimalId());
+                    transferEntries = getTransferKeys(state.getClosestDownleaf().getDecimalId());
                 }
                 else if (state.getClosestUpleaf() != currSuccessor) {
-                    transferEntries = moveKeys(state.getClosestUpleaf().getDecimalId());
+                    transferEntries = getTransferKeys(state.getClosestUpleaf().getDecimalId());
                 }
 
                 Pastry.NodeState.Builder myState = Pastry.NodeState.newBuilder(state.toProto());
@@ -606,10 +657,10 @@ public class PastryNode {
             SortedMap<BigInteger, String> transferEntries = new TreeMap<>();
 
             if(state.getClosestDownleaf() != currPredecessor) {
-                transferEntries = moveKeys(state.getClosestDownleaf().getDecimalId());
+                transferEntries = getTransferKeys(state.getClosestDownleaf().getDecimalId());
             }
             else if (state.getClosestUpleaf() != currSuccessor) {
-                transferEntries = moveKeys(state.getClosestUpleaf().getDecimalId());
+                transferEntries = getTransferKeys(state.getClosestUpleaf().getDecimalId());
             }
 
             Pastry.NewNodes.Builder response = Pastry.NewNodes.newBuilder();
@@ -649,6 +700,18 @@ public class PastryNode {
         }
 
         @Override
+        public void moveKeys(Pastry.MoveKeysRequest request, StreamObserver<Pastry.Empty> responseObserver) {
+            lock.lock();
+            try {
+                request.getDhtEntriesList().forEach(entry -> localData.put(new BigInteger(entry.getKey()), entry.getValue()));
+            } finally {
+                lock.unlock();
+            }
+            responseObserver.onNext(Pastry.Empty.newBuilder().build());
+            responseObserver.onCompleted();
+        }
+
+        @Override
         public void getNeighborSet(Pastry.NeighborSetRequest request, StreamObserver<Pastry.NeighborSetResponse> responseObserver) {
             logger.trace("[{}]  Sending neighbor set", self);
             responseObserver.onNext(state.neighborsToProto());
@@ -666,7 +729,7 @@ public class PastryNode {
      * Keys that are numerically closer to the closest leaf are transferred
      */
     // TODO: move to NodeState
-    private SortedMap<BigInteger, String> moveKeys(BigInteger closestLeaf) {
+    private SortedMap<BigInteger, String> getTransferKeys(BigInteger closestLeaf) {
         SortedMap<BigInteger, String> keysToTransfer = new TreeMap<>();
         lock.lock();
         try {

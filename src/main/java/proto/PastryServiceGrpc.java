@@ -123,6 +123,38 @@ public final class PastryServiceGrpc {
      return getJoinMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<proto.Pastry.MoveKeysRequest,
+      proto.Pastry.Empty> getMoveKeysMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "MoveKeys",
+      requestType = proto.Pastry.MoveKeysRequest.class,
+      responseType = proto.Pastry.Empty.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<proto.Pastry.MoveKeysRequest,
+      proto.Pastry.Empty> getMoveKeysMethod() {
+    io.grpc.MethodDescriptor<proto.Pastry.MoveKeysRequest, proto.Pastry.Empty> getMoveKeysMethod;
+    if ((getMoveKeysMethod = PastryServiceGrpc.getMoveKeysMethod) == null) {
+      synchronized (PastryServiceGrpc.class) {
+        if ((getMoveKeysMethod = PastryServiceGrpc.getMoveKeysMethod) == null) {
+          PastryServiceGrpc.getMoveKeysMethod = getMoveKeysMethod = 
+              io.grpc.MethodDescriptor.<proto.Pastry.MoveKeysRequest, proto.Pastry.Empty>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "PastryService", "MoveKeys"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  proto.Pastry.MoveKeysRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  proto.Pastry.Empty.getDefaultInstance()))
+                  .setSchemaDescriptor(new PastryServiceMethodDescriptorSupplier("MoveKeys"))
+                  .build();
+          }
+        }
+     }
+     return getMoveKeysMethod;
+  }
+
   private static volatile io.grpc.MethodDescriptor<proto.Pastry.NeighborSetRequest,
       proto.Pastry.NeighborSetResponse> getGetNeighborSetMethod;
 
@@ -240,6 +272,13 @@ public final class PastryServiceGrpc {
 
     /**
      */
+    public void moveKeys(proto.Pastry.MoveKeysRequest request,
+        io.grpc.stub.StreamObserver<proto.Pastry.Empty> responseObserver) {
+      asyncUnimplementedUnaryCall(getMoveKeysMethod(), responseObserver);
+    }
+
+    /**
+     */
     public void getNeighborSet(proto.Pastry.NeighborSetRequest request,
         io.grpc.stub.StreamObserver<proto.Pastry.NeighborSetResponse> responseObserver) {
       asyncUnimplementedUnaryCall(getGetNeighborSetMethod(), responseObserver);
@@ -275,6 +314,13 @@ public final class PastryServiceGrpc {
                 proto.Pastry.JoinRequest,
                 proto.Pastry.JoinResponse>(
                   this, METHODID_JOIN)))
+          .addMethod(
+            getMoveKeysMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                proto.Pastry.MoveKeysRequest,
+                proto.Pastry.Empty>(
+                  this, METHODID_MOVE_KEYS)))
           .addMethod(
             getGetNeighborSetMethod(),
             asyncUnaryCall(
@@ -340,6 +386,14 @@ public final class PastryServiceGrpc {
 
     /**
      */
+    public void moveKeys(proto.Pastry.MoveKeysRequest request,
+        io.grpc.stub.StreamObserver<proto.Pastry.Empty> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getMoveKeysMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
     public void getNeighborSet(proto.Pastry.NeighborSetRequest request,
         io.grpc.stub.StreamObserver<proto.Pastry.NeighborSetResponse> responseObserver) {
       asyncUnaryCall(
@@ -395,6 +449,13 @@ public final class PastryServiceGrpc {
     public proto.Pastry.JoinResponse join(proto.Pastry.JoinRequest request) {
       return blockingUnaryCall(
           getChannel(), getJoinMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public proto.Pastry.Empty moveKeys(proto.Pastry.MoveKeysRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getMoveKeysMethod(), getCallOptions(), request);
     }
 
     /**
@@ -459,6 +520,14 @@ public final class PastryServiceGrpc {
 
     /**
      */
+    public com.google.common.util.concurrent.ListenableFuture<proto.Pastry.Empty> moveKeys(
+        proto.Pastry.MoveKeysRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getMoveKeysMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
     public com.google.common.util.concurrent.ListenableFuture<proto.Pastry.NeighborSetResponse> getNeighborSet(
         proto.Pastry.NeighborSetRequest request) {
       return futureUnaryCall(
@@ -477,8 +546,9 @@ public final class PastryServiceGrpc {
   private static final int METHODID_NOTIFY_EXISTENCE = 0;
   private static final int METHODID_FORWARD = 1;
   private static final int METHODID_JOIN = 2;
-  private static final int METHODID_GET_NEIGHBOR_SET = 3;
-  private static final int METHODID_PING = 4;
+  private static final int METHODID_MOVE_KEYS = 3;
+  private static final int METHODID_GET_NEIGHBOR_SET = 4;
+  private static final int METHODID_PING = 5;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -508,6 +578,10 @@ public final class PastryServiceGrpc {
         case METHODID_JOIN:
           serviceImpl.join((proto.Pastry.JoinRequest) request,
               (io.grpc.stub.StreamObserver<proto.Pastry.JoinResponse>) responseObserver);
+          break;
+        case METHODID_MOVE_KEYS:
+          serviceImpl.moveKeys((proto.Pastry.MoveKeysRequest) request,
+              (io.grpc.stub.StreamObserver<proto.Pastry.Empty>) responseObserver);
           break;
         case METHODID_GET_NEIGHBOR_SET:
           serviceImpl.getNeighborSet((proto.Pastry.NeighborSetRequest) request,
@@ -581,6 +655,7 @@ public final class PastryServiceGrpc {
               .addMethod(getNotifyExistenceMethod())
               .addMethod(getForwardMethod())
               .addMethod(getJoinMethod())
+              .addMethod(getMoveKeysMethod())
               .addMethod(getGetNeighborSetMethod())
               .addMethod(getPingMethod())
               .build();

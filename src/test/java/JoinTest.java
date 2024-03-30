@@ -21,7 +21,40 @@ public class JoinTest extends BaseTest {
     private final Logger logger = LoggerFactory.getLogger(DhtApiTest.class);
 
     @Test
-    public void testMoveKeys() throws IOException {
+    public void testLeave_MoveKeys() throws IOException {
+        PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++, 0, 0);
+        bootstrap.initPastry();
+        runningNodes.add(bootstrap);
+
+        List<BigInteger> keys = new ArrayList<>();
+
+
+        PastryNode node1 = new PastryNode("localhost", BASE_PORT++, 0, 0);
+        node1.joinPastry(bootstrap.getNode());
+        runningNodes.add(node1);
+
+        for (int i = 0; i < 10; i++) {
+            bootstrap.put("key" + i, "value");
+            keys.add(Util.convertToDecimal(Util.getId("key" + i)));
+        }
+
+        for (BigInteger key : keys) {
+            PastryNode closest = runningNodes.stream().min(Comparator.comparing(n -> n.getNode().getDecimalId().subtract(key).abs())).get();
+            assertNotNull(closest.getLocalData().get(key), "Expected key to be in closest node");
+        }
+
+        bootstrap.leavePastry();
+        runningNodes.remove(bootstrap);
+
+        for (BigInteger key : keys) {
+            PastryNode closest = runningNodes.stream().min(Comparator.comparing(n -> n.getNode().getDecimalId().subtract(key).abs())).get();
+            assertNotNull(closest.getLocalData().get(key), "Expected key to be in closest node");
+        }
+
+    }
+
+    @Test
+    public void testJoin_MoveKeys() throws IOException {
         PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++, 0, 0);
         bootstrap.initPastry();
         runningNodes.add(bootstrap);

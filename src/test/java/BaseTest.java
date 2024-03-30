@@ -31,6 +31,9 @@ public class BaseTest {
         logger.warn(System.lineSeparator() + System.lineSeparator()+ "============== {} =============" + System.lineSeparator(), testInfo.getDisplayName());
     }
 
+    /**
+     * Whether the test is running in Continuous Integration environment
+     */
     public static boolean isRunningInCI() {
         String ci = System.getenv("CI");
         return "true".equals(ci);

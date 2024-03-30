@@ -76,6 +76,10 @@ message ForwardResponse {
     NOT_FOUND = 3; // key for DELETE not found
   }
 }
+message MoveKeysRequest {
+  NodeReference sender = 1;
+  repeated DHTEntry dhtEntries = 2;
+}
 
 service PastryService {
 
@@ -85,6 +89,8 @@ service PastryService {
   rpc Forward(ForwardRequest) returns (ForwardResponse) {}
 
   rpc Join(JoinRequest) returns (JoinResponse) {}
+
+  rpc MoveKeys(MoveKeysRequest) returns (Empty) {}
 
   rpc GetNeighborSet(NeighborSetRequest) returns (NeighborSetResponse) {}
   rpc Ping(Empty) returns (Empty) {}
