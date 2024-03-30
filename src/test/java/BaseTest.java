@@ -42,7 +42,7 @@ public class BaseTest {
         PastryNode.setBase(BASE_4_IDS);
         PastryNode.setLeafSize(LEAF_SET_SIZE_8);
         MAX_NODES = isRunningInCI() ? 10 : 50;
-        MAX_KEYS = isRunningInCI() ? 15 : 50;
+        MAX_KEYS = 2 * MAX_NODES;
     }
 
     @AfterEach
