@@ -25,7 +25,7 @@ public class NodeState {
     /**
      * log(base,N) rows, base columns
      */
-    private final List<List<NodeReference>> routingTable = new ArrayList<>(8); // TODO: set as number of digits in id
+    private final List<List<NodeReference>> routingTable = new ArrayList<>();
     /**
      * Closest nodes per metric
      */
@@ -532,7 +532,7 @@ public class NodeState {
 
     public void syncInsertIntoRoutingTable(NodeReference newNode) {
         int i = Util.getSharedPrefixLength(newNode.getId(), self.getId());
-        int j = Integer.parseInt(newNode.getId().substring(i, i+1));
+        int j = Util.parseDigit(newNode.getId().charAt(i));
         lock.lock();
         try {
             List<NodeReference> row = routingTable.get(i);

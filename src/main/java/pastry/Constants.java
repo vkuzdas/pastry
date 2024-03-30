@@ -10,6 +10,7 @@ public interface Constants {
     /**
      * L parameter values
      */
+    int LEAF_SET_SIZE_4 = 4;
     int LEAF_SET_SIZE_8 = 8;
     int LEAF_SET_SIZE_16 = 16;
     int LEAF_SET_SIZE_32 = 32;

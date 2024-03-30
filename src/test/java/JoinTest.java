@@ -12,6 +12,7 @@ import java.math.BigInteger;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static pastry.Constants.*;
 
 /**
  * Test class for joining nodes

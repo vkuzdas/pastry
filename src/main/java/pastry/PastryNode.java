@@ -65,9 +65,9 @@ public class PastryNode {
 
         if(defaultCalculator == null) {
             // fallback to Numerical
-            state = new NodeState(B_PARAMETER, 8, L_PARAMETER, ip, port, x, y, new NumericalDifferenceDistanceCalculator());
+            state = new NodeState(B_PARAMETER, L_PARAMETER, L_PARAMETER, ip, port, x, y, new NumericalDifferenceDistanceCalculator());
         } else {
-            state = new NodeState(B_PARAMETER, 8, L_PARAMETER, ip, port, x, y, defaultCalculator);
+            state = new NodeState(B_PARAMETER, L_PARAMETER, L_PARAMETER, ip, port, x, y, defaultCalculator);
         }
 
         self = state.getSelf();
@@ -104,7 +104,7 @@ public class PastryNode {
     }
 
     public static void setLeafSize(int size) {
-        if (size != LEAF_SET_SIZE_8 && size != Constants.LEAF_SET_SIZE_16 && size != Constants.LEAF_SET_SIZE_32) {
+        if (size != LEAF_SET_SIZE_4 && size != LEAF_SET_SIZE_8 && size != Constants.LEAF_SET_SIZE_16 && size != Constants.LEAF_SET_SIZE_32) {
             throw new IllegalArgumentException("L must be 8, 16 or 32");
         }
         PastryNode.L_PARAMETER = size;
@@ -425,7 +425,7 @@ public class PastryNode {
         // routing table
         else {
             int l = Util.getSharedPrefixLength(id_base, self.getId());
-            int matchDigit = Integer.parseInt(id_base.charAt(l)+"");
+            int matchDigit = Util.parseDigit(id_base.charAt(l));
 
             NodeReference r;
             r = state.routingTableGet(l, matchDigit);
