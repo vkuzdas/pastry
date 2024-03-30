@@ -25,30 +25,30 @@ public class DhtApiTest extends BaseTest {
 
         PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++, x++, y++);
         bootstrap.initPastry();
-        nodes.add(bootstrap);
+        runningNodes.add(bootstrap);
 
         for (int i = 0; i < 10 ; i++) {
             PastryNode node = new PastryNode("localhost", BASE_PORT++, x++, y++);
-            node.joinPastry(nodes.get(new Random().nextInt(nodes.size())).getNode());
-            nodes.add(node);
+            node.joinPastry(runningNodes.get(new Random().nextInt(runningNodes.size())).getNode());
+            runningNodes.add(node);
         }
 
         // randomly put 50 random keys, assert closest node is owner
         for (int i = 0; i < MAX_KEYS; i++) {
             j++;
             String key = "key" + j;
-            PastryNode randomNode = nodes.get(new Random().nextInt(nodes.size()));
+            PastryNode randomNode = runningNodes.get(new Random().nextInt(runningNodes.size()));
 
             NodeReference owner = randomNode.put(key, "value" + j);
 
-            assertNumericallyClosestOfAll(Util.getId(key), owner, nodes);
+            assertNumericallyClosestOfAll(Util.getId(key), owner, runningNodes);
         }
 
         // get 50 keys
         for (int i = 0; i < MAX_KEYS; i++) {
             String key = "key" + j;
 
-            PastryNode randomNode = nodes.get(new Random().nextInt(nodes.size()));
+            PastryNode randomNode = runningNodes.get(new Random().nextInt(runningNodes.size()));
 
             assertEquals("value" + j, randomNode.get(key));
 
@@ -60,7 +60,7 @@ public class DhtApiTest extends BaseTest {
             j++;
             String key = "key" + j;
 
-            PastryNode randomNode = nodes.get(new Random().nextInt(nodes.size()));
+            PastryNode randomNode = runningNodes.get(new Random().nextInt(runningNodes.size()));
 
             assertEquals(Pastry.ForwardResponse.StatusCode.REMOVED, randomNode.delete(key));
         }
@@ -70,7 +70,7 @@ public class DhtApiTest extends BaseTest {
             j++;
             String key = "key" + j;
 
-            PastryNode randomNode = nodes.get(new Random().nextInt(nodes.size()));
+            PastryNode randomNode = runningNodes.get(new Random().nextInt(runningNodes.size()));
 
             assertEquals(Pastry.ForwardResponse.StatusCode.NOT_FOUND, randomNode.delete(key));
         }

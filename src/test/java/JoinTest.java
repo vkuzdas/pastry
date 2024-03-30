@@ -24,7 +24,7 @@ public class JoinTest extends BaseTest {
     public void testMoveKeys() throws IOException {
         PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++, 0, 0);
         bootstrap.initPastry();
-        nodes.add(bootstrap);
+        runningNodes.add(bootstrap);
 
         List<BigInteger> keys = new ArrayList<>();
 
@@ -39,11 +39,11 @@ public class JoinTest extends BaseTest {
         for (int i = 0; i < MAX_NODES; i++) {
             PastryNode node = new PastryNode("localhost", BASE_PORT++, 0, 0);
             node.joinPastry(bootstrap.getNode());
-            nodes.add(node);
+            runningNodes.add(node);
         }
 
         for (BigInteger key : keys) {
-            PastryNode closest = nodes.stream().min(Comparator.comparing(n -> n.getNode().getDecimalId().subtract(key).abs())).get();
+            PastryNode closest = runningNodes.stream().min(Comparator.comparing(n -> n.getNode().getDecimalId().subtract(key).abs())).get();
             assertNotNull(closest.getLocalData().get(key), "Expected key to be in closest node");
         }
     }
@@ -82,21 +82,21 @@ public class JoinTest extends BaseTest {
         assertEquals(node4.getNode(), bootstrap.getRoutingTable().get(0).get(3), "Expected node4 to rewrite node3");
 
 
-        registerAll(bootstrap, node1, node2, node3, node4);
+        registerAllRunningNodes(bootstrap, node1, node2, node3, node4);
 
         DistanceCalculator calculator = new CoordinateDistanceCalculator();
 
         // verify that distance in nodeState is calculated correctly
         bootstrap.getAllNodes().forEach(computed -> {
-            PastryNode constructed = nodes.stream().filter(n -> n.getNode().equals(computed)).findFirst().get();
+            PastryNode constructed = runningNodes.stream().filter(n -> n.getNode().equals(computed)).findFirst().get();
             assertEquals(calculator.calculateDistance(bootstrap.getNode(), constructed.getNode()), computed.getDistance());
         });
         node1.getAllNodes().forEach(computed -> {
-            PastryNode constructed = nodes.stream().filter(n -> n.getNode().equals(computed)).findFirst().get();
+            PastryNode constructed = runningNodes.stream().filter(n -> n.getNode().equals(computed)).findFirst().get();
             assertEquals(calculator.calculateDistance(node1.getNode(), constructed.getNode()), computed.getDistance());
         });
         node4.getAllNodes().forEach(computed -> {
-            PastryNode constructed = nodes.stream().filter(n -> n.getNode().equals(computed)).findFirst().get();
+            PastryNode constructed = runningNodes.stream().filter(n -> n.getNode().equals(computed)).findFirst().get();
             assertEquals(calculator.calculateDistance(node4.getNode(), constructed.getNode()), computed.getDistance());
         });
     }
@@ -106,13 +106,13 @@ public class JoinTest extends BaseTest {
     public void testBootstrapJoin_alwaysJoinClosest() throws IOException {
         PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++, 0, 0);
         bootstrap.initPastry();
-        nodes.add(bootstrap);
+        runningNodes.add(bootstrap);
 
         for (int i = 0; i < MAX_NODES ; i++) {
             PastryNode node = new PastryNode("localhost", BASE_PORT++, 0, 0);
             NodeReference closest = node.joinPastry(bootstrap.getNode());
-            assertNumericallyClosestOfAll(node.getNode(), closest, nodes);
-            nodes.add(node);
+            assertNumericallyClosestOfAll(node.getNode(), closest, runningNodes);
+            runningNodes.add(node);
         }
     }
 
@@ -120,13 +120,13 @@ public class JoinTest extends BaseTest {
     public void testRandomJoin_alwaysJoinClosest() throws IOException {
         PastryNode bootstrap = new PastryNode("localhost", BASE_PORT++, 0, 0);
         bootstrap.initPastry();
-        nodes.add(bootstrap);
+        runningNodes.add(bootstrap);
 
         for (int i = 0; i < MAX_NODES; i++) {
             PastryNode node = new PastryNode("localhost", BASE_PORT++, 0, 0);
-            NodeReference closest = node.joinPastry(nodes.get(new Random().nextInt(nodes.size())).getNode());
-            assertNumericallyClosestOfAll(node.getNode(), closest, nodes);
-            nodes.add(node);
+            NodeReference closest = node.joinPastry(runningNodes.get(new Random().nextInt(runningNodes.size())).getNode());
+            assertNumericallyClosestOfAll(node.getNode(), closest, runningNodes);
+            runningNodes.add(node);
         }
     }
 

@@ -21,8 +21,10 @@ public class BaseTest {
     protected int MAX_NODES;
     protected int MAX_KEYS;
 
-    // TODO: refactor to 'runningNodes'
-    protected final ArrayList<PastryNode> nodes = new ArrayList<>();
+    /**
+     * All running nodes are shutdown after each test
+     */
+    protected final ArrayList<PastryNode> runningNodes = new ArrayList<>();
 
     @BeforeEach
     public void printInfo(TestInfo testInfo) {
@@ -45,14 +47,14 @@ public class BaseTest {
 
     @AfterEach
     public void tearDown() {
-        for (PastryNode node : nodes) {
+        for (PastryNode node : runningNodes) {
             node.shutdownPastryNode();
         }
-        nodes.clear();
+        runningNodes.clear();
     }
 
-    public void registerAll(PastryNode ... nodes) {
-        this.nodes.addAll(Arrays.asList(nodes));
+    public void registerAllRunningNodes(PastryNode ... nodes) {
+        this.runningNodes.addAll(Arrays.asList(nodes));
     }
 
 

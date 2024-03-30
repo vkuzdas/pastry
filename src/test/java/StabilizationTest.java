@@ -31,7 +31,7 @@ public class StabilizationTest extends BaseTest {
         PastryNode node3 = new PastryNode("localhost", BASE_PORT++, 150, 150);
         node3.joinPastry(bootstrap.getNode());
 
-        registerAll(bootstrap, node1, node2, node3);
+        registerAllRunningNodes(bootstrap, node1, node2, node3);
 
         Thread.sleep(PastryNode.STABILIZATION_INTERVAL * 2L);
         node2.shutdownPastryNode();
