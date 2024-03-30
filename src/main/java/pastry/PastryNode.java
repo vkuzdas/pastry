@@ -536,20 +536,36 @@ public class PastryNode {
                 // respond
                 Pastry.ForwardResponse.Builder response = Pastry.ForwardResponse.newBuilder().setOwner(self.toProto());
 
-                // TODO: lock
                 switch (request.getRequestType()) {
                     case PUT:
                         logger.trace("[{}]  saved key {}", self, keyHash);
-                        localData.put(Util.convertToDecimal(keyHash), request.getValue());
+                        lock.lock();
+                        try {
+                            localData.put(Util.convertToDecimal(keyHash), request.getValue());
+                        } finally {
+                            lock.unlock();
+                        }
                         response.setStatusCode(SAVED);
                         break;
                     case GET:
-                        String value = localData.get(Util.convertToDecimal(keyHash));
+                        String value;
+                        lock.lock();
+                        try {
+                            value = localData.get(Util.convertToDecimal(keyHash));
+                        } finally {
+                            lock.unlock();
+                        }
                         logger.trace("[{}]  retrieved key {}", self, keyHash);
                         response.setValue(value).setStatusCode(RETRIEVED);
                         break;
                     case DELETE:
-                        String rem = localData.remove(Util.convertToDecimal(keyHash));
+                        String rem;
+                        lock.lock();
+                        try {
+                            rem = localData.remove(Util.convertToDecimal(keyHash));
+                        } finally {
+                            lock.unlock();
+                        }
                         Pastry.ForwardResponse.StatusCode status = rem != null ? REMOVED : NOT_FOUND;
                         logger.trace("[{}]  key {} {}", self, keyHash, status);
                         response.setStatusCode(status);
