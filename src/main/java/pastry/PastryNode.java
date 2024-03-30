@@ -209,40 +209,51 @@ public class PastryNode {
 
     public void leavePastry() {
         // local data should be moved before leaving
-        NodeReference currSuccessor = state.getClosestUpleaf();
-        NodeReference currPredecessor = state.getClosestDownleaf();
 
-        TreeMap<BigInteger, String> successorKeys = new TreeMap<>();
-        TreeMap<BigInteger, String> predecessorKeys = new TreeMap<>();
+        boolean keysSent = false;
+        while(!keysSent) {
+            NodeReference currSuccessor = state.getClosestUpleaf();
+            NodeReference currPredecessor = state.getClosestDownleaf();
 
-        if (currPredecessor != null && currSuccessor != null) {
-            // keys are split according to closeness
-            localData.forEach((key, value) -> {
-                BigInteger distToPredecessor = currPredecessor.getDecimalId().subtract(key).abs();
-                BigInteger distToSuccessor = currSuccessor.getDecimalId().subtract(key).abs();
+            TreeMap<BigInteger, String> successorKeys = new TreeMap<>();
+            TreeMap<BigInteger, String> predecessorKeys = new TreeMap<>();
 
-                if (distToPredecessor.compareTo(distToSuccessor) < 0) {
-                    predecessorKeys.put(key, value);
-                } else {
-                    successorKeys.put(key, value);
+            if (currPredecessor != null && currSuccessor != null) {
+                // keys are split according to closeness
+                localData.forEach((key, value) -> {
+                    BigInteger distToPredecessor = currPredecessor.getDecimalId().subtract(key).abs();
+                    BigInteger distToSuccessor = currSuccessor.getDecimalId().subtract(key).abs();
+
+                    if (distToPredecessor.compareTo(distToSuccessor) < 0) {
+                        predecessorKeys.put(key, value);
+                    } else {
+                        successorKeys.put(key, value);
+                    }
+                });
+            }
+            if (currPredecessor != null && currSuccessor == null) {
+                predecessorKeys.putAll(localData);
+            }
+            if (currPredecessor == null && currSuccessor != null) {
+                successorKeys.putAll(localData);
+            }
+
+            try {
+                if (!successorKeys.isEmpty()) {
+                    sendKeysTo(currSuccessor, successorKeys);
                 }
-            });
-        }
-        if (currPredecessor != null && currSuccessor == null) {
-            predecessorKeys.putAll(localData);
-        }
-        if (currPredecessor == null && currSuccessor != null) {
-            successorKeys.putAll(localData);
+                if (!predecessorKeys.isEmpty()) {
+                    sendKeysTo(currPredecessor, predecessorKeys);
+                }
+                keysSent = true;
+            } catch (StatusRuntimeException e) {
+                logger.error("[{}]  status of [{}] is {}, retrying", self, currSuccessor, e.getStatus().getCode());
+            }
         }
 
         localData.clear();
 
-        if (!successorKeys.isEmpty()) {
-            sendKeysTo(currSuccessor, successorKeys);
-        }
-        if (!predecessorKeys.isEmpty()) {
-            sendKeysTo(currPredecessor, predecessorKeys);
-        }
+
 
         shutdownPastryNode();
     }
@@ -256,8 +267,16 @@ public class PastryNode {
 
         ManagedChannel channel = ManagedChannelBuilder.forTarget(destination.getAddress()).usePlaintext().build();
         blockingStub = PastryServiceGrpc.newBlockingStub(channel);
-        blockingStub.moveKeys(moveKeysToSuccessor.build());
-        channel.shutdown();
+
+        try {
+            blockingStub.moveKeys(moveKeysToSuccessor.build());
+        } catch (StatusRuntimeException e) {
+            logger.error("[{}]  status of [{}] is {}, retrying", self, destination, e.getStatus().getCode());
+            state.unregisterFailedNode(destination);
+            throw e; // will be caught in previous method
+        } finally {
+            channel.shutdown();
+        }
     }
 
     public void shutdownPastryNode() {

@@ -90,6 +90,9 @@ public class NodeReference {
 
     @Override
     public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof NodeReference)) {
+            return false;
+        }
         NodeReference other = (NodeReference) obj;
         return this.port == other.port && this.ip.equals(other.ip);
     }
