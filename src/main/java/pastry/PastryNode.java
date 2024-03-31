@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pastry.metric.DistanceCalculator;
 import pastry.metric.NumericalDifferenceDistanceCalculator;
+import pastry.metric.ZeroDistanceCalculator;
 import proto.Pastry;
 import proto.PastryServiceGrpc;
 
@@ -65,7 +66,7 @@ public class PastryNode {
 
         if(defaultCalculator == null) {
             // fallback to Numerical
-            state = new NodeState(B_PARAMETER, L_PARAMETER, L_PARAMETER, ip, port, x, y, new NumericalDifferenceDistanceCalculator());
+            state = new NodeState(B_PARAMETER, L_PARAMETER, L_PARAMETER, ip, port, x, y, new ZeroDistanceCalculator());
         } else {
             state = new NodeState(B_PARAMETER, L_PARAMETER, L_PARAMETER, ip, port, x, y, defaultCalculator);
         }
