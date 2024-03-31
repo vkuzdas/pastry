@@ -5,7 +5,6 @@ import pastry.PastryNode;
 import static pastry.Constants.BASE_16_IDS;
 import static pastry.Constants.LEAF_SET_SIZE_32;
 
-@Disabled
 public class RecoveryHexTest extends RecoveryTest {
 
         @Override
