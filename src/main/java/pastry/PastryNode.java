@@ -145,7 +145,7 @@ public class PastryNode {
 
     public void initPastry() throws IOException {
         startServer();
-        logger.trace("[{}]  started FIX", self);
+        logger.debug("[{}]  started FIX", self);
 
         if(stabilization) {
             startStabilizationThread();
@@ -162,7 +162,7 @@ public class PastryNode {
         TimerTask stabilizationTimerTask = new TimerTask() {
             @Override
             public void run() {
-                logger.trace("[{}]  checking neighbors..", self);
+                logger.debug("[{}]  checking neighbors..", self);
                 // make copy of current neighbor set
                 // iterate over it and request their neighbors
                 // fill neighborCandidates
@@ -308,7 +308,7 @@ public class PastryNode {
         Pastry.JoinResponse resp;
 
         try {
-            logger.trace("[{}]  Joining using {}", self, bootstrap);
+            logger.debug("[{}]  Joining using {}", self, bootstrap);
             resp = blockingStub.join(request.build());
             channel.shutdown();
         } catch (StatusRuntimeException e) {
@@ -399,8 +399,8 @@ public class PastryNode {
         }
 
         newlyDiscovered.forEach(state::registerNewNode);
-        logger.trace("[{}]  Notified: {}", self, notified);
-        logger.trace("[{}]  Newly discovered: {}", self, newlyDiscovered);
+        logger.debug("[{}]  Notified: {}", self, notified);
+        logger.debug("[{}]  Newly discovered: {}", self, newlyDiscovered);
     }
 
 
@@ -412,14 +412,10 @@ public class PastryNode {
      */
     public NodeReference route(String id_base) {
         state.printNodeState();
-//        if (syncSizeGet(neighborSet) == 0) {
-//            // network is empty, self is closest by definition
-//            return self;
-//        }
 
         if (state.inLeafRange(id_base)) {
             NodeReference leaf = state.getNumericallyClosestLeaf(id_base);
-            logger.trace("[{}]  Routing {} to numerically closest leaf [{}]", self, id_base, leaf);
+            logger.debug("[{}]  Routing {} to numerically closest leaf [{}]", self, id_base, leaf);
             return leaf;
         }
         // routing table
@@ -432,11 +428,11 @@ public class PastryNode {
 
             if (r == null) {
                 r = state.findSameLengthMatch(id_base, l);
-                logger.trace("[{}]  Routing {} to same len match (l={}) [{}]", self, id_base, l, r);
+                logger.debug("[{}]  Routing {} to same len match (l={}) [{}]", self, id_base, l, r);
                 return r;
             }
 
-            logger.trace("[{}]  Routing {} to longer prefix match (l={}) [{}]", self, id_base, l, r);
+            logger.debug("[{}]  Routing {} to longer prefix match (l={}) [{}]", self, id_base, l, r);
             return r;
         }
     }
@@ -504,7 +500,7 @@ public class PastryNode {
         @Override
         public void join(Pastry.JoinRequest request, StreamObserver<Pastry.JoinResponse> responseObserver) {
             Pastry.NodeReference sender = request.getSender();
-            logger.trace("[{}]  Join request from {}:{}", self, sender.getIp(), sender.getPort());
+            logger.debug("[{}]  Join request from {}:{}", self, sender.getIp(), sender.getPort());
             NodeReference newNode = new NodeReference(sender);
 
 
@@ -539,7 +535,7 @@ public class PastryNode {
 
                 // create JoinResponse, add current node state
                 Pastry.JoinResponse response = Pastry.JoinResponse.newBuilder().addNodeState(myState).build();
-                logger.trace("[{}]  My id is the closest to {}, responding back", self, newNode.getId());
+                logger.debug("[{}]  My id is the closest to {}, responding back", self, newNode.getId());
 
                 responseObserver.onNext(response);
                 responseObserver.onCompleted();
@@ -571,7 +567,7 @@ public class PastryNode {
 
 
                 // reroute newNode's join request to the closest node
-                logger.trace("[{}]  Forwarding to {}", self, closest.getAddress());
+                logger.debug("[{}]  Forwarding to {}", self, closest.getAddress());
                 ManagedChannel channel = ManagedChannelBuilder.forTarget(closest.getAddress()).usePlaintext().build();
                 blockingStub = PastryServiceGrpc.newBlockingStub(channel);
 
@@ -595,7 +591,7 @@ public class PastryNode {
         @Override
         public void forward(Pastry.ForwardRequest request, StreamObserver<Pastry.ForwardResponse> responseObserver) {
             String keyHash = request.getKey();
-            logger.trace("[{}]  {} request, key = {}", self, request.getRequestType(), keyHash);
+            logger.debug("[{}]  {} request, key = {}", self, request.getRequestType(), keyHash);
 
             NodeReference closest = route(keyHash);
 
@@ -606,7 +602,7 @@ public class PastryNode {
 
                 switch (request.getRequestType()) {
                     case PUT:
-                        logger.trace("[{}]  saved key {}", self, keyHash);
+                        logger.info("[{}]  saved key {}", self, keyHash);
                         lock.lock();
                         try {
                             localData.put(Util.convertToDecimal(keyHash), request.getValue());
@@ -623,7 +619,7 @@ public class PastryNode {
                         } finally {
                             lock.unlock();
                         }
-                        logger.trace("[{}]  retrieved key {}", self, keyHash);
+                        logger.info("[{}]  retrieved key {}", self, keyHash);
                         response.setValue(value).setStatusCode(RETRIEVED);
                         break;
                     case DELETE:
@@ -635,19 +631,19 @@ public class PastryNode {
                             lock.unlock();
                         }
                         Pastry.ForwardResponse.StatusCode status = rem != null ? REMOVED : NOT_FOUND;
-                        logger.trace("[{}]  key {} {}", self, keyHash, status);
+                        logger.info("[{}]  key {} {}", self, keyHash, status);
                         response.setStatusCode(status);
                         break;
                 }
 
-                logger.trace("[{}]  My id is the closest to {}, responding back", self, keyHash);
+                logger.debug("[{}]  My id is the closest to {}, responding back", self, keyHash);
                 responseObserver.onNext(response.build());
                 responseObserver.onCompleted();
                 return;
             }
 
             // forward request
-            logger.trace("[{}]  Forwarding {} request to {}", self, request.getRequestType(), closest.getAddress());
+            logger.debug("[{}]  Forwarding {} request to {}", self, request.getRequestType(), closest.getAddress());
             ManagedChannel channel = ManagedChannelBuilder.forTarget(closest.getAddress()).usePlaintext().build();
             blockingStub = PastryServiceGrpc.newBlockingStub(channel);
             Pastry.ForwardResponse response = blockingStub.forward(request);
@@ -730,7 +726,7 @@ public class PastryNode {
 
         @Override
         public void getNeighborSet(Pastry.NeighborSetRequest request, StreamObserver<Pastry.NeighborSetResponse> responseObserver) {
-            logger.trace("[{}]  Sending neighbor set", self);
+            logger.debug("[{}]  Sending neighbor set", self);
             responseObserver.onNext(state.neighborsToProto());
             responseObserver.onCompleted();
         }

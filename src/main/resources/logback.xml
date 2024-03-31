@@ -7,9 +7,9 @@
 
     <logger name="io.grpc" level="OFF" />
 
-    <root level="trace">
+    <root level="debug">
     <!--    TRACE = everything else -->
-    <!--    DEBUG = main Chord operations -->
+    <!--    DEBUG = main Pastry operations -->
     <!--    INFO = put(), get(), delete() -->
     <!--    WARN = GRPC server start/stop-->
         <appender-ref ref="STDOUT" />

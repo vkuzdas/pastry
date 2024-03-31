@@ -242,7 +242,7 @@ public class NodeState {
         } finally {
             lock.unlock();
         }
-        logger.trace("[{}]  No same length match found for {}, routing to self", self, id_base);
+        logger.debug("[{}]  No same length match found for {}, routing to self", self, id_base);
         return self;
     }
 
