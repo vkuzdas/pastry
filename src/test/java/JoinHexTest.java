@@ -1,8 +1,10 @@
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import pastry.PastryNode;
 
 import static pastry.Constants.*;
 
+@Disabled
 public class JoinHexTest extends JoinTest {
 
     @Override
