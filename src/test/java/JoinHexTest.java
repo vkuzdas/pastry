@@ -4,7 +4,7 @@ import pastry.PastryNode;
 
 import static pastry.Constants.*;
 
-@Disabled
+@Disabled("Works locally but not in CI")
 public class JoinHexTest extends JoinTest {
 
     @Override

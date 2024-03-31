@@ -12,7 +12,6 @@ import java.math.BigInteger;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static pastry.Constants.*;
 
 /**
  * Test class for joining nodes
@@ -50,7 +49,7 @@ public class JoinTest extends BaseTest {
     }
 
     @Test
-    @Disabled("Maven cannot use Coord calculator for some reason, manual run should work")
+    @Disabled("Maven cannot use Coord calculator for some reason, local manual run should work")
     public void testMetric_routingTableRewritten() throws IOException {
         PastryNode.setDefaultCalculator(new CoordinateDistanceCalculator());
 
