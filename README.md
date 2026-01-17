@@ -1,37 +1,94 @@
-# pastry
+# 🥧 Pastry DHT
 
-This is a Java project that uses Maven for dependency management. The project is a gRPC server application that implements a distributed hash table using the Pastry protocol.
+A Java implementation of the [Pastry](https://www.freepastry.org/) distributed hash table protocol with gRPC-based node communication.
+
+[![Java CI](https://github.com/vkuzdas/pastry/actions/workflows/java_ci.yml/badge.svg)](https://github.com/vkuzdas/pastry/actions/workflows/java_ci.yml)
+
+## Overview
+
+Pastry is a scalable, self-organizing peer-to-peer overlay network that provides efficient key-based routing. Each node maintains a **routing table**, **leaf set**, and **neighbor set** to route messages in $O(\log N)$ hops to the node numerically closest to a given key.
+
+This implementation supports:
+- **DHT Operations** — `put`, `get`, `delete` with consistent key ownership
+- **Node Join/Leave** — Dynamic membership with state transfer
+- **Pluggable Distance Metrics** — Coordinate-based, ping latency, or custom
+- **Configurable Parameters** — Base (4/16) and leaf set size (8/16/32)
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                      PastryNode                         │
+├─────────────────────────────────────────────────────────┤
+│  NodeState                                              │
+│  ├── Routing Table (log₁₆N × 16 entries)               │
+│  ├── Leaf Set (numerically closest nodes)              │
+│  └── Neighbor Set (proximity-based)                    │
+├─────────────────────────────────────────────────────────┤
+│  gRPC Server (PastryServiceGrpc)                        │
+│  ├── Join / NewNodeAnnouncement                        │
+│  ├── Forward (key routing)                             │
+│  └── Stabilization (periodic repair)                   │
+└─────────────────────────────────────────────────────────┘
+```
+
+## Project Structure
+
+```
+src/
+├── main/java/pastry/
+│   ├── PastryNode.java       # Core node logic & gRPC server
+│   ├── NodeState.java        # Routing table, leaf set, neighbors
+│   ├── NodeReference.java    # Node identity (ip, port, coords)
+│   └── metric/               # Distance calculators
+└── test/java/
+    ├── JoinTest.java         # Network formation tests
+    ├── DhtApiTest.java       # Put/get/delete correctness
+    └── RecoveryTest.java     # Node failure handling
+```
+
+## Tech Stack
+
+| Component | Technology |
+|-----------|------------|
+| Language | Java 17 |
+| Build | Maven |
+| RPC | gRPC + Protocol Buffers |
+| Logging | SLF4J + Logback |
+| Testing | JUnit 5, Awaitility |
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+```bash
+# Build & test
+mvn clean install
 
-### Prerequisites
+# Run a bootstrap node
+java -cp target/classes pastry.PastryNode
+```
 
-- Java 8 or higher
-- Maven
-- IntelliJ IDEA 2023.2.2 or any other IDE that supports Java and Maven
+## Configuration
 
-### Installing
+```java
+// ID space: base-4 or base-16 (hex)
+PastryNode.setBase(Constants.BASE_16_IDS);
 
-1. Clone the repository to your local machine.
-2. Open the project in your IDE.
-3. Run `mvn clean install` to download the dependencies and build the project.
+// Leaf set size: 8, 16, or 32
+PastryNode.setLeafSize(Constants.LEAF_SET_SIZE_16);
 
-## Running the Application
+// Custom proximity metric
+PastryNode.setDefaultCalculator(new CoordinateDistanceCalculator());
+```
 
-The main class of the application is `PastryNode.java`. You can run this class directly from your IDE.
+## Distance Metrics
 
-## Built With
+| Metric | Use Case |
+|--------|----------|
+| `ZeroDistanceCalculator` | Testing (no proximity) |
+| `NumericalDifferenceDistanceCalculator` | ID-space distance |
+| `CoordinateDistanceCalculator` | Euclidean (x, y) |
+| `PingResponseTimeDistanceCalculator` | Network latency |
 
-- [Java](https://www.java.com) - The programming language used
-- [Maven](https://maven.apache.org/) - Dependency Management
-- [gRPC](https://grpc.io/) - A high-performance, open-source universal RPC framework
-- [Protocol Buffers](https://developers.google.com/protocol-buffers) - Google's language-neutral, platform-neutral, extensible mechanism for serializing structured data
-- [Logback](http://logback.qos.ch/) - The logging framework
+## References
 
-## Authors
-
-- [VKuzdas](https://github.com/vkuzdas)
-- [peter.macejko@fel.cvut.cz](peter.macejko@fel.cvut.cz)
-
+- [Pastry: Scalable, decentralized object location and routing for large-scale peer-to-peer systems](https://www.freepastry.org/PAST/pastry.pdf) — Rowstron & Druschel, 2001
